@@ -2,14 +2,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 	public static void main(String[] args) {
+		
 		Spider spider = new Spider();
 		
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File("e3_courses.csv")));
-			//TODO: add other catalogs
 			//BNE
 			spider.getData("https://campus.uni-due.de/lsf/rds?state=wtree&search=1&trex=step&root120192=238902|234498|234747|234979&P.vx=kurz", bw);
 			//IOS Lehrauftrag

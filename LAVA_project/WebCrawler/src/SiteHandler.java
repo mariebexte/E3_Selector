@@ -13,14 +13,14 @@ import org.jsoup.select.Elements;
 public class SiteHandler {
 
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
-	private List<String> links = new LinkedList<String>();
+	private List<String> links;
 	private Document htmlDocument;
 
 	private boolean wroteColumnHeaders = false;
 
 	// Crawl all courses linked on a page
 	public void crawl(String url) {
-
+		links = new LinkedList<String>();
 		boolean success = retrieveDocument(url);
 
 		if (success) {
@@ -75,7 +75,7 @@ public class SiteHandler {
 			title = title.replaceAll(" -.? Cr\\..*[\\n\\r]?.*", "");
 		}
 		
-		if (!title.contains("Klausuranmeldung")) {
+		if (!title.contains("Klausuranmeldung")&&!title.contains("ENTFÄLLT")) {
 
 			bw.write("\"" + cleanText(title));
 			
