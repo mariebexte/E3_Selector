@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,8 +65,6 @@ public class SiteHandler {
 		Elements elements = htmlDocument.getElementsByTag("title");
 		String title = elements.text();
 		
-		System.err.println("TITLE BEFORE:"+title);
-		
 		title = title.replaceAll("- .*?: .*? - .*? - ", "");
 		// Title is ill-formatted; need to match again
 		if (!title.contains(" - ")) {
@@ -73,15 +72,16 @@ public class SiteHandler {
 			title = title.replaceAll("- .*?: ", "");
 			title = title.replaceAll(" - .?.?.? Cr\\..*[\\n\\r]?.*", "");
 		} else {
-			title = title.replaceAll(" - Cr\\. .*[\\n\\r]?.*", "");
+			title = title.replaceAll(" -.? Cr\\..*[\\n\\r]?.*", "");
 		}
-		
-		System.err.println("TITLE AFTER:"+title);
 		
 		if (!title.contains("Klausuranmeldung")) {
 
 			bw.write("\"" + cleanText(title));
-
+			
+			//Need to explicitly test these classes as some courses are missing some of them
+			List<String> basicFields = Arrays.asList(new String[] {"basic_1","basic_2","basic_3","basic_4","basic_5","basic_6","basic_7","basic_8","basic_9","basic_10",
+					"basic_12","basic_13","basic_15","basic_16","basic_17"});
 			// Extract fields grouped in basicdata
 			elements = htmlDocument.getElementsByClass("mod_n_basic");
 			// Entries with the same value in headers need to be combined into one entry
@@ -92,6 +92,10 @@ public class SiteHandler {
 				// If this is true: continue in next column
 				if (!headersValueThis.equals(headersValuePrevious)) {
 					bw.write("\",\"");
+					if(((basicFields.indexOf(headersValueThis))-(basicFields.indexOf(headersValuePrevious)))>1) {
+						//The course is missing one of the fields: need to fill in a blank column entry
+						bw.write("\",\"");
+					}
 				} else {
 					bw.write(";");
 				}
@@ -149,50 +153,7 @@ public class SiteHandler {
 			bw.write("\",\"" + persons_1);
 			bw.write("\",\"" + persons_2);
 
-//		// this one is empty, can skip it
-//		elements = htmlDocument.getElementsByClass("mod_n_even");
-//		System.out.println("EL even: "+elements.size());
-//		for (Element ele : elements) {
-//			System.out.println("NEXT mod n even: " + "\t" + ele.text());
-//		}
-
-////		elements = htmlDocument.getElementsByClass("mod_n_odd");
-//			elements = htmlDocument.getElementsByClass(c);
-//
-//			// Done with dates & times
-//			boolean stop = false;
-//			// Done with person info, next would be institution info, but we do not need
-//			// that
-//			boolean fullStop = false;
-//			int index = 0;
-//			for (Element ele : elements) {
-//				System.out.println("NEXT:" + ele.text());
-//				if (!stop) {
-//					if (ele.attr("headers").equals("persons_1")) {
-//						stop = true;
-//						for (int i = 0; i < variables.length; i++) {
-//							String str = variables[i];
-//							bw.write("\",\"" + str);
-//						}
-//						bw.write("\",\"" + ele.text());
-//					} else {
-//						String temp = ele.text();
-//						temp = temp.replaceAll(";", " ");
-//						variables[index] = variables[index] + temp + ";";
-//						index++;
-//						if (index == variables.length) {
-//							index = 0;
-//						}
-//					}
-//				} else {// To get the last field of interest to us: persons_2; stop after this one
-//					if (!fullStop) {
-//						bw.write("\",\"" + ele.text());
-//						fullStop = true;
-//					}
-//				}
-//			}
-
-			// To extract terms, persons
+			// To extract textual remarks
 			elements = htmlDocument.getElementsByClass("mod_n");
 			for (Element ele : elements) {
 				bw.write("\",\"" + cleanText(ele.text()));

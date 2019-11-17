@@ -36,17 +36,12 @@ public class Spider {
 		handler.crawl(url);
 		this.pagesToVisit.addAll(handler.getLinks());
 		
-		int links = 0;
-//		while (this.pagesToVisit.size() > 0) {
-		for(int i=0; i<2; i++) {
-			System.out.println("Next URL");
-			System.out.println(pagesToVisit.size());
+		while (this.pagesToVisit.size() > 0) {
+//		for(int i=0; i<2; i++) {
 			currentUrl = this.nextUrl();
 			if(!currentUrl.equals("")) {
 				handler.extractFields(currentUrl,bw);
-				links++;
 			}
-			System.out.println(links);
 		}
 	}
 }
