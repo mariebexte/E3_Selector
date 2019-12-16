@@ -31,7 +31,7 @@ public class Spider {
 		return nextUrl;
 	}
 
-	public void getData(String url, BufferedWriter bw) throws IOException {
+	public void getData(String url, String catalog, BufferedWriter bw) throws IOException {
 
 		String currentUrl;
 		// Get courses linked on this site
@@ -42,7 +42,7 @@ public class Spider {
 //		for(int i=0; i<2; i++) {
 			currentUrl = this.nextUrl();
 			if (!currentUrl.equals("")) {
-				handler.extractFields(currentUrl, bw);
+				handler.extractFields(currentUrl, catalog, bw);
 			}
 		}
 	}
@@ -56,5 +56,13 @@ public class Spider {
 	    }else {
 	    	return "";
 	    }
+	}
+	
+	public SiteHandler getSiteHandler() {
+		return this.handler;
+	}
+	
+	public void resetVisited() {
+		this.pagesVisited.clear();
 	}
 }

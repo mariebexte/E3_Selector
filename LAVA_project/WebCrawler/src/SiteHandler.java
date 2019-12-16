@@ -1,8 +1,10 @@
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -15,6 +17,9 @@ public class SiteHandler {
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 Safari/535.1";
 	private List<String> links;
 	private Document htmlDocument;
+
+	private Set<String> distinctCourses = new HashSet<String>();
+	private Set<String> courseBase = new HashSet<String>();
 
 	private boolean wroteColumnHeaders = false;
 
@@ -45,18 +50,23 @@ public class SiteHandler {
 	}
 
 	// Extract data about a course
-	public void extractFields(String url, BufferedWriter bw) throws IOException {
+	public void extractFields(String url, String catalog, BufferedWriter bw) throws IOException {
 		retrieveDocument(url);
 
 		if (!wroteColumnHeaders) {
 			// First column will hold the title of a course
 			bw.write("title,");
+			
+			bw.write("catalog,");
 
 			// Extract column names:
 			Elements el = htmlDocument.getElementsByClass("mod");
 			for (Element ele : el) {
 				bw.write("\"" + cleanText(ele.text()) + "\"" + ",");
 			}
+
+			bw.write("isReoccurring");
+
 			bw.newLine();
 			wroteColumnHeaders = true;
 		}
@@ -64,7 +74,7 @@ public class SiteHandler {
 		// Extract the title
 		Elements elements = htmlDocument.getElementsByTag("title");
 		String title = elements.text();
-		
+
 		title = title.replaceAll("- .*?: .*? - .*? - ", "");
 		// Title is ill-formatted; need to match again
 		if (!title.contains(" - ")) {
@@ -74,14 +84,18 @@ public class SiteHandler {
 		} else {
 			title = title.replaceAll(" -.? Cr\\..*[\\n\\r]?.*", "");
 		}
-		
-		if (!title.contains("Klausuranmeldung")&&!title.contains("ENTFÄLLT")) {
+
+		if (!title.contains("Klausuranmeldung") && !title.contains("ENTFÄLLT")) {
 
 			bw.write("\"" + cleanText(title));
-			
-			//Need to explicitly test these classes as some courses are missing some of them
-			List<String> basicFields = Arrays.asList(new String[] {"basic_1","basic_2","basic_3","basic_4","basic_5","basic_6","basic_7","basic_8","basic_9","basic_10",
-					"basic_12","basic_13","basic_15","basic_16","basic_17"});
+			bw.write("\",\"" + catalog);
+			distinctCourses.add(title);
+
+			// Need to explicitly test these classes as some courses are missing some of
+			// them
+			List<String> basicFields = Arrays.asList(new String[] { "basic_1", "basic_2", "basic_3", "basic_4",
+					"basic_5", "basic_6", "basic_7", "basic_8", "basic_9", "basic_10", "basic_12", "basic_13",
+					"basic_15", "basic_16", "basic_17" });
 			// Extract fields grouped in basicdata
 			elements = htmlDocument.getElementsByClass("mod_n_basic");
 			// Entries with the same value in headers need to be combined into one entry
@@ -92,8 +106,8 @@ public class SiteHandler {
 				// If this is true: continue in next column
 				if (!headersValueThis.equals(headersValuePrevious)) {
 					bw.write("\",\"");
-					if(((basicFields.indexOf(headersValueThis))-(basicFields.indexOf(headersValuePrevious)))>1) {
-						//The course is missing one of the fields: need to fill in a blank column entry
+					if (((basicFields.indexOf(headersValueThis)) - (basicFields.indexOf(headersValuePrevious))) > 1) {
+						// The course is missing one of the fields: need to fill in a blank column entry
 						bw.write("\",\"");
 					}
 				} else {
@@ -154,12 +168,58 @@ public class SiteHandler {
 			bw.write("\",\"" + persons_2);
 
 			// To extract textual remarks
+			// Kommentar, Literatur, Bemerkung, Voraussetzungen, Leistungsnachweis
+			// Collect whether this course has this field, as some have missing fields
+			Boolean[] textFields = new Boolean[] { false, false, false, false, false };
+			boolean reachedLabelSection = false;
+			Elements titles = htmlDocument.getElementsByClass("mod");
+			for (Element t : titles) {
+				System.out.println(t.text());
+				if (t.text().equals("Zuständigkeit")) {
+					reachedLabelSection = true;
+				}
+				if (reachedLabelSection) {
+					if (t.text().equals("Kommentar")) {
+						textFields[0] = true;
+					}
+					if (t.text().equals("Literatur")) {
+						textFields[1] = true;
+					}
+					if (t.text().equals("Bemerkung")) {
+						textFields[2] = true;
+					}
+					if (t.text().equals("Voraussetzungen")) {
+						textFields[3] = true;
+					}
+					if (t.text().equals("Leistungsnachweis")) {
+						textFields[4] = true;
+					}
+				}
+			}
 			elements = htmlDocument.getElementsByClass("mod_n");
-			for (Element ele : elements) {
-				bw.write("\",\"" + cleanText(ele.text()));
+
+//			for (Element ele : elements) {
+//				bw.write("\",\"" + cleanText(ele.text()));
+//			}
+
+			int missingFieldsSoFar = 0;
+
+			for (int i = 0; i < 5; i++) {
+				System.out.println(textFields[i]);
+			}
+			System.out.println(elements.size());
+
+			for (int i = 0; i < textFields.length; i++) {
+				if (!textFields[i]) {
+					bw.write("\",\"");
+					missingFieldsSoFar++;
+				} else {
+//					System.out.println(elements.get(i-missingFieldsSoFar).text());
+					bw.write("\",\"" + cleanText(elements.get(i - missingFieldsSoFar).text()));
+				}
 			}
 
-			bw.write("\"");
+			bw.write("\",\"" + courseBase.contains(title) + "\"");
 			bw.newLine();
 		}
 	}
@@ -187,10 +247,20 @@ public class SiteHandler {
 
 	private String cleanText(String text) {
 		text = text.replaceAll(";", " ");
-		if(text.matches("^[1-9]*-[1-9]*$")) {
+		if (text.matches("^[1-9]*-[1-9]*$")) {
 			text = text.replace("-", " - ");
 		}
 		return text.replaceAll("\"", "\"\"");
 
+	}
+
+	public Set<String> getTitles() {
+		return distinctCourses;
+	}
+
+	public void resetTitles() {
+		courseBase.addAll(distinctCourses);
+		distinctCourses.clear();
+		wroteColumnHeaders = false;
 	}
 }
