@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<!-- Required meta tags -->
+        <meta charset="utf-8">
+		<title>E3 Selector: Enter your data</title>
+        
+        <!-- CSS Files -->
+	   <link href="c3.min.css" rel="stylesheet">
+
+	   <!-- JS Files -->
+	   <script type="text/javascript" src="d3.min.js"></script>
+	   <script type="text/javascript" src="c3.min.js"></script>
+
+        
+        <style>
+            #userInput{
+                position: absolute;
+                top: 10%;
+                left: 50%;
+                margin-left: -350px;
+                width: 700px;
+                height: 200px;
+                font-size: 20pt;
+                font-family: "Futura";
+            }
+            
+            button{
+                font-size: 20pt;
+                font-family: "Futura";
+            }
+            
+            select{
+                font-size: 16pt;
+                font-family: "Futura";
+            }
+            
+            input{
+                font-size: 16pt;
+                font-family: "Futura";
+                margin:5px;
+            }
+            
+                        
+            label{
+                font-size: 16pt;
+                font-family: "Futura";
+            }
+            
+            #userInput div{
+                margin-bottom: 30px;
+            }
+            
+            #courseTree{
+                background-color:red;
+            }
+        </style>
+        
+    </head>
+    <body>
+    <div id="userInput">
+        <div>
+            Select your study program:</br>
+            <select>
+                <option value="AngInf">Angewandte Informatik</option>
+                <option value="BauIng">Bauingenieurwesen</option>
+                <option value="Elektro">Elektrotechnik & Informationstechnik</option>
+                <option value="ISE">ISE</option>
+                <option value="Komedia">Komedia</option>
+                <option value="Maschinenbau">Maschinenbau</option>
+                <option value="MedizinT">Medizintechnik</option>
+                <option value="Nano">Nano Engineering</option>
+                <option value="WIng">Wirtschaftsingenieurwesen</option>
+            </select>
+        </div>
+    
+        <div>
+            Which languages would you like your courses to be in?</br>
+                <input type="checkbox" name="ok_languages" value="De" id="de">
+                    <label for="de">German</label><br>
+                <input type="checkbox" name="ok_languages" value="En" id="en">
+                    <label for="en">English</label><br>
+                <input type="checkbox" name="ok_languages" value="Tu" id="tu">
+                    <label for="tu">Turkish</label><br>
+                <input type="checkbox" name="ok_languages" value="Nl" id="nl">
+                    <label for="nl">Dutch</label><br>
+        </div>
+    
+        <div id="container">
+            When are you not available?</br>
+        </div>
+
+        <button type="button" onclick="showCourseTree()">Show Courses</button>
+
+    </div>
+
+    <div id="courseTree" style="display:none">
+        <p>
+            dfogigmdpvliö,ifgogfjbkgmdäpäohkjfägidoaeüähpjktgümäsegdfbfgpnmfgknmgp
+        </p>
+    </div>
+
+        <script type="text/javascript">
+            
+            document.createSvg = function(tagName) {
+                var svgNS = "http://www.w3.org/2000/svg";
+                return this.createElementNS(svgNS, tagName);
+            };
+
+            var unavailableTimes = new Set();
+            var colorText = "black";
+            var colorAvailable = "green";
+            var colorUnavailable = "red"; 
+            var noColor = "none";
+
+            var grid = function(numberW, numberPerSide, sizeW, size, pixelsW, pixelsPerSide, colors) {
+                var svg = document.createSvg("svg");
+                svg.setAttribute("width", pixelsW);
+                svg.setAttribute("height", pixelsPerSide);
+                svg.setAttribute("viewBox", [0, 0, numberW * sizeW + numberW, numberPerSide * size + numberPerSide].join(" "));
+
+                var times = ["08 - 10","10 - 12","12 - 14","14 - 16","16 - 18","18 - 20"];
+                var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+                for(var i = 0; i < numberW; i++) {
+                    for(var j = 0; j < numberPerSide; j++) {
+
+                      var g = document.createSvg("g");
+                      g.setAttribute("transform", ["translate(", i*sizeW + i, ",", j*size + j, ")"].join(""));
+                      var number = numberPerSide * i + j;
+                      var box = document.createSvg("rect");
+                      box.setAttribute("width", sizeW);
+                      box.setAttribute("height", size);
+                        if(i==0 || j == 0){
+                            box.setAttribute("fill", noColor);
+                            if(i==0 && j>0){
+                                box.setAttribute("fill", noColor);
+
+                                var text = document.createSvg("text");
+                                text.appendChild(document.createTextNode(times[j-1]));
+                                text.setAttribute("fill", colorText);
+                                text.setAttribute("font-size", 5);
+                                text.setAttribute("x", size/4);
+                                text.setAttribute("y", size/1.7);
+                                g.appendChild(text);
+                            }
+                            if(j==0 && i>0){
+                                box.setAttribute("fill", noColor);
+                                var text = document.createSvg("text");
+                                text.appendChild(document.createTextNode(days[i-1]));
+                                text.setAttribute("fill", colorText);
+                                text.setAttribute("font-size", 5);
+                                text.setAttribute("x", size/2);
+                                text.setAttribute("y", sizeW/2.5);
+                                g.appendChild(text);
+                            }
+                        }
+                        else{
+                            box.setAttribute("fill", colorAvailable);
+                            box.setAttribute("id", days[i-1] + times[j-1]);                   
+                        }
+                      g.appendChild(box);
+                      svg.appendChild(g);
+                    }  
+                }
+                svg.addEventListener(
+                    "click",
+                    function(e){
+                        var id = e.target.id;
+                        var cell = e.target;
+                        if(unavailableTimes.has(id)){
+                            unavailableTimes.delete(id);
+                            cell.setAttribute("fill",colorAvailable);
+                        }
+                        else{
+                            unavailableTimes.add(id);
+                            cell.setAttribute("fill",colorUnavailable);
+
+                        }
+//                        alert(id);
+//                        alert(unavailableTimes.size);
+                    },
+                    false);
+                return svg;
+            };
+    
+            function showCourseTree(){
+                document.getElementById("userInput").style.display = "none";
+                document.getElementById("courseTree").style.display = "block";
+            }
+
+            var container = document.getElementById("container");
+            container.appendChild(grid(8, 7, 22, 12, 700, 350, ["black", "white","none"]));
+            
+//            d3.csv("e3_courses_reoccurrenceAndMyProf.csv").then(function (data) {
+//			c3.generate({
+//
+//			});
+//		    });
+            
+            //START OF TREE
+            
+            var margin = {top: 20, right: 120, bottom: 20, left: 120},
+                width = 960 - margin.right - margin.left,
+                height = 800 - margin.top - margin.bottom;
+            var i = 0,
+                duration = 750,
+                root;
+            var tree = d3.tree()
+                .size([height, width]);
+            //also works with diagonal, radial
+            var diagonal = d3.linkHorizontal()
+    .x(function(d) { return d.y; })
+    .y(function(d) { return d.x; });
+            var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            d3.json("flare.json", function(error, flare) {
+              if (error) throw error;
+              root = flare;
+              root.x0 = height / 2;
+              root.y0 = 0;
+              function collapse(d) {
+                if (d.children) {
+                  d._children = d.children;
+                  d._children.forEach(collapse);
+                  d.children = null;
+                }
+              }
+              root.children.forEach(collapse);
+              update(root);
+            });
+            d3.select(self.frameElement).style("height", "800px");
+            function update(source) {
+              // Compute the new tree layout.
+              var nodes = tree.nodes(root).reverse(),
+                  links = tree.links(nodes);
+              // Normalize for fixed-depth.
+              nodes.forEach(function(d) { d.y = d.depth * 180; });
+              // Update the nodes…
+              var node = svg.selectAll("g.node")
+                  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+              // Enter any new nodes at the parent's previous position.
+              var nodeEnter = node.enter().append("g")
+                  .attr("class", "node")
+                  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                  .on("click", click);
+              nodeEnter.append("circle")
+                  .attr("r", 1e-6)
+                  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+              nodeEnter.append("text")
+                  .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
+                  .attr("dy", ".35em")
+                  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                  .text(function(d) { return d.name; })
+                  .style("fill-opacity", 1e-6);
+              // Transition nodes to their new position.
+              var nodeUpdate = node.transition()
+                  .duration(duration)
+                  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+              nodeUpdate.select("circle")
+                  .attr("r", 4.5)
+                  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+              nodeUpdate.select("text")
+                  .style("fill-opacity", 1);
+              // Transition exiting nodes to the parent's new position.
+              var nodeExit = node.exit().transition()
+                  .duration(duration)
+                  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                  .remove();
+              nodeExit.select("circle")
+                  .attr("r", 1e-6);
+              nodeExit.select("text")
+                  .style("fill-opacity", 1e-6);
+              // Update the links…
+              var link = svg.selectAll("path.link")
+                  .data(links, function(d) { return d.target.id; });
+              // Enter any new links at the parent's previous position.
+              link.enter().insert("path", "g")
+                  .attr("class", "link")
+                  .attr("d", function(d) {
+                    var o = {x: source.x0, y: source.y0};
+                    return diagonal({source: o, target: o});
+                  });
+              // Transition links to their new position.
+              link.transition()
+                  .duration(duration)
+                  .attr("d", diagonal);
+              // Transition exiting nodes to the parent's new position.
+              link.exit().transition()
+                  .duration(duration)
+                  .attr("d", function(d) {
+                    var o = {x: source.x, y: source.y};
+                    return diagonal({source: o, target: o});
+                  })
+                  .remove();
+              // Stash the old positions for transition.
+              nodes.forEach(function(d) {
+                d.x0 = d.x;
+                d.y0 = d.y;
+              });
+            }
+            // Toggle children on click.
+            function click(d) {
+              if (d.children) {
+                d._children = d.children;
+                d.children = null;
+              } else {
+                d.children = d._children;
+                d._children = null;
+              }
+              update(d);
+            }
+            
+            
+            
+            
+            
+        </script>
+
+    </body>
+</html>  
