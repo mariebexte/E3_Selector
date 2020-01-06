@@ -4,8 +4,8 @@
     
 .node circle {
   fill: #fff;
-  stroke: steelblue;
-  stroke-width: 3px;
+  stroke: black;
+  stroke-width: 2px;
 }
 
 .node text {
@@ -15,20 +15,22 @@
 
 .link {
   fill: none;
-  stroke: #ccc;
+  stroke: lightgray;
   stroke-width: 2px;
 }
  
 #leftPanel    
 {
+    display:block;
    position:absolute;
+        width: 350px;
+    height: auto;
    top:0;
+    bottom: 0;
    right:0;
     padding: 10px;
     margin: 10px;
-    width: 350px;
-    height: 95%;
-        background-color: aliceblue;
+    background-color: whitesmoke;
 }
     
 .panelTitle{
@@ -42,6 +44,8 @@
     font-size: 12px;
     text-align: left;
     margin: 5px;
+    padding: 7px;
+    border-radius: 10px;
 }
     
     #selectedCoursesPanel{
@@ -100,6 +104,18 @@ var treeData;
 d3.json('e3_courses_final.json').then(function (data) {
 treeData = data;
     
+    var seminarColor="peachpuff";
+    var blockSeminarColor="salmon";
+    var lectureColor="powderblue";
+    var lectureExerciseColor="lightgreen";
+    var eLearningColor="thistle";
+    
+    var seminarColorDark="orange";
+    var blockSeminarColorDark="red";
+    var lectureColorDark="dodgerblue";
+    var lectureExerciseColorDark="limegreen";
+    var eLearningColorDark="darkorchid";
+    
   var selectedCourses = [];
     
 // Set the dimensions and margins of the diagram
@@ -113,6 +129,7 @@ var margin = {top: 20, right: 90, bottom: 30, left: 90},
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.right + margin.left)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("style","background-color:whitesmoke;")
   .append("g")
     .attr("transform", "translate("
           + 500 + "," + margin.top + ")");
@@ -218,32 +235,56 @@ function update(source) {
 
   // Update the node attributes and style
   nodeUpdate.select('circle.node')
-    .attr('r', 10)
-    .style("fill", function(d) {
-        return d._children ? "lightsteelblue" : "#fff";
+    .attr('r', 9)
+    .style('fill', function(d) {
+        if(d.children){
+          return "white";
+        }
+        else{
+            switch(d.data.Veranstaltungsart){
+                case "Seminar":return seminarColor;
+                case "Blockseminar": return blockSeminarColor;
+                case "Vorlesung": return lectureColor;
+                case "Vorlesung/Übung":return lectureExerciseColor;
+                case "E-Learning":return eLearningColor;    
+                default: return "black";
+            }
+        }
+    })
+    .style('stroke', function(d) {
+            switch(d.data.Veranstaltungsart){
+                case "Seminar":return seminarColorDark;
+                case "Blockseminar": return blockSeminarColorDark;
+                case "Vorlesung": return lectureColorDark;
+                case "Vorlesung/Übung":return lectureExerciseColorDark;
+                case "E-Learning":return eLearningColorDark;    
+                default: return "black";
+            }
     })
     .attr('cursor', 'pointer');
+ 
+    //Original version:
+//      nodeUpdate.select('circle.node')
+//    .attr('r', 10)
+//    .style("fill", function(d) {
+//        return d._children ? "lightsteelblue" : "#fff";
+//    })
+//    .attr('cursor', 'pointer');
     
+//Update node labels; cannot style background color of text items
 nodeUpdate.select('text')
-        .attr('style', function(d){
-    
-                var courseColor = "";
-                switch(d.data.Veranstaltungsart) {
-                  case "Seminar":
-                    courseColor = "background-color: blue;";
-                    break;
-                  case "Vorlesung":
-                    courseColor = "background-color: red;";
-                    break;
-                  default:
-                    courseColor  = "background-color: white;";
-                }
-    
-                if(selectedCourses.includes(d.data)){
-                    return courseColor + "text-decoration:underline;font-weight:bold";
-                }
-                return courseColor;
-        });
+        .style('fill', function(d) {
+            if(selectedCourses.includes(d.data)){
+            switch(d.data.Veranstaltungsart){
+                case "Seminar":return seminarColorDark;
+                case "Blockseminar": return blockSeminarColorDark;
+                case "Vorlesung": return lectureColorDark;
+                case "Vorlesung/Übung":return lectureExerciseColorDark;
+                case "E-Learning":return eLearningColorDark;  
+                default: return "black";
+            }}
+            return "black";
+    });
 
   // Remove any exiting nodes
   var nodeExit = node.exit().transition()
@@ -346,42 +387,47 @@ nodeUpdate.select('text')
       }
     }
     update(d);
-  }
-    
-    var seminarColor="background-color: peachpuff";
-    var blockSeminarColor="background-color: lemonchiffon";
-    var lectureColor="background-color: powderblue";
-    var lectureExerciseColor="background-color: lightgreen";
-    var eLearningColor="background-color: thistle";
-    
+  } 
     
     function addToSelection(course) {
       selectionPanel.append('p')
       .attr('class', 'text')
+      .on('click',function(d){
+            var index = selectedCourses.indexOf(course);
+            selectedCourses.splice(index,1);
+            update(node);
+      })
       .text(course.title)
       .attr('style',function(d){
           switch(course.Veranstaltungsart) {
                   case "Seminar":
-                    return seminarColor;
+                    return "background-color:"+seminarColor;
                     break;
                 case "Blockseminar":
-                    return blockSeminarColor;
+                    return "background-color:"+blockSeminarColor;
                     break;
                   case "Vorlesung":
-                    return lectureColor;
+                    return "background-color:"+lectureColor;
                     break;
                 case "Vorlesung/Übung":
-                    return lectureExerciseColor;
+                    return "background-color:"+lectureExerciseColor;
                     break;
                 case "E-Learning":
-                    return eLearningColor;
+                    return "background-color:"+eLearningColor;
                     break;
                   default:
                     return "background-color: black;";
          }
-      })
-      .append("br");
-        
+      }).style("position","relative")
+        .append("svg")
+            .attr("style","position:absolute;top:-4;right:-10")
+      .attr("height","24px").attr("width","24px")
+      .append("circle")
+      .attr("r","10px")
+            .attr("cx","11.5px")      .attr("cy","12.5px")
+      .attr("stroke","black")
+          .attr("stroke-width","2px")
+      .attr("fill","white");
 //      selectionPanel.select('g.text')
 //                .attr("style", function(d){   
 //                var courseColor = "";
@@ -397,7 +443,10 @@ nodeUpdate.select('text')
 //                }
 //                return courseColor;
 //        });
-
+        selectionPanel.selectAll("p.text")
+            .append("p")
+            .attr("style","position:absolute;top:-18.0;right:-16.5;font-size:22.5px;")
+            .text("×");
         
     }
    
