@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>E3 Selector: Enter your data</title>
+
+    <!-- CSS Files -->
+    <link href="c3.min.css" rel="stylesheet">
+
+    <!-- JS Files -->
+    <script type="text/javascript" src="d3.min.js"></script>
+    <script type="text/javascript" src="c3.min.js"></script>
+        
+    <style>
+    
+        #page1 {
+            margin:auto;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            width: 42%;
+            height: 98%;
+            font-size: 18pt;
+            font-family: "Futura";
+            background-color:lightblue;
+            padding:2%;
+            border-radius: 20px;
+        }
+
+/*
+        #page1 div {
+            margin-bottom: 30px;
+        }
+*/
+        
+        #container{
+            width: auto;
+        }
+
+        button {
+            font-size: 20pt;
+            font-family: "Futura";
+        }
+
+        select {
+            font-size: 12pt;
+            font-family: "Futura";
+        }
+
+        input {
+            font-size: 12pt;
+            font-family: "Futura";
+            margin:5px;
+        }
+
+
+        label {
+            font-size: 14pt;
+            font-family: "Futura";
+        }
+
+        .node circle {
+          fill: #fff;
+          stroke: black;
+          stroke-width: 2px;
+        }
+
+        .node text {
+          font: 12px sans-serif;
+          font-family: "Futura";  
+        }
+
+        .link {
+          fill: none;
+          stroke: lightgray;
+          stroke-width: 2px;
+        }
+
+        #rightPanel {
+            position:absolute;
+            display:block;
+            width: 20.5%;
+            height: auto;
+            top:0;
+            bottom: 0;
+           right:0;
+            padding: 10px;
+            margin: 0.5%;
+            background-color: whitesmoke;
+        }
+
+        #leftPanel {
+           display:block;
+            width: 20.5%;
+            height: auto;
+            position:absolute;
+           top:0;
+            left: 0;
+           bottom:0;
+            padding: 10px;
+            margin: 0.5%;
+            background-color: whitesmoke;
+        }
+
+        .panelTitle {
+            font-family: "Futura";  
+            font-size: 18px;
+            text-align: center;
+        }
+
+        #selectedCoursesPanel p { 
+            font-family: "Futura";  
+            font-size: 12px;
+            text-align: left;
+            margin: 5px;
+            padding: 7px 12px 7px 10px;
+            border-radius: 10px;
+        }
+
+        #middlePanel {
+            display:block;
+            position:absolute;
+            top:0;
+            bottom:0;
+            left:22.5%;
+            width:55%;
+            height:auto;
+            margin-top:0.5%;
+            margin-bottom: 0.5%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color:whitesmoke;
+        }
+
+        #detailedViewButton {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        
+        button{
+            border-radius: 15px;
+            padding:10px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+
+        #page3 {
+            height:100%;
+            width: 100%;
+            font-family: "Futura";
+            font-size: 14pt;
+            font-weight: normal;
+        }
+        
+        .selection{
+            background-color:white;
+            border-radius:15px;
+            padding:2%;
+            width:auto;
+            margin-bottom: 3%;
+        }
+        
+        .centered{
+            margin:0;
+            text-align: center;
+        }
+        
+        .header{
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2%;
+            font-size: 20;
+        }
+        
+        svg.mainElement {
+            width: 100%;
+            height: 100%;
+        }
+            
+        /* 
+        Generic Styling, for Desktops/Laptops 
+        */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        /* Zebra striping */
+        tr:nth-of-type(odd) { 
+            background: #eee; 
+        }
+        th { 
+            background: #333; 
+            color: white; 
+            font-weight: bold; 
+            cursor: s-resize;
+            background-repeat: no-repeat;
+            background-position: 3% center;
+        }
+        td, th { 
+            padding: 6px; 
+            border: 1px solid #ccc; 
+            text-align: left; 
+        }
+
+        th.des:after {
+          content: "\21E9";
+        }
+
+        th.aes:after {
+          content: "\21E7";
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="page1">
+        <p class="header">
+            E3 Selector
+        </p>
+        <div class = "selection">
+            Select your study program:<br>
+            <select>
+                <option value="AngInf">Angewandte Informatik</option>
+                <option value="BauIng">Bauingenieurwesen</option>
+                <option value="Elektro">Elektrotechnik und Informationstechnik</option>
+                <option value="ISE">ISE</option>
+                <option value="Komedia">Komedia</option>
+                <option value="Maschinenbau">Maschinenbau</option>
+                <option value="MedizinT">Medizintechnik</option>
+                <option value="Nano">Nano Engineering</option>
+                <option value="WIng">Wirtschaftsingenieurwesen</option>
+            </select>
+        </div>
+    
+        <div class = "selection">
+            Which languages would you like your courses to be in?<br>
+                <input type="checkbox" name="ok_languages" value="De" id="de">
+                    <label for="de">German</label><br>
+                <input type="checkbox" name="ok_languages" value="En" id="en">
+                    <label for="en">English</label><br>
+                <input type="checkbox" name="ok_languages" value="Tu" id="tu">
+                    <label for="tu">Turkish</label><br>
+                <input type="checkbox" name="ok_languages" value="Nl" id="nl">
+                    <label for="nl">Dutch</label><br>
+        </div>
+    
+        <div id="container"  class="selection">
+            When are you not available?<br>
+        </div>
+        <div class="centered">
+        <button type="button" onclick="showCourseTree()" class="centered">Show Courses</button>
+        </div>
+    </div>
+    
+    <div id="page2" style="display:none">
+        <div id=leftPanel>
+            <p class="panelTitle">
+                Filter Courses
+            </p>      
+        </div>
+        <div id="middlePanel">
+            <svg id="treeSVG" >
+            </svg>
+        </div>
+        <div id=rightPanel>
+            <p class="panelTitle">
+                Your Selected Courses
+            </p>
+            <div id=selectedCoursesPanel>
+            </div>
+            <button type="button" class="panelTitle" id="detailedViewButton" onclick="showDetailedView()">Detailed Overview</button>
+        </div> 
+    </div>
+    
+    <div id="page3" style="display:none">
+        <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
+    </div>
+
+<script>
+    
+    //PAGE1--------------------------------------------------------------------------------
+
+    document.createSvg = function(tagName) {
+        var svgNS = "http://www.w3.org/2000/svg";
+        return this.createElementNS(svgNS, tagName);
+    };
+
+    var unavailableTimes = new Set();
+    var colorText = "black";
+    var colorAvailable = "darkblue";
+    var colorUnavailable = "red"; 
+    var noColor = "none";
+
+    var grid = function(numberW, numberPerSide, sizeW, size, pixelsW, pixelsPerSide, colors) {
+        var svg = document.createSvg("svg");
+        svg.setAttribute("class", "mainElement")
+        svg.setAttribute("width", pixelsW);
+        svg.setAttribute("height", pixelsPerSide);
+        svg.setAttribute("viewBox", [0, 0, numberW * sizeW + numberW, numberPerSide * size + numberPerSide].join(" "));
+
+        var times = ["08 - 10","10 - 12","12 - 14","14 - 16","16 - 18","18 - 20"];
+        var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+        for(var i = 0; i < numberW; i++) {
+            for(var j = 0; j < numberPerSide; j++) {
+
+              var g = document.createSvg("g");
+              g.setAttribute("transform", ["translate(", i*sizeW + i, ",", j*size + j, ")"].join(""));
+              var number = numberPerSide * i + j;
+              var box = document.createSvg("rect");
+              box.setAttribute("width", sizeW);
+              box.setAttribute("height", size);
+                if(i==0 || j == 0){
+                    box.setAttribute("fill", noColor);
+                    if(i==0 && j>0){
+                        box.setAttribute("fill", noColor);
+
+                        var text = document.createSvg("text");
+                        text.appendChild(document.createTextNode(times[j-1]));
+                        text.setAttribute("fill", colorText);
+                        text.setAttribute("font-size", 5);
+                        text.setAttribute("x", size/4);
+                        text.setAttribute("y", size/1.7);
+                        g.appendChild(text);
+                    }
+                    if(j==0 && i>0){
+                        box.setAttribute("fill", noColor);
+                        var text = document.createSvg("text");
+                        text.appendChild(document.createTextNode(days[i-1]));
+                        text.setAttribute("fill", colorText);
+                        text.setAttribute("font-size", 5);
+                        text.setAttribute("x", size/2);
+                        text.setAttribute("y", sizeW/2.5);
+                        g.appendChild(text);
+                    }
+                }
+                else{
+                    box.setAttribute("fill", colorAvailable);
+                    box.setAttribute("id", days[i-1] + times[j-1]);                   
+                }
+              g.appendChild(box);
+              svg.appendChild(g);
+            }  
+        }
+        svg.addEventListener(
+            "click",
+            function(e){
+                var id = e.target.id;
+                var cell = e.target;
+                if(unavailableTimes.has(id)){
+                    unavailableTimes.delete(id);
+                    cell.setAttribute("fill",colorAvailable);
+                }
+                else{
+                    unavailableTimes.add(id);
+                    cell.setAttribute("fill",colorUnavailable);
+
+                }
+            },
+            false);
+        return svg;
+    };
+    
+    function showCourseTree(){
+        document.getElementById("page1").style.display = "none";
+        document.getElementById("page2").style.display = "block";
+    }
+
+    var container = document.getElementById("container");
+    container.appendChild(grid(8, 7, 22, 12, 700, 350, ["black", "white","none"]));
+
+
+    //PAGE2--------------------------------------------------------------------------------
+    
+    var treeData;
+
+    d3.json('e3_courses_final.json').then(function (data) {
+    treeData = data;
+
+        var seminarColor="peachpuff";
+        var blockSeminarColor="salmon";
+        var lectureColor="powderblue";
+        var lectureExerciseColor="lightgreen";
+        var eLearningColor="thistle";
+
+        var seminarColorDark="orange";
+        var blockSeminarColorDark="red";
+        var lectureColorDark="dodgerblue";
+        var lectureExerciseColorDark="limegreen";
+        var eLearningColorDark="darkorchid";
+
+        var selectedCourses = [];
+
+        // Set the dimensions and margins of the diagram
+        var margin = {top: 20, right: 10, bottom: 10, left: 30},
+            width = 800 - margin.left - margin.right,
+            height = 980 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+
+
+        var svg = d3.select("#treeSVG")
+            .attr("class", "mainElement")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .append("g") 
+            .attr("transform", "translate("
+              + margin.left + "," + margin.top + ")");
+
+        var selectionPanel = d3.select("#selectedCoursesPanel");
+
+        var i = 0,
+            duration = 750,
+            root;
+
+        // declares a tree layout and assigns the size
+        var treemap = d3.tree().size([height, width]);
+
+        // Assigns parent, children, height, depth
+        root = d3.hierarchy(treeData, function(d) {return d.children; });
+        root.x0 = height / 2;
+        root.y0 = 0;
+
+        // Collapse after the second level
+        root.children.forEach(collapse);
+
+        update(root);
+
+
+        // Collapse the node and all it's children
+         function collapse(d) {
+           if(d.children) {
+             d._children = d.children
+             d._children.forEach(collapse)
+             d.children = null
+           }
+         }
+        
+        //PAGE3 
+//        var titles = d3.keys(data[0]);
+        var titles = data.keys;
+        
+                    
+//            function filterJSON(json, key, value) {
+//              var result = {};
+//              for (var explosionIndex in json) {
+//                if (json[explosionIndex][key] === value) {
+//                  result[explosionIndex] = json[explosionIndex];
+//                }
+//              }
+//              alert("TEST");
+//            }
+        
+//        var par = d3.select('#page3');
+//        par.on('click', function(){
+//            var result = {};
+//            for (var explosionIndex in data) {
+//                if (data[explosionIndex]['Veranstaltungsart'] === 'Seminar') {
+//                  result[explosionIndex] = json[explosionIndex];
+//                }
+//              }
+//            alert(selectedCourses.title);
+//        });
+        
+        d3.select('#page3').append('table').attr("id",'courseTable');
+        var table = d3.select("#courseTable");
+        table.append('thead').append('tr');
+        table.append('tbody');
+        
+        //PAGE3 end
+        
+
+        function update(source) {
+
+            // Assigns the x and y position for the nodes
+            var treeData = treemap(root);
+
+            // Compute the new tree layout.
+            var nodes = treeData.descendants(),
+                links = treeData.descendants().slice(1);
+
+            // Normalize for fixed-depth.
+            nodes.forEach(function(d){ d.y = d.depth * 160});
+
+            // ****************** Nodes section ***************************
+
+            // Update the nodes...
+            var node = svg.selectAll('g.node')
+                .data(nodes, function(d) {
+                    return d.id || (d.id = ++i); });  
+
+            // Enter any new nodes at the parent's previous position.
+            var nodeEnter = node.enter().append('g')
+                .attr('class', 'node')
+                .attr("transform", function(d) {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";})
+                .on('click', click);
+
+            // Add Circle for the nodes
+            nodeEnter.append('circle')
+                .attr('class', 'node')
+                .attr('r', 1e-6)
+                .style("fill", function(d) {
+                    return d._children ? "lightsteelblue" : "#fff";});
+
+            // Add labels for the nodes     
+            nodeEnter.append('text')
+                .attr('class','node')
+                .attr("dy", ".35em")
+                .attr("x", function(d) {
+                    return d.children || d._children ? -13 : 13;})
+                .attr("text-anchor", function(d) {
+                    return d.children || d._children ? "end" : "start";})
+                .text(function(d) { return d.data.title; });
+
+            // UPDATE
+            var nodeUpdate = nodeEnter.merge(node);
+
+            // Transition to the proper position for the node
+            nodeUpdate.transition()
+                .duration(duration)
+                .attr("transform", function(d) { 
+                    return "translate(" + d.y + "," + d.x + ")";});
+
+            // Update the node attributes and style
+            nodeUpdate.select('circle.node')
+                .attr('r', 9)
+                .style('fill', function(d) {
+                    if(d.children){
+                      return "white";
+                    }
+                    else{
+                        switch(d.data.Veranstaltungsart){
+                            case "Seminar":return seminarColor;
+                            case "Blockseminar": return blockSeminarColor;
+                            case "Vorlesung": return lectureColor;
+                            case "Vorlesung/Übung":return lectureExerciseColor;
+                            case "E-Learning":return eLearningColor;    
+                            default: return "black";
+                        }
+                    }
+                })
+                .style('stroke', function(d) {
+                        switch(d.data.Veranstaltungsart){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "Vorlesung/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;    
+                            default: return "black";
+                        }
+                })
+                .attr('cursor', 'pointer');
+
+            //Update node labels; cannot style background color of text items
+            nodeUpdate.select('text')
+                .style('fill', function(d) {
+                    if(selectedCourses.includes(d.data)){
+                        switch(d.data.Veranstaltungsart){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "Vorlesung/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;  
+                            default: return "black";
+                        }
+                    }
+                    return "black";
+                });
+
+            // Remove any exiting nodes
+            var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + source.y + "," + source.x + ")";})
+                .remove();
+
+            // On exit reduce the node circles size to 0
+            nodeExit.select('circle')
+                .attr('r', 1e-6);
+
+            // On exit reduce the opacity of text labels
+            nodeExit.select('text')
+                .style('fill-opacity', 1e-6);
+
+            // ****************** links section ***************************
+
+            // Update the links...
+            var link = svg.selectAll('path.link')
+                .data(links, function(d) { return d.id; });
+
+            // Enter any new links at the parent's previous position.
+            var linkEnter = link.enter().insert('path', "g")
+                .attr("class", "link")
+                .attr('d', function(d){
+                    var o = {x: source.x0, y: source.y0}
+                    return diagonal(o, o)});
+
+            // UPDATE
+            var linkUpdate = linkEnter.merge(link);
+
+            // Transition back to the parent element position
+            linkUpdate.transition()
+                .duration(duration)
+                .attr('d', function(d){ return diagonal(d, d.parent) });
+
+            // Remove any exiting links
+            var linkExit = link.exit().transition()
+                .duration(duration)
+                .attr('d', function(d) {
+                    var o = {x: source.x, y: source.y}
+                    return diagonal(o, o)})
+                .remove();
+
+            // Store the old positions for transition.
+            nodes.forEach(function(d){
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+
+            // Creates a curved (diagonal) path from parent to the child nodes
+            function diagonal(s, d) {
+                path = `M ${s.y} ${s.x}
+                    C ${(s.y + d.y) / 2} ${s.x},
+                    ${(s.y + d.y) / 2} ${d.x},
+                    ${d.y} ${d.x}`
+                return path
+            }
+
+            // Toggle children on click.
+            function click(d) {
+                //Treat leaves differently: these are selectable courses
+                if(!d.children && !d._children){
+                    if(selectedCourses.includes(d.data)){
+                        var index = selectedCourses.indexOf(d.data);
+                        selectedCourses.splice(index,1);
+                    }
+                    else{
+                        selectedCourses.push(d.data);
+                    }       
+                } 
+                else{
+                    if (d.children) {
+                        d._children = d.children;
+                        d.children = null;
+                    } else {
+                        root.children.forEach(collapse);
+                        d.children = d._children;
+                        d._children = null;
+                    }
+                }
+                update(d);
+            } 
+
+            function addToSelection(course) {
+                selectionPanel.append('p')
+                    .attr('class', 'text')
+                    .on('click',function(d){
+                        alert(selectedCourses[0].title);
+                        var index = selectedCourses.indexOf(course);
+                        selectedCourses.splice(index,1);
+                        update(node);})
+                    .text(course.title)
+                    .attr('style',function(d){
+                        return "background-color:lightgray;"})
+                    .style("position","relative")
+                    .append("svg")
+                    .attr("style","position:absolute;top:-4;right:-10")
+                    .attr("height","24px")
+                    .attr("width","24px")
+                    .append("circle")
+                    .attr("r","10px")
+                    .attr("cx","12px")
+                    .attr("cy","12px")
+                    .attr("stroke",function(d) {
+                        switch(course.Veranstaltungsart){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "Vorlesung/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;    
+                            default: return "black";
+                        }
+                    })
+                    .attr("stroke-width","2px")
+                    .attr("fill",function(d) {
+                        switch(course.Veranstaltungsart){
+                            case "Seminar":return seminarColor;
+                            case "Blockseminar": return blockSeminarColor;
+                            case "Vorlesung": return lectureColor;
+                            case "Vorlesung/Übung":return lectureExerciseColor;
+                            case "E-Learning":return eLearningColor;    
+                            default: return "black";
+                        }
+                    });
+            }
+
+            //Refresh selection panel    
+            selectionPanel.selectAll("p").remove();    
+            selectedCourses.forEach(addToSelection);
+            selectionPanel.selectAll("p svg")
+                .append("text")
+                .attr("style","font-size:19px;")
+                .attr("x","50%")
+                .attr("y","60%")
+                .attr("dominant-baseline","middle")
+                .attr("text-anchor","middle")
+                .text("×");
+
+        
+        //PAGE3--------------------------------------------------------------------------------
+        var sortAscending = true;
+                     
+//		  var newDiv = d3.select('#page3').append('div');
+//        
+//                        newDiv.selectAll('p')
+////                        .data(data.children[0].children)
+//                        .data(selectedCourses)
+////                        .data(data.children[1].children)
+//                        .enter()
+//                        .append('p')
+//                        .text(function(d){return ""+d.catalog});
+        
+//        for(i = 1; i<5; i++){
+//                        newDiv.selectAll('p')
+////                        .data(data.children[0].children)
+//                        .data(data.children[i].children)
+//                        .enter()
+//                        .append('p')
+//                        .text(function(d){return ""+d.catalog});
+//        }
+            
+                    titles = ["title","recommendation (0-100)","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache"];
+                    var table = d3.select('#courseTable');
+                    var headers = table.select('thead').select('tr')
+		                   .selectAll('th')
+		                   .data(titles)
+                           .enter()
+		                   .append('th')
+		                   .text(function (d) {
+//                                var props  = Object.getOwnPropertyNames ( data.children[0].children );
+//                                var props  = Object.getOwnPropertyNames ( JSON.parse(selectedCourses.stringify()) );
+//                                alert(props);
+			                    return d;
+		                    });
+            
+        		  var rows = table.select('tbody');  
+            
+            rows.selectAll('tr')
+		               .data(selectedCourses).enter()
+		               .append('tr')
+                    .selectAll('td')
+		    .data(function (d) {
+		    	return titles.map(function (k) {
+		    		return { 'value': d[k], 'name': k};
+		    	});
+		    }).enter()
+		    .append('td')
+		    .attr('data-th', function (d) {
+		    	return d.name;
+		    })
+		    .text(function (d) {
+		    	return d.value;
+          });
+            
+            
+		    }
+    });
+            
+//            rows.selectAll('tr')
+//                .data(selectedCourses)
+//                .enter()
+//                .append('tr')
+//            .text(function(d){return d.title});
+//		  rows.selectAll('td')
+//		    .data(function (d) {
+////                alert(Object.getOwnPropertyNames(d));
+//		    	return selectedCourses.map(function (k) {
+//		    		return { 'value': d[k], 'name': k};
+//		    	});
+//		    }).enter()
+//		    .append('td')
+//		    .attr('data-th', function (d) {
+//		    	return d.name;
+//		    })
+//		    .text(function (d) {
+//		    	return d.value;
+//		    });
+//
+//        }
+//        });
+    
+    function showDetailedView(){
+        document.getElementById("page2").style.display = "none";
+        document.getElementById("page3").style.display = "block";
+    }
+    
+
+</script>
+</body>
