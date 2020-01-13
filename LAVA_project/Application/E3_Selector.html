@@ -20,7 +20,7 @@
             margin-bottom: 1%;
             width: 42%;
             height: 98%;
-            font-size: 18pt;
+            font-size: 12pt;
             font-family: "Futura";
             background-color:lightblue;
             padding:2%;
@@ -38,7 +38,7 @@
         }
 
         button {
-            font-size: 20pt;
+            font-size: 12pt;
             font-family: "Futura";
         }
 
@@ -51,11 +51,12 @@
             font-size: 12pt;
             font-family: "Futura";
             margin:5px;
+            
         }
 
 
         label {
-            font-size: 14pt;
+            font-size: 10pt;
             font-family: "Futura";
         }
 
@@ -238,13 +239,13 @@
     
         <div class = "selection">
             Which languages would you like your courses to be in?<br>
-                <input type="checkbox" name="ok_languages" value="De" id="de">
+                <input type="checkbox" name="ok_languages" value="Deutsch" id="de" class = "languageSelection">
                     <label for="de">German</label><br>
-                <input type="checkbox" name="ok_languages" value="En" id="en">
+                <input type="checkbox" name="ok_languages" value="Englisch" id="en" class = "languageSelection">
                     <label for="en">English</label><br>
-                <input type="checkbox" name="ok_languages" value="Tu" id="tu">
+                <input type="checkbox" name="ok_languages" value="Türkisch" id="tu" class = "languageSelection">
                     <label for="tu">Turkish</label><br>
-                <input type="checkbox" name="ok_languages" value="Nl" id="nl">
+                <input type="checkbox" name="ok_languages" value="Niederländisch" id="nl" class = "languageSelection">
                     <label for="nl">Dutch</label><br>
         </div>
     
@@ -252,7 +253,7 @@
             When are you not available?<br>
         </div>
         <div class="centered">
-        <button type="button" onclick="showCourseTree()" class="centered">Show Courses</button>
+        <button type="button" id="showPage2Button" class="centered">Show Courses</button>
         </div>
     </div>
     
@@ -294,6 +295,8 @@
     var colorAvailable = "darkblue";
     var colorUnavailable = "red"; 
     var noColor = "none";
+    
+    var treeData; //For page 2
 
     var grid = function(numberW, numberPerSide, sizeW, size, pixelsW, pixelsPerSide, colors) {
         var svg = document.createSvg("svg");
@@ -365,21 +368,144 @@
         return svg;
     };
     
-    function showCourseTree(){
-        document.getElementById("page1").style.display = "none";
-        document.getElementById("page2").style.display = "block";
-    }
-
     var container = document.getElementById("container");
     container.appendChild(grid(8, 7, 22, 12, 700, 350, ["black", "white","none"]));
-
-
-    //PAGE2--------------------------------------------------------------------------------
     
-    var treeData;
+//    function showCourseTree(){
+////        filterCourses_hardConstraints();
+//        checkIfAnyCoursesAreSelected();
+//        document.getElementById("page1").style.display = "none";
+//        document.getElementById("page2").style.display = "block";
+//    }
+    
+//    function checkIfAnyCoursesAreSelected(){
+//        
+//        var sumOfCourses = 0;
+//        for(i=0;i<5;i++){
+//            sumOfCourses = sumOfCourses + treeData.children[i].children.length;
+//        }
+//        alert(sumOfCourses);
+//        
+//    }
+    
+//    function filterCourses_hardConstraints(){
+//        //Select which languages the user selected
+//        var checkedLanguages = []; 
+//        var inputElements = document.getElementsByClassName('languageSelection');
+//        for(var i=0; inputElements[i]; ++i){
+//            if(inputElements[i].checked){
+//                checkedLanguages.push(inputElements[i].value);
+//            }
+//        }
+//        
+//        //Remove all courses held in languages not selected by the user
+//        for(i=0; i<5; i++){
+//            var subtree = treeData.children[i].children;
+//            var deleteCourse = false;
+//            alert(subtree.length);
+////            for(course : subtree){
+//            subtree.forEach(function checkLanguage(course){
+//                //Must handle occurences of Deutsch;Englisch (multiple languages)
+//                deleteCourse = true;
+//                for(j=0; j<checkedLanguages.length; j++){
+//                    if(course.Sprache.includes(checkedLanguages[j])){
+//                        deleteCourse = false;
+//                    }
+//                }
+//                if(deleteCourse){
+////                    subtree.splice(subtree.indexOf(course));
+//                    treeData.children[i].children.splice(treeData.children[i].children.indexOf(course));
+//                }
+//            });
+////            for(j=0; j<subtree.length; j++){
+////                var course = subtree[j];
+////                if(!checkedLanguages.includes(course.Sprache)){
+////                   subtree.splice(j,1); 
+////                }
+////            }
+//            alert(subtree.length);
+//        }
+        //alert(Object.getOwnPropertyNames(treeData.children[0].children));
+//    } 
+
+
+    //PAGE2-------------------------------------------------------------------------------
 
     d3.json('e3_courses_final.json').then(function (data) {
-    treeData = data;
+        
+        treeData = data;
+        
+        var i = 0,
+        duration = 750,
+        root;
+        
+        // Set the dimensions and margins of the diagram
+        var margin = {top: 20, right: 10, bottom: 10, left: 30},
+            width = 800 - margin.left - margin.right,
+            height = 980 - margin.top - margin.bottom;
+        
+        // declares a tree layout and assigns the size
+        var treemap = d3.tree().size([height, width]);
+        
+        var showPage2Button = d3.select('#showPage2Button');
+        showPage2Button.on('click',filterAccordingToHardConstraints);
+        
+        function filterAccordingToHardConstraints(){
+            //Select which languages the user selected
+            var tempData = JSON.parse(JSON.stringify(data));
+//            alert(Object.getOwnPropertyNames(tempData.children));
+            var checkedLanguages = []; 
+            var inputElements = document.getElementsByClassName('languageSelection');
+            var sumOfCourses = 0;
+            for(var i=0; inputElements[i]; ++i){
+                if(inputElements[i].checked){
+                    checkedLanguages.push(inputElements[i].value);
+                }
+            }
+
+            //Remove all courses held in languages not selected by the user
+            for(i=0; i<5; i++){
+                var kept = 0;
+                var deleted = 0;
+                var subtree = tempData.children[i].children;
+                var deleteCourse = false;
+                for(k=subtree.length-1; k>=0; k--){
+                    var course = subtree[k];
+                    //Must handle occurences of Deutsch;Englisch (multiple languages)
+                    deleteCourse = true;
+                    for(j=0; j<checkedLanguages.length; j++){
+                        if(course.Sprache.includes(checkedLanguages[j])){
+                            deleteCourse = false;
+                            kept = kept+1;
+                        }
+                    }
+                    if(deleteCourse){
+                        deleted = deleted+1;
+                        tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
+                    }
+                }
+                sumOfCourses = sumOfCourses + tempData.children[i].children.length;
+            }   
+            if(sumOfCourses > 0){           
+                treeData = tempData;
+
+//                // Assigns parent, children, height, depth
+                root = d3.hierarchy(treeData, function(d) {return d.children; });
+//                root.x0 = height / 2;
+//                root.y0 = 0;
+//
+//                // Collapse after the second level
+                root.children.forEach(collapse);
+//
+                update(root);
+                
+                document.getElementById("page1").style.display = "none";
+                document.getElementById("page2").style.display = "block";
+            }
+            else{
+                alert("Your selected options leave no courses to display!");
+            }
+        }
 
         var seminarColor="peachpuff";
         var blockSeminarColor="salmon";
@@ -394,11 +520,12 @@
         var eLearningColorDark="darkorchid";
 
         var selectedCourses = [];
+        var catalogNames = ["BNE","IOS","Kultur und Gesellschaft","Natur und Technik","Wirtschaft"];
 
-        // Set the dimensions and margins of the diagram
-        var margin = {top: 20, right: 10, bottom: 10, left: 30},
-            width = 800 - margin.left - margin.right,
-            height = 980 - margin.top - margin.bottom;
+//        // Set the dimensions and margins of the diagram
+//        var margin = {top: 20, right: 10, bottom: 10, left: 30},
+//            width = 800 - margin.left - margin.right,
+//            height = 980 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
         // appends a 'group' element to 'svg'
@@ -415,12 +542,8 @@
 
         var selectionPanel = d3.select("#selectedCoursesPanel");
 
-        var i = 0,
-            duration = 750,
-            root;
-
         // declares a tree layout and assigns the size
-        var treemap = d3.tree().size([height, width]);
+//        var treemap = d3.tree().size([height, width]);
 
         // Assigns parent, children, height, depth
         root = d3.hierarchy(treeData, function(d) {return d.children; });
@@ -442,11 +565,7 @@
            }
          }
         
-        //PAGE3 
-//        var titles = d3.keys(data[0]);
-        var titles = data.keys;
-        
-                    
+        //PAGE3                    
 //            function filterJSON(json, key, value) {
 //              var result = {};
 //              for (var explosionIndex in json) {
@@ -514,8 +633,20 @@
                 .attr('class','node')
                 .attr("dy", ".35em")
                 .attr("x", function(d) {
+                    //Node labels for empty catalog nodes should appear left
+                    if(!d.children && !d._children){
+                        if(catalogNames.includes(d.data.title)){
+                            return -13;
+                        }
+                    }
                     return d.children || d._children ? -13 : 13;})
                 .attr("text-anchor", function(d) {
+                    //Node labels for empty catalog nodes should appear left
+                    if(!d.children && !d._children){
+                        if(catalogNames.includes(d.data.title)){
+                            return "end";
+                        }
+                    }
                     return d.children || d._children ? "end" : "start";})
                 .text(function(d) { return d.data.title; });
 
@@ -532,8 +663,11 @@
             nodeUpdate.select('circle.node')
                 .attr('r', 9)
                 .style('fill', function(d) {
-                    if(d.children){
-                      return "white";
+                    //Node is expanded
+                    if(d._children){
+                        if(d._children.length > 0){
+                            return "black";
+                        }
                     }
                     else{
                         switch(d.data.Veranstaltungsart){
@@ -542,7 +676,7 @@
                             case "Vorlesung": return lectureColor;
                             case "Vorlesung/Übung":return lectureExerciseColor;
                             case "E-Learning":return eLearningColor;    
-                            default: return "black";
+                            default: return "white";
                         }
                     }
                 })
@@ -637,13 +771,17 @@
             function click(d) {
                 //Treat leaves differently: these are selectable courses
                 if(!d.children && !d._children){
-                    if(selectedCourses.includes(d.data)){
-                        var index = selectedCourses.indexOf(d.data);
-                        selectedCourses.splice(index,1);
+                    if(catalogNames.includes(d.data.title)){
+                        //Should be a non-responsive node
+                    }else{
+                        if(selectedCourses.includes(d.data)){
+                            var index = selectedCourses.indexOf(d.data);
+                            selectedCourses.splice(index,1);
+                        }
+                        else{
+                            selectedCourses.push(d.data);
+                        } 
                     }
-                    else{
-                        selectedCourses.push(d.data);
-                    }       
                 } 
                 else{
                     if (d.children) {
@@ -662,7 +800,7 @@
                 selectionPanel.append('p')
                     .attr('class', 'text')
                     .on('click',function(d){
-                        alert(selectedCourses[0].title);
+//                        alert(selectedCourses[0].title);
                         var index = selectedCourses.indexOf(course);
                         selectedCourses.splice(index,1);
                         update(node);})
@@ -716,46 +854,23 @@
         
         //PAGE3--------------------------------------------------------------------------------
         var sortAscending = true;
-                     
-//		  var newDiv = d3.select('#page3').append('div');
-//        
-//                        newDiv.selectAll('p')
-////                        .data(data.children[0].children)
-//                        .data(selectedCourses)
-////                        .data(data.children[1].children)
-//                        .enter()
-//                        .append('p')
-//                        .text(function(d){return ""+d.catalog});
-        
-//        for(i = 1; i<5; i++){
-//                        newDiv.selectAll('p')
-////                        .data(data.children[0].children)
-//                        .data(data.children[i].children)
-//                        .enter()
-//                        .append('p')
-//                        .text(function(d){return ""+d.catalog});
-//        }
             
-                    titles = ["title","recommendation (0-100)","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache"];
-                    var table = d3.select('#courseTable');
-                    var headers = table.select('thead').select('tr')
-		                   .selectAll('th')
-		                   .data(titles)
-                           .enter()
-		                   .append('th')
-		                   .text(function (d) {
-//                                var props  = Object.getOwnPropertyNames ( data.children[0].children );
-//                                var props  = Object.getOwnPropertyNames ( JSON.parse(selectedCourses.stringify()) );
-//                                alert(props);
-			                    return d;
-		                    });
+        titles = ["title","recommendation (0-100)","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache"];
+        var table = d3.select('#courseTable');
+        var headers = table.select('thead').select('tr')
+               .selectAll('th')
+               .data(titles)
+               .enter()
+               .append('th')
+               .text(function (d) {
+                    return d;
+                });
             
-        		  var rows = table.select('tbody');  
-            
-            rows.selectAll('tr')
-		               .data(selectedCourses).enter()
-		               .append('tr')
-                    .selectAll('td')
+        var rows = table.select('tbody');  
+        rows.selectAll('tr')
+            .data(selectedCourses).enter()
+            .append('tr')
+            .selectAll('td')
 		    .data(function (d) {
 		    	return titles.map(function (k) {
 		    		return { 'value': d[k], 'name': k};
@@ -768,33 +883,10 @@
 		    .text(function (d) {
 		    	return d.value;
           });
-            
-            
-		    }
+             
+        }
+        
     });
-            
-//            rows.selectAll('tr')
-//                .data(selectedCourses)
-//                .enter()
-//                .append('tr')
-//            .text(function(d){return d.title});
-//		  rows.selectAll('td')
-//		    .data(function (d) {
-////                alert(Object.getOwnPropertyNames(d));
-//		    	return selectedCourses.map(function (k) {
-//		    		return { 'value': d[k], 'name': k};
-//		    	});
-//		    }).enter()
-//		    .append('td')
-//		    .attr('data-th', function (d) {
-//		    	return d.name;
-//		    })
-//		    .text(function (d) {
-//		    	return d.value;
-//		    });
-//
-//        }
-//        });
     
     function showDetailedView(){
         document.getElementById("page2").style.display = "none";
