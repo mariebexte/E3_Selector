@@ -149,11 +149,13 @@
         }
 
         #page3 {
-            height:100%;
-            width: 100%;
+            height:99%;
+            width: 99%;
             font-family: "Futura";
-            font-size: 14pt;
-            font-weight: normal;
+            font-size: 12pt;
+            margin:0.5%;
+            padding: 1%;
+            background-color:whitesmoke;
         }
         
         .selection{
@@ -185,27 +187,45 @@
         Generic Styling, for Desktops/Laptops 
         */
         table { 
-            width: 100%; 
+            width: 98%; 
             border-collapse: collapse; 
         }
         /* Zebra striping */
+/*
         tr:nth-of-type(odd) { 
             background: #eee; 
         }
+*/
+        tr{
+            background:white;
+        }
         th { 
-            background: #333; 
+            background: slategray; 
             color: white; 
-            font-weight: bold; 
             cursor: s-resize;
+            font-weight: normal;
             background-repeat: no-repeat;
             background-position: 3% center;
         }
         td, th { 
             padding: 6px; 
-            border: 1px solid #ccc; 
+            border: 2px solid whitesmoke; 
             text-align: left; 
         }
+        
+        .fakeButton {
+          text-decoration: none;
+          background-color: #EEEEEE;
+          color: #333333;
+          padding: 2px 6px 2px 6px;
+          border-top: 1px solid #CCCCCC;
+          border-right: 1px solid #333333;
+          border-bottom: 1px solid #333333;
+          border-left: 1px solid #CCCCCC;
+            border-radius: 15px;
+        }
 
+/*
         th.des:after {
           content: "\21E9";
         }
@@ -213,6 +233,7 @@
         th.aes:after {
           content: "\21E7";
         }
+*/
 
     </style>
 </head>
@@ -431,7 +452,7 @@
 
     //PAGE2-------------------------------------------------------------------------------
 
-    d3.json('e3_courses_final.json').then(function (data) {
+    d3.json('e3_courses_withLinks_final.json').then(function (data) {
         
         treeData = data;
         
@@ -442,70 +463,13 @@
         // Set the dimensions and margins of the diagram
         var margin = {top: 20, right: 10, bottom: 10, left: 30},
             width = 800 - margin.left - margin.right,
-            height = 980 - margin.top - margin.bottom;
+            height = 830 - margin.top - margin.bottom;
         
         // declares a tree layout and assigns the size
         var treemap = d3.tree().size([height, width]);
         
         var showPage2Button = d3.select('#showPage2Button');
         showPage2Button.on('click',filterAccordingToHardConstraints);
-        
-        function filterAccordingToHardConstraints(){
-            //Select which languages the user selected
-            var tempData = JSON.parse(JSON.stringify(data));
-//            alert(Object.getOwnPropertyNames(tempData.children));
-            var checkedLanguages = []; 
-            var inputElements = document.getElementsByClassName('languageSelection');
-            var sumOfCourses = 0;
-            for(var i=0; inputElements[i]; ++i){
-                if(inputElements[i].checked){
-                    checkedLanguages.push(inputElements[i].value);
-                }
-            }
-
-            //Remove all courses held in languages not selected by the user
-            for(i=0; i<5; i++){
-                var kept = 0;
-                var deleted = 0;
-                var subtree = tempData.children[i].children;
-                var deleteCourse = false;
-                for(k=subtree.length-1; k>=0; k--){
-                    var course = subtree[k];
-                    //Must handle occurences of Deutsch;Englisch (multiple languages)
-                    deleteCourse = true;
-                    for(j=0; j<checkedLanguages.length; j++){
-                        if(course.Sprache.includes(checkedLanguages[j])){
-                            deleteCourse = false;
-                            kept = kept+1;
-                        }
-                    }
-                    if(deleteCourse){
-                        deleted = deleted+1;
-                        tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
-                    }
-                }
-                sumOfCourses = sumOfCourses + tempData.children[i].children.length;
-            }   
-            if(sumOfCourses > 0){           
-                treeData = tempData;
-
-//                // Assigns parent, children, height, depth
-                root = d3.hierarchy(treeData, function(d) {return d.children; });
-//                root.x0 = height / 2;
-//                root.y0 = 0;
-//
-//                // Collapse after the second level
-                root.children.forEach(collapse);
-//
-                update(root);
-                
-                document.getElementById("page1").style.display = "none";
-                document.getElementById("page2").style.display = "block";
-            }
-            else{
-                alert("Your selected options leave no courses to display!");
-            }
-        }
 
         var seminarColor="peachpuff";
         var blockSeminarColor="salmon";
@@ -593,6 +557,93 @@
         table.append('tbody');
         
         //PAGE3 end
+        
+        function filterAccordingToHardConstraints(){
+            //Select which languages the user selected
+            var tempData = JSON.parse(JSON.stringify(data));
+//            alert(Object.getOwnPropertyNames(tempData.children));
+            var checkedLanguages = []; 
+            var inputElements = document.getElementsByClassName('languageSelection');
+            var sumOfCourses = 0;
+            for(var i=0; inputElements[i]; ++i){
+                if(inputElements[i].checked){
+                    checkedLanguages.push(inputElements[i].value);
+                }
+            }
+
+            //Remove all courses held in languages not selected by the user
+            for(i=0; i<5; i++){
+                var kept = 0;
+                var deleted = 0;
+                var subtree = tempData.children[i].children;
+                var deleteCourse = false;
+//                alert("data: "+data.children[i].children.length);
+//                alert("tempData: "+tempData.children[i].children.length);
+//                alert("treeData: "+treeData.children[i].children.length);
+//                alert(subtree.length);
+    //            for(course : subtree){
+//                subtree.forEach(function(course)
+                for(k=subtree.length-1; k>=0; k--){
+//                    alert(k);
+                    var course = subtree[k];
+//                    alert(course.Sprache);
+                    //Must handle occurences of Deutsch;Englisch (multiple languages)
+                    deleteCourse = true;
+                    for(j=0; j<checkedLanguages.length; j++){
+                        if(course.Sprache.includes(checkedLanguages[j])){
+                            deleteCourse = false;
+                            kept = kept+1;
+                        }
+                    }
+                    if(deleteCourse){
+                        deleted = deleted+1;
+//                        alert("Delete this one.");
+//                        alert("Before: "+tempData.children[i].children.length);
+//                        subtree.splice(subtree.indexOf(course));
+                        tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
+//                        alert("After :"+tempData.children[i].children.length);
+                    }
+                }
+                //);
+//            for(j=0; j<subtree.length; j++){
+//                var course = subtree[j];
+//                if(!checkedLanguages.includes(course.Sprache)){
+//                   subtree.splice(j,1); 
+//                }
+//            }
+//                alert("data: "+data.children[i].children.length);
+//                alert("kept: "+kept);
+//                alert("deleted: "+deleted);
+//                alert("tempData: "+tempData.children[i].children.length);
+//                alert("treeData: "+treeData.children[i].children.length);
+//                sumOfCourses = sumOfCourses + subtree.length;
+                sumOfCourses = sumOfCourses + tempData.children[i].children.length;
+            }
+        
+//            alert("sum of courses: "+ sumOfCourses);    
+            if(sumOfCourses > 0){
+                
+//                alert("props: "+Object.getOwnPropertyNames(tempData.children[2].children));
+                
+                treeData = tempData;
+
+//                // Assigns parent, children, height, depth
+                root = d3.hierarchy(treeData, function(d) {return d.children; });
+                root.x0 = height / 2;
+                root.y0 = 0;
+//
+//                // Collapse after the second level
+                root.children.forEach(collapse);
+//
+                update(root);
+                
+                document.getElementById("page1").style.display = "none";
+                document.getElementById("page2").style.display = "block";
+            }
+            else{
+                alert("Your selected options leave no courses to display!");
+            }
+        }
         
 
         function update(source) {
@@ -855,7 +906,7 @@
         //PAGE3--------------------------------------------------------------------------------
         var sortAscending = true;
             
-        titles = ["title","recommendation (0-100)","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache"];
+        titles = ["title","Recommendation","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache","link"];
         var table = d3.select('#courseTable');
         var headers = table.select('thead').select('tr')
                .selectAll('th')
@@ -880,9 +931,38 @@
 		    .attr('data-th', function (d) {
 		    	return d.name;
 		    })
+            .attr('class',function(d){
+                return d.name;
+            })
 		    .text(function (d) {
-		    	return d.value;
+                if(! (d.name == "link")){
+                    return d.value;
+                }
           });
+            
+        rows.selectAll('a').remove();    
+        rows.selectAll('.link').append('a')
+            .attr('href',function(d){
+//                if(d.name == "link"){
+                    return d.value;
+//                }
+            })
+            .attr('target','_blank')
+            .attr('class','fakeButton')
+            .text("LSF");
+            
+//        rows.selectAll('svg').remove();    
+//        rows.selectAll('.Recommendation').append('svg').append('rect')
+//            .attr('height','5px')
+//            .attr('width',function(d){
+//                alert(d.value);
+//                  if(d.value > 0)
+//                    return d.value+"%";
+//                  })
+//            .text(function(d){
+//                  if(d.value > 0)
+//                    return d.value+"%";
+//                  });
              
         }
         

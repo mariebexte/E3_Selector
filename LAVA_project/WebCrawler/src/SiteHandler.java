@@ -54,6 +54,9 @@ public class SiteHandler {
 		retrieveDocument(url);
 
 		if (!wroteColumnHeaders) {
+			//include links to courses
+			bw.write("link,");
+			
 			// First column will hold the title of a course
 			bw.write("title,");
 			
@@ -70,6 +73,9 @@ public class SiteHandler {
 			bw.newLine();
 			wroteColumnHeaders = true;
 		}
+		
+		// Write lsf url
+		bw.write("\""+url+"\",");
 
 		// Extract the title
 		Elements elements = htmlDocument.getElementsByTag("title");
