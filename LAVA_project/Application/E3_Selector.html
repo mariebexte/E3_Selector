@@ -149,13 +149,22 @@
         }
 
         #page3 {
-            height:99%;
-            width: 99%;
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            height:auto;
+            width:auto;
             font-family: "Futura";
             font-size: 12pt;
             margin:0.5%;
             padding: 1%;
             background-color:whitesmoke;
+        }
+        
+        #page3 p{
+            text-align: center;
         }
         
         .selection{
@@ -935,7 +944,7 @@
                 return d.name;
             })
 		    .text(function (d) {
-                if(! (d.name == "link")){
+                if(!(d.name == "link") && !(d.name == "Recommendation")){
                     return d.value;
                 }
           });
@@ -951,18 +960,28 @@
             .attr('class','fakeButton')
             .text("LSF");
             
-//        rows.selectAll('svg').remove();    
-//        rows.selectAll('.Recommendation').append('svg').append('rect')
-//            .attr('height','5px')
-//            .attr('width',function(d){
-//                alert(d.value);
-//                  if(d.value > 0)
-//                    return d.value+"%";
-//                  })
-//            .text(function(d){
-//                  if(d.value > 0)
-//                    return d.value+"%";
-//                  });
+        rows.selectAll('svg').remove();    
+        rows.selectAll('.Recommendation').append('svg')
+            .attr('height','30px')
+            .attr('width',function(d){
+                  if(d.value > 0)
+                    return d.value+"%";
+                  })
+            .append('rect')
+            .attr('fill','palegreen')
+            .attr('height','30px')
+            .attr('width',function(d){
+                  if(d.value > 0)
+                    return "100%";
+                  });
+        rows.selectAll('.Recommendation').selectAll('svg')
+            .append('text')
+            .text(function(d){
+                  if(d.value > 0)
+                    return d.value+"%";
+                  })
+            .attr('x','5%')
+            .attr('y','70%');
              
         }
         
