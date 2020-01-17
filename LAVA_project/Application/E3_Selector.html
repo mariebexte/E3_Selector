@@ -27,6 +27,20 @@
             border-radius: 20px;
         }
         
+        #page2 p{
+            margin:0;
+            font-family: "Futura";
+            text-align: center;
+        }
+        
+/*
+        #page2 div{
+            border-radius: 15px;
+            padding: 15px;
+            margin:2%;
+        }
+*/
+        
         .selection p{
             padding:0;
             margin:0 0 5px 0;
@@ -98,7 +112,7 @@
 
         #leftPanel {
            display:block;
-            width: 20.5%;
+            width: 12%;
             height: auto;
             position:absolute;
            top:0;
@@ -108,7 +122,20 @@
             margin: 0.5%;
             background-color: whitesmoke;
         }
-
+        
+        .filterClass{
+            border-radius: 15px;
+            padding: 10px;
+            margin:4% 2% 4% 2%;
+        }
+        
+        .filterClass label{
+            display: inline-block;
+            width:70%;
+            padding-left:5px;
+            padding-right:5px;
+        }
+        
         .panelTitle {
             font-family: "Futura";  
             font-size: 18px;
@@ -326,7 +353,40 @@
         <div id=leftPanel>
             <p class="panelTitle">
                 Filter Courses
-            </p>      
+            </p>  
+            <div style="background-color:white;" class="filterClass">
+                <p>Course Type</p>
+                <input type="checkbox" name="Veranstaltungsart" value="Vorlesung/Übung" id="lec_ex" class = "courseTypeSelection">
+                    <label for="lec_ex" style="background-color:lightgreen;">Lecture + Exercise</label><br>
+                <input type="checkbox" name="Veranstaltungsart" value="Vorlesung" id="lec" class = "courseTypeSelection">
+                    <label for="lec" style="background-color:powderblue;">Lecture</label><br>
+                <input type="checkbox" name="Veranstaltungsart" value="Seminar" id="sem" class = "courseTypeSelection">
+                    <label for="sem" style="background-color:peachpuff">Seminar</label><br>
+                <input type="checkbox" name="Veranstaltungsart" value="Blockseminar" id="sem_bl" class = "courseTypeSelection">
+                    <label for="sem_bl" style=background-color:salmon>Blocked Seminar</label><br>
+                <input type="checkbox" name="Veranstaltungsart" value="E-Learning" id="e_learn" class = "courseTypeSelection">
+                    <label for="e_learn" style="background-color:thistle">E-Learning</label><br>
+            </div>
+            <div style="background-color:white;" class="filterClass">
+                <p>Exam Type</p>
+                <input type="checkbox" name="exam" value="Written" id="written" class = "examSelection">
+                    <label for="written">Written Exam</label><br>
+                <input type="checkbox" name="exam" value="Oral" id="oral" class = "examSelection">
+                    <label for="oral">Oral</label><br>
+                <input type="checkbox" name="exam" value="Presentation" id="presentation" class = "examSelection">
+                    <label for="presentation">Presentation</label><br>
+                <input type="checkbox" name="exam" value="Report" id="report" class = "examSelection">
+                    <label for="report">Report</label><br>
+            </div>
+            <div style="background-color:white;" class="filterClass">
+                <p>Location</p>
+                <input type="checkbox" name="location" value="Essen" id="essen" class = "locationSelection">
+                    <label for="essen">Essen</label><br>
+                <input type="checkbox" name="location" value="Duisburg" id="duisburg" class = "locationSelection">
+                    <label for="duisburg">Duisburg</label><br>
+                <input type="checkbox" name="location" value="NRW" id="nrw" class = "locationSelection">
+                    <label for="nrw">NRW</label><br>
+            </div>
         </div>
         <div id="middlePanel">
             <svg id="treeSVG" >
@@ -355,8 +415,23 @@
 
 <script>
     
-    //PAGE1--------------------------------------------------------------------------------
+        var seminarColor="peachpuff";
+        var blockSeminarColor="salmon";
+        var lectureColor="powderblue";
+        var lectureExerciseColor="lightgreen";
+        var eLearningColor="thistle";
 
+        var seminarColorDark="orange";
+        var blockSeminarColorDark="red";
+        var lectureColorDark="dodgerblue";
+        var lectureExerciseColorDark="limegreen";
+        var eLearningColorDark="darkorchid";
+    
+    // Check all boxes in the beginning
+    d3.select('#page2').selectAll('input').attr('checked','true');
+    
+    //PAGE1--------------------------------------------------------------------------------
+    
     document.createSvg = function(tagName) {
         var svgNS = "http://www.w3.org/2000/svg";
         return this.createElementNS(svgNS, tagName);
@@ -364,7 +439,7 @@
 
     var unavailableTimes = new Set();
     var colorText = "black";
-    var colorAvailable = "darkblue";
+    var colorAvailable = "lightgreen";
     var colorUnavailable = "red"; 
     var noColor = "none";
     
@@ -510,7 +585,6 @@
         //alert(Object.getOwnPropertyNames(treeData.children[0].children));
 //    } 
 
-
     //PAGE2-------------------------------------------------------------------------------
 
     d3.json('e3_courses_withLinks_final.json').then(function (data) {
@@ -531,18 +605,6 @@
         
         var showPage2Button = d3.select('#showPage2Button');
         showPage2Button.on('click',filterAccordingToHardConstraints);
-
-        var seminarColor="peachpuff";
-        var blockSeminarColor="salmon";
-        var lectureColor="powderblue";
-        var lectureExerciseColor="lightgreen";
-        var eLearningColor="thistle";
-
-        var seminarColorDark="orange";
-        var blockSeminarColorDark="red";
-        var lectureColorDark="dodgerblue";
-        var lectureExerciseColorDark="limegreen";
-        var eLearningColorDark="darkorchid";
 
         var selectedCourses = [];
         var catalogNames = ["BNE","IOS","Kultur und Gesellschaft","Natur und Technik","Wirtschaft"];
@@ -618,6 +680,47 @@
         table.append('tbody');
         
         //PAGE3 end
+        
+        d3.select('#page2').selectAll('input').on('click',function (){
+            if(this.checked == true){
+                filterTreeData(this.name,this.value,false);
+            }else{
+                filterTreeData(this.name,this.value,true);
+            }
+        });
+        
+        function filterTreeData(key, value, remove){
+            
+            alert("key "+key);
+            alert("value "+value);
+            
+            var tempData = JSON.parse(JSON.stringify(treeData));
+            
+            //Remove all courses held in languages not selected by the user
+            for(i=0; i<5; i++){
+                var subtree = tempData.children[i].children;
+                var deleteCourse = false;
+                //Distinguish checked/unchecked
+                for(k=subtree.length-1; k>=0; k--){
+                    var course = subtree[k];
+                    deleteCourse = false;
+//                    alert("key of course "+course[key]);
+                    if(course[key] == value){
+                        deleteCourse = true
+                    }
+                    if(deleteCourse){
+                        tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
+                    }
+                }
+            } 
+            treeData = tempData;
+
+                // Assigns parent, children, height, depth
+                root = d3.hierarchy(treeData, function(d) {return d.children; });
+                root.x0 = height / 2;
+                root.y0 = 0;
+                update(root);      
+        }
         
         function filterAccordingToHardConstraints(){
             //Select which languages the user selected
