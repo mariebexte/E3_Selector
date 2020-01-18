@@ -315,16 +315,16 @@
         </p>
         <div class = "selection">
             <p>Select your study program:</p>
-            <select>
-                <option value="AngInf">Angewandte Informatik</option>
-                <option value="BauIng">Bauingenieurwesen</option>
-                <option value="Elektro">Elektrotechnik und Informationstechnik</option>
+            <select id=studyProgram>
+                <option value="Angewandte Informatik">Angewandte Informatik</option>
+                <option value="Bauingenieurwesen">Bauingenieurwesen</option>
+                <option value="Elektrotechnik und Informationstechnik">Elektrotechnik und Informationstechnik</option>
                 <option value="ISE">ISE</option>
                 <option value="Komedia">Komedia</option>
                 <option value="Maschinenbau">Maschinenbau</option>
-                <option value="MedizinT">Medizintechnik</option>
-                <option value="Nano">Nano Engineering</option>
-                <option value="WIng">Wirtschaftsingenieurwesen</option>
+                <option value="MedizinTechnik">Medizintechnik</option>
+                <option value="Nano Engineering">Nano Engineering</option>
+                <option value="Wirtschaftsingenieurwesen">Wirtschaftsingenieurwesen</option>
             </select>
         </div>
     
@@ -722,37 +722,35 @@
             //Select which languages the user selected
             var tempData = JSON.parse(JSON.stringify(data));
 //            alert(Object.getOwnPropertyNames(tempData.children));
-            var checkedLanguages = []; 
+            var deselectedLanguages = []; 
             var inputElements = document.getElementsByClassName('languageSelection');
             var sumOfCourses = 0;
-            for(var i=0; inputElements[i]; ++i){
-                if(inputElements[i].checked){
-                    checkedLanguages.push(inputElements[i].value);
+            for(var i=0; i<inputElements.length; ++i){
+                if(!inputElements[i].checked){
+                    deselectedLanguages.push(inputElements[i].value);
                 }
             }
+            
+            var studyProgram = d3.select("#studyProgram").node().value;
 
-            //Remove all courses held in languages not selected by the user
+            //Remove all courses held in languages not selected by the user,
+            //not allowed to be taken by the selected study program
             for(i=0; i<5; i++){
-                var kept = 0;
+//                var kept = 0;
                 var deleted = 0;
                 var subtree = tempData.children[i].children;
                 var deleteCourse = false;
-//                alert("data: "+data.children[i].children.length);
-//                alert("tempData: "+tempData.children[i].children.length);
-//                alert("treeData: "+treeData.children[i].children.length);
-//                alert(subtree.length);
-    //            for(course : subtree){
-//                subtree.forEach(function(course)
                 for(k=subtree.length-1; k>=0; k--){
-//                    alert(k);
                     var course = subtree[k];
-//                    alert(course.Sprache);
                     //Must handle occurences of Deutsch;Englisch (multiple languages)
-                    deleteCourse = true;
-                    for(j=0; j<checkedLanguages.length; j++){
-                        if(course.Sprache.includes(checkedLanguages[j])){
-                            deleteCourse = false;
-                            kept = kept+1;
+                    deleteCourse = false;
+                    for(j=0; j<deselectedLanguages.length; j++){
+                        if(course.Sprache.includes(deselectedLanguages[j])){
+                            deleteCourse = true;
+//                            kept = kept+1;
+                        }
+                        if(course.Ausgeschlossen_Ingenieurwissenschaften_Bachelor.includes(studyProgram)){
+                            deleteCourse = true;
                         }
                     }
                     if(deleteCourse){
