@@ -628,7 +628,7 @@
             var collapsed = [];
                 // Store which nodes are collapsed
                 for(a = 0; a<5; a++){
-                    if(root.children[a]._children){
+                    if(root.children[a]._children || (!root.children[a]._children && !root.children[a].children)){
 //                        alert(root.children[a].data.title);
                         collapsed.push(true);
                     }
