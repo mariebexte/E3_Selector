@@ -156,12 +156,11 @@
             position:absolute;
             top:0;
             bottom:0;
-            left:22.5%;
-            width:55%;
+            left:15%;
+            width:62%;
             height:auto;
             margin-top:0.5%;
             margin-bottom: 0.5%;
-            margin-left: auto;
             margin-right: auto;
             background-color:whitesmoke;
         }
@@ -342,7 +341,7 @@
         </div>
     
         <div id="container"  class="selection">
-            <p>When are you not available?</p>
+            <p>When are you free to take courses?</p>
         </div>
         <div class="centered">
         <button type="button" id="showPage2Button" class="centered">Show Courses</button>
@@ -367,25 +366,28 @@
                 <input type="checkbox" name="Veranstaltungsart" value="E-Learning" id="e_learn" class = "courseTypeSelection">
                     <label for="e_learn" style="background-color:thistle">E-Learning</label><br>
             </div>
+<!--            Make sure to also exclude 'unknown' exam type when filtering-->
             <div style="background-color:white;" class="filterClass">
                 <p>Exam Type</p>
-                <input type="checkbox" name="exam" value="Written" id="written" class = "examSelection">
-                    <label for="written">Written Exam</label><br>
-                <input type="checkbox" name="exam" value="Oral" id="oral" class = "examSelection">
-                    <label for="oral">Oral</label><br>
-                <input type="checkbox" name="exam" value="Presentation" id="presentation" class = "examSelection">
+                <input type="checkbox" name="Exam" value="Klausur" id="exam" class = "examSelection">
+                    <label for="exam">Written Exam</label><br>
+                <input type="checkbox" name="Exam" value="Mündliche Prüfung" id="oral" class = "examSelection">
+                    <label for="oral">Oral Exam</label><br>
+                <input type="checkbox" name="Exam" value="Schriftliche Ausarbeitung" id="report" class = "examSelection">
+                    <label for="report">Written Report</label><br>
+                <input type="checkbox" name="Exam" value="Präsentation" id="presentation" class = "examSelection">
                     <label for="presentation">Presentation</label><br>
-                <input type="checkbox" name="exam" value="Report" id="report" class = "examSelection">
-                    <label for="report">Report</label><br>
             </div>
             <div style="background-color:white;" class="filterClass">
                 <p>Location</p>
-                <input type="checkbox" name="location" value="Essen" id="essen" class = "locationSelection">
+                <input type="checkbox" name="Location" value="Essen" id="essen" class = "locationSelection">
                     <label for="essen">Essen</label><br>
-                <input type="checkbox" name="location" value="Duisburg" id="duisburg" class = "locationSelection">
+                <input type="checkbox" name="Location" value="Duisburg" id="duisburg" class = "locationSelection">
                     <label for="duisburg">Duisburg</label><br>
-                <input type="checkbox" name="location" value="NRW" id="nrw" class = "locationSelection">
-                    <label for="nrw">NRW</label><br>
+                <input type="checkbox" name="Location" value="Bochum" id="bochum" class = "locationSelection">
+                    <label for="bochum">Bochum</label><br>
+                <input type="checkbox" name="Location" value="Dortmund" id="dortmund" class = "locationSelection">
+                    <label for="dortmund">Dortmund</label><br>
             </div>
         </div>
         <div id="middlePanel">
@@ -437,10 +439,10 @@
         return this.createElementNS(svgNS, tagName);
     };
 
-    var unavailableTimes = new Set();
+    var availableTimes = new Set();
     var colorText = "black";
     var colorAvailable = "lightgreen";
-    var colorUnavailable = "red"; 
+    var colorUnavailable = "peachpuff"; 
     var noColor = "none";
     
     var treeData; //For page 2
@@ -489,7 +491,7 @@
                     }
                 }
                 else{
-                    box.setAttribute("fill", colorAvailable);
+                    box.setAttribute("fill", colorUnavailable);
                     box.setAttribute("id", days[i-1] + times[j-1]);                   
                 }
               g.appendChild(box);
@@ -501,13 +503,13 @@
             function(e){
                 var id = e.target.id;
                 var cell = e.target;
-                if(unavailableTimes.has(id)){
-                    unavailableTimes.delete(id);
-                    cell.setAttribute("fill",colorAvailable);
+                if(availableTimes.has(id)){
+                    availableTimes.delete(id);
+                    cell.setAttribute("fill",colorUnavailable);
                 }
                 else{
-                    unavailableTimes.add(id);
-                    cell.setAttribute("fill",colorUnavailable);
+                    availableTimes.add(id);
+                    cell.setAttribute("fill",colorAvailable);
 
                 }
             },
@@ -523,7 +525,7 @@
 
     var data_filteredAccToPage1;
     
-    d3.json('e3_courses_withLinks_final.json').then(function (data) {
+    d3.json('e3_courses_withLinks_cleanTypes_final.json').then(function (data) {
         
         data_filteredAccToPage1 = data;
         treeData = data_filteredAccToPage1;
@@ -641,7 +643,7 @@
                     var key = this.name;
                     var value = this.value;
                     
-                    for(a=0; a<5; a++){
+                    for(a=0; a<tempData.children.length; a++){
                         var subtree = tempData.children[a].children;
                         var deleteCourse = false;
                         //Distinguish checked/unchecked
@@ -649,8 +651,10 @@
                             var course = subtree[k];
                             deleteCourse = false;
 //                          alert("key of course "+course[key]);
-                            if(course[key] == value){
-                                deleteCourse = true
+//                            if(course[key] == value){
+                            //Relax condition to also match fields with multiple entries
+                            if(course[key].includes(value) || course[key] == "unknown"){  
+                                deleteCourse = true;
                             }
                             if(deleteCourse){
                                 tempData.children[a].children.splice(tempData.children[a].children.indexOf(course),1);
@@ -1072,7 +1076,7 @@
         //PAGE3--------------------------------------------------------------------------------
         var sortAscending = true;
             
-        titles = ["title","Recommendation","Credits","Veranstaltungsart","Leistungsnachweis_manual","Location","Sprache","link"];
+        titles = ["title","Recommendation","Credits","Veranstaltungsart","Exam","Location","Sprache","link"];
         var table = d3.select('#courseTable');
         var headers = table.select('thead').select('tr')
                .selectAll('th')
