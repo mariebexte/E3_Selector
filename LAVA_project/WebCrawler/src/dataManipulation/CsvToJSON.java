@@ -19,7 +19,7 @@ public class CsvToJSON {
 	public static void main(String[] args) throws IOException {
 		
 //		BufferedReader br = new BufferedReader(new FileReader(new File("e3_courses_FINAL.csv")));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("e3_courses_withLinks_cleanTypes_final.json")));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("e3_courses_190120_2.json")));
 		
 //		String line = br.readLine();
 //		String[] entries;
@@ -35,7 +35,7 @@ public class CsvToJSON {
 //			System.out.println("CAT: "+catalog);
 //		}
 		
-	    Reader in = new FileReader("e3_courses_180120.csv");
+	    Reader in = new FileReader("e3_courses_190120_2.csv");
 	    Iterable<CSVRecord> records = CSVFormat.DEFAULT
 //	      .withHeader(HEADERS)
 	      .withFirstRecordAsHeader()
@@ -43,7 +43,7 @@ public class CsvToJSON {
 	    
 	    Map<String, String> courseMap;
 	    
-	    bw.write("{\"title\":\"E3 Courses\",\"children\":[");
+	    bw.write("{\"title\":\" \",\"children\":[");
 	    
 	    for (CSVRecord record : records) {	    	
 	    	
