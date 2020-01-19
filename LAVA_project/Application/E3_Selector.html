@@ -431,7 +431,7 @@
     
     //PAGE1-------------------------------------------------------------------------------- 
 
-    var availableTimes = new Set();
+    var times_userNotAvailable = new Set();
     var colorText = "black";
     var colorAvailable = "lightgreen";
     var colorUnavailable = "peachpuff"; 
@@ -449,8 +449,10 @@
         svg.setAttribute("height", pixelsPerSide);
         svg.setAttribute("viewBox", [0, 0, numberW * sizeW + numberW, numberPerSide * size + numberPerSide].join(" "));
 
-        var times = ["8 - 10","10 - 12","12 - 14","14 - 16","16 - 18","18 - 20"];
-        var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+        var times_display = ["8 - 10","10 - 12","12 - 14","14 - 16","16 - 18","18 - 20"];
+        var times = ["8-10","10-12","12-14","14-16","16-18","18-20"];
+        var days_display = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+        var days = ["Mo","Di","Mi","Do","Fr","Sa","So"];
 
         for(var i = 0; i < numberW; i++) {
             for(var j = 0; j < numberPerSide; j++) {
@@ -467,7 +469,7 @@
                         box.setAttribute("fill", noColor);
 
                         var text = document.createSvg("text");
-                        text.appendChild(document.createTextNode(times[j-1]));
+                        text.appendChild(document.createTextNode(times_display[j-1]));
                         text.setAttribute("fill", colorText);
                         text.setAttribute("font-size", 4);
                         text.setAttribute("x", size/4);
@@ -477,7 +479,7 @@
                     if(j==0 && i>0){
                         box.setAttribute("fill", noColor);
                         var text = document.createSvg("text");
-                        text.appendChild(document.createTextNode(days[i-1]));
+                        text.appendChild(document.createTextNode(days_display[i-1]));
                         text.setAttribute("fill", colorText);
                         text.setAttribute("font-size", 4);
                         text.setAttribute("x", size/2);
@@ -487,7 +489,8 @@
                 }
                 else{
                     box.setAttribute("fill", colorUnavailable);
-                    box.setAttribute("id", days[i-1] + times[j-1]);                   
+                    box.setAttribute("id", days[i-1] + times[j-1]);
+                    times_userNotAvailable.add(""+days[i-1] + times[j-1]);
                 }
               g.appendChild(box);
               svg.appendChild(g);
@@ -498,14 +501,13 @@
             function(e){
                 var id = e.target.id;
                 var cell = e.target;
-                if(availableTimes.has(id)){
-                    availableTimes.delete(id);
-                    cell.setAttribute("fill",colorUnavailable);
+                if(times_userNotAvailable.has(id)){
+                    times_userNotAvailable.delete(id);
+                    cell.setAttribute("fill",colorAvailable);
                 }
                 else{
-                    availableTimes.add(id);
-                    cell.setAttribute("fill",colorAvailable);
-
+                    times_userNotAvailable.add(id);
+                    cell.setAttribute("fill",colorUnavailable);
                 }
             },
             false);
@@ -618,6 +620,14 @@
                         if(course.Ausgeschlossen_Ingenieurwissenschaften_Bachelor.includes(studyProgram)){
                             deleteCourse = true;
                         }
+                        for(timestamp of times_userNotAvailable){
+//                            alert(course.Times_manual);
+//                            alert(timestamp);
+                            if(course.Times_manual.includes(timestamp)){
+                                deleteCourse = true;
+                            }
+                        }
+                        
                     }
                     if(deleteCourse){
                         tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
