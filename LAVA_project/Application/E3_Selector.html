@@ -96,7 +96,7 @@
         #rightPanel {
             position:absolute;
             display:block;
-            width: 20.5%;
+            width: 300px;
             height: auto;
             top:0;
             bottom: 0;
@@ -108,7 +108,7 @@
 
         #leftPanel {
            display:block;
-            width: 12%;
+            width: 200px;
             height: auto;
             position:absolute;
            top:0;
@@ -159,12 +159,13 @@
             position:absolute;
             top:0;
             bottom:0;
-            left:15%;
-            width:62%;
+            left:240px;
+            right:340px;
+/*            width:64%;*/
             height:auto;
             margin-top:0.5%;
             margin-bottom: 0.5%;
-            margin-right: auto;
+/*            margin-right: auto;*/
             background-color:whitesmoke;
         }
 
@@ -382,8 +383,8 @@
             <p class="panelTitle">
                 Filter Courses
             </p>
-            <div class="row align-items-center" style="background-color:white;" class="filterClass">
-                <div class="col-sm-2"><p id="value-range"></p></div>
+            <div class="row align-items-center filterClass" style="background-color:white;" class="filterClass">
+                <p id="value-range">Credits</p>
                 <div class="col-sm"><div id="slider-range"></div></div>
             </div>
             <div style="background-color:white;" class="filterClass">
@@ -1105,7 +1106,6 @@
             .default([1, 9])
             .fill('darkslategray')
             .on('onchange', val => {
-                d3.select('p#value-range').text(val.map(d3.format('.2%')).join('-'));
                 credit_range = val;
                 filterCourses_leftPanel();
             });
@@ -1116,16 +1116,9 @@
             .attr('width', 500)
             .attr('height', 80)
             .append('g')
-            .attr('transform', 'translate(30,30)');
+            .attr('transform', 'translate(12,20)');
 
           gRange.call(sliderRange);
-
-          d3.select('p#value-range').text(
-            sliderRange
-              .value()
-              .map(d3.format('.2%'))
-              .join('-')
-          );
         
         d3.select('#detailedViewButton').on('click',showDetailedView);
         
@@ -1220,7 +1213,7 @@
                     d3.select(this)
                         .append('svg')
                         .attr('height','30px')
-                        .attr('width','40px')
+                        .attr('width','50px')
                         .append('circle')
                         .attr('r',14)
                         .attr("cx",'50%')
