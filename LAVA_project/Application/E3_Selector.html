@@ -1243,76 +1243,62 @@
                 });
             });  
             
-            //Show time of courses visually in timetable
-//            alert('removing');
-////            d3.selectAll('.courseMarker').remove();
-//            alert('drawing');
-//            d3.selectAll('tr.table-data').each(function(d){
-//                var times = [];
-//                var time;
-//                var courseTimes = d.Times_manual;
-//                if(courseTimes.includes(';')){
-//                    var times = courseTimes.split(';');
-//                }
-//                else{
-//                    times.push(courseTimes);
-//                }
-//                alert(times);
-//                
-//                for(t=0; t<times.length;t++){
-////                    alert(times[t]);
-//                    time = times[t];
-//                    d3.select('#radarChart') 
-////                        .each(function(){
-////                                        alert(this.parentNode.tagName);
-//                        //when selecting #radarChart it works, when selecting this.parentNode or this it does not
-////                            d3.select(this)
-//                                .append('p')
-//                                .on('click',function(){
-//                                alert('hello?');
-//                            })
-//                            .text('HELLLLOOOOOOO');
-////                                .attr('width','5px')
-////                                .attr('height','5px')
-////                                .attr('fill','blue')
-////                                .attr('class','courseMarker');
-////                    });
-//                } 
-//            });
-                    
-            selectedCourses.forEach(function(d){
-//                alert(d.Times_manual);
-                var times = [];
-                var time;
-                var courseTimes = d.Times_manual;
-                if(courseTimes.includes(';')){
-                    var times = courseTimes.split(';');
-                }
-                else{
-                    times.push(courseTimes);
-                }
+            var timeTable = d3.select('#timeTable');
+            var times = [];
+            var time;
+            var courseTimes;
+            
+            //Visually display couse hours in timetable
+            d3.selectAll('.table-data')
+                .on('mouseenter',function(d){
+                    d3.select(this)
+                        .attr('style','background-color:aliceblue;');
+                
+                    times = [];
+                    courseTimes = d.Times_manual;
+                    if(!courseTimes == ""){
+                        if(courseTimes.includes(';')){
+                            times = courseTimes.split(';');
+                        }
+                        else{
+                            times.push(courseTimes);
+                        }
+                        for(t=0; t<times.length;t++){
+                            time = times[t];
+                            var name = '#'+time;
+                            timeTable.select(name)
+                                .transition()
+                                .duration(500)
+                                .attr('fill','aliceblue');
+                        }
+                    }                   
+                });
+                        
+            d3.selectAll('.table-data')
+                .on('mouseleave',function(d){
+                    d3.select(this)
+                        .attr('style','background-color:white;');
+                
+                    times = [];
+                    courseTimes = d.Times_manual;
+                    if(!courseTimes == ""){
+                        if(courseTimes.includes(';')){
+                            var times = courseTimes.split(';');
+                        }
+                        else{
+                            times.push(courseTimes);
+                        }
 
-//                for(t=0; t<times.length;t++){
-////                    alert(times[t]);
-//                    time = times[t];
-//                    
-//                    d3.select('#'+time).each(
-//                        function(){
-//                            d3.select(this.parentNode).each(function(){
-//                                d3.select(this)
-//                        .append('rect')
-//                        .attr('width','3px')
-//                        .attr('height','3px')
-//                        .attr('fill','black')
-//                        .on('click',function(){
-//                        alert('hi ?')
-//                    })
-//                        .text('HELLO');});
-//                    })
-//                }
-            })
-            
-            
+                        for(t=0; t<times.length;t++){
+                            time = times[t];
+                            var name = '#'+time;
+                            timeTable.select(name)
+                                .attr('fill',function(){
+                                    return d3.select('#availability').select('#'+this.id).attr('fill');
+                                });
+                        }
+                    }                   
+                });
         }
     });
     
