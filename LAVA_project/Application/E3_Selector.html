@@ -388,15 +388,15 @@
             </div>
             <div style="background-color:white;" class="filterClass">
                 <p>Course Type</p>
-                <input type="checkbox" name="Veranstaltungsart" value="VL/Übung" id="lec_ex" class = "courseTypeSelection">
+                <input type="checkbox" name="Type" value="VL/Übung" id="lec_ex" class = "courseTypeSelection">
                     <label for="lec_ex" style="background-color:lightgreen;">Lecture + Exercise</label><br>
-                <input type="checkbox" name="Veranstaltungsart" value="Vorlesung" id="lec" class = "courseTypeSelection">
+                <input type="checkbox" name="Type" value="Vorlesung" id="lec" class = "courseTypeSelection">
                     <label for="lec" style="background-color:powderblue;">Lecture</label><br>
-                <input type="checkbox" name="Veranstaltungsart" value="Seminar" id="sem" class = "courseTypeSelection">
+                <input type="checkbox" name="Type" value="Seminar" id="sem" class = "courseTypeSelection">
                     <label for="sem" style="background-color:peachpuff">Seminar</label><br>
-                <input type="checkbox" name="Veranstaltungsart" value="Blockseminar" id="sem_bl" class = "courseTypeSelection">
+                <input type="checkbox" name="Type" value="Blockseminar" id="sem_bl" class = "courseTypeSelection">
                     <label for="sem_bl" style=background-color:salmon>Blocked Seminar</label><br>
-                <input type="checkbox" name="Veranstaltungsart" value="E-Learning" id="e_learn" class = "courseTypeSelection">
+                <input type="checkbox" name="Type" value="E-Learning" id="e_learn" class = "courseTypeSelection">
                     <label for="e_learn" style="background-color:thistle">E-Learning</label><br>
             </div>
 <!--            Make sure to also exclude 'unknown' exam type when filtering-->
@@ -540,6 +540,7 @@
             function(e){
                 var id = e.target.id;
                 var cell = e.target;
+                if(!id==""){
                 if(times_userNotAvailable.has(id)){
                     times_userNotAvailable.delete(id);
                     cell.setAttribute("fill",colorAvailable);
@@ -547,7 +548,7 @@
                 else{
                     times_userNotAvailable.add(id);
                     cell.setAttribute("fill",colorUnavailable);
-                }
+                }}
             },
             false);
         return svg;
@@ -653,7 +654,7 @@
                     deleteCourse = false;
                     
                     for(j=0; j<deselectedLanguages.length; j++){
-                        if(course.Sprache.includes(deselectedLanguages[j])){
+                        if(course.Language.includes(deselectedLanguages[j])){
                             deleteCourse = true;
                         }
                         if(course.Ausgeschlossen_Ingenieurwissenschaften_Bachelor.includes(studyProgram)){
@@ -765,7 +766,7 @@
                     //See if course falls within selected range of credits
                     minCred = credit_range[0];
                     maxCred = credit_range[1];
-                    courseCred = course["Credits_manual"];
+                    courseCred = course["Credits"];
                     if(courseCred.includes('-')){
                         courseCredArr = courseCred.split("-");
                         courseMin = courseCredArr[0];
@@ -858,7 +859,7 @@
                 .attr("x", function(d) {
                     //Node labels for empty catalog nodes (2nd level) should appear left
                     if(!d.children && !d._children){
-                        if(catalogNames.includes(d.data.title)){
+                        if(catalogNames.includes(d.data.Title)){
                             return -13;
                         }
                     }
@@ -866,12 +867,12 @@
                 .attr("text-anchor", function(d) {
                     //Node labels for empty catalog nodes should appear left
                     if(!d.children && !d._children){
-                        if(catalogNames.includes(d.data.title)){
+                        if(catalogNames.includes(d.data.Title)){
                             return "end";
                         }
                     }
                     return d.children || d._children ? "end" : "start";})
-                .text(function(d) { return d.data.title; });
+                .text(function(d) { return d.data.Title; });
 
             // UPDATE
             var nodeUpdate = nodeEnter.merge(node);
@@ -893,7 +894,7 @@
                         }
                     }
                     else{
-                        switch(d.data.Veranstaltungsart){
+                        switch(d.data.Type){
                             case "Seminar":return seminarColor;
                             case "Blockseminar": return blockSeminarColor;
                             case "Vorlesung": return lectureColor;
@@ -904,7 +905,7 @@
                     }
                 })
                 .style('stroke', function(d) {
-                        switch(d.data.Veranstaltungsart){
+                        switch(d.data.Type){
                             case "Seminar":return seminarColorDark;
                             case "Blockseminar": return blockSeminarColorDark;
                             case "Vorlesung": return lectureColorDark;
@@ -919,7 +920,7 @@
             nodeUpdate.select('text')
                 .style('fill', function(d) {
                     if(selectedCourses.includes(d.data)){
-                        switch(d.data.Veranstaltungsart){
+                        switch(d.data.Type){
                             case "Seminar":return seminarColorDark;
                             case "Blockseminar": return blockSeminarColorDark;
                             case "Vorlesung": return lectureColorDark;
@@ -994,7 +995,7 @@
             function click(d) {
                 //Treat leaves differently: these are selectable courses
                 if(!d.children && !d._children){
-                    if(catalogNames.includes(d.data.title)){
+                    if(catalogNames.includes(d.data.Title)){
                         //Empty catalog: should be a non-responsive node
                     }else{
                         if(selectedCourses.includes(d.data)){
@@ -1027,7 +1028,7 @@
             d3.select('#treeSVG').selectAll('text')
                 .style('fill', function(d) {
                     if(selectedCourses.includes(d.data)){
-                        switch(d.data.Veranstaltungsart){
+                        switch(d.data.Type){
                             case "Seminar":return seminarColorDark;
                             case "Blockseminar": return blockSeminarColorDark;
                             case "Vorlesung": return lectureColorDark;
@@ -1049,7 +1050,7 @@
                     selectedCourses.splice(index,1);
                     updateSelectedCourses();})
                 .text(function(d){
-                    return d.title;})
+                    return d.Title;})
                 .attr('style',function(d){
                         return "background-color:white;"})
                     .style("position","relative")
@@ -1062,7 +1063,7 @@
                     .attr("cx","12px")
                     .attr("cy","12px")
                     .attr("stroke",function(d) {
-                        switch(d.Veranstaltungsart){
+                        switch(d.Type){
                             case "Seminar":return seminarColorDark;
                             case "Blockseminar": return blockSeminarColorDark;
                             case "Vorlesung": return lectureColorDark;
@@ -1073,7 +1074,7 @@
                     })
                     .attr("stroke-width","2px")
                     .attr("fill",function(d) {
-                        switch(d.Veranstaltungsart){
+                        switch(d.Type){
                             case "Seminar":return seminarColor;
                             case "Blockseminar": return blockSeminarColor;
                             case "Vorlesung": return lectureColor;
@@ -1138,7 +1139,7 @@
         } 
     
         //PAGE3--------------------------------------------------------------------------------      
-        var titles = ["Delete","title","Recommendation","Credits_manual","Veranstaltungsart","Exam","Location","Sprache","link"];
+        var titles = ["Delete","Title","Recommendation","Credits","Type","Exam","Location","Language","Link"];
         
         //Define basic table structure
         var table = d3.select('#selectedCoursesTable').append('table').attr("id",'courseTable');
@@ -1173,12 +1174,12 @@
                     return d.name;
                 })
                 .text(function (d) {
-                    if(!(d.name == "link") && !(d.name == "Recommendation") && !(d.name == "Delete")){
+                    if(!(d.name == "Link") && !(d.name == "Recommendation") && !(d.name == "Delete")){
                         return d.value;
                     }
                 });
   
-            rows.selectAll('.link').append('a')
+            rows.selectAll('.Link').append('a')
                 .attr('href',function(d){
                         return d.value;
                 })
@@ -1190,8 +1191,11 @@
                 .append('svg')
                 .attr('height','30px')
                 .attr('width',function(d){
-                      if(d.value > 0)
-                        return d.value+"%";
+                      if(d.value > 0){
+                        return d.value+"px";
+                      }else{
+                          return "0px";
+                      }
                       })
                 .append('rect')
                 .attr('fill','palegreen')
@@ -1216,7 +1220,7 @@
                     d3.select(this)
                         .append('svg')
                         .attr('height','30px')
-                        .attr('width','50px')
+                        .attr('width','40px')
                         .append('circle')
                         .attr('r',14)
                         .attr("cx",'50%')
