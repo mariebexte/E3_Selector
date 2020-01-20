@@ -295,12 +295,37 @@
             background-color:whitesmoke;
             margin:0.5%;
         }
+        
+        #landingPage{
+            font-family: "Futura";
+            background: aliceblue;
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:1%;
+        }
+        
+/*
+        #landingPage p{
+            font-size: 30pt;
+        }
+*/
 
     </style>
 </head>
 <body>
-    
-    <div id="page1">
+    <div id='landingPage' class='centered'>
+        <h1>Welcome to E3 Selector</h1>
+        <p>This is an application to help you select E3 courses more easily.<br>
+        We'll first ask you for some information so that we can get rid of all the courses that are not revant to you. <br>
+            You can then browse thorough the couses matching your criteria, filter them and select those that seem interesting to you.<br>
+            Finally, you can inspect your selected courses further and will be able to jump to their lsf page to apply for participation.
+        </p>    
+        <button type='button' onclick='showFirstPage()'>Start</button>
+    </div>
+    <div id="page1" style="display:none">
         <p class="header">
             E3 Selector
         </p>
@@ -411,6 +436,12 @@
     </div>
 
 <script>
+    
+    function showFirstPage(){
+        document.getElementById('landingPage').style.display = "none";
+        document.getElementById('page1').style.display = "block";
+        
+    }
     
         var seminarColor="peachpuff";
         var blockSeminarColor="salmon";
@@ -1049,17 +1080,6 @@
                 .text("×");      
         }
         
-        d3.select('#detailedViewButton').on('click',showDetailedView);
-        
-        function showDetailedView(){
-            fillSelectedCoursesTable();
-            timeTableGrid_page3 = timeTableGrid.cloneNode(true);
-            var courseTimes = document.getElementById("timeTable");
-            courseTimes.appendChild(timeTableGrid_page3);
-            document.getElementById("page2").style.display = "none";
-            document.getElementById("page3").style.display = "block";
-        } 
-        
         //Slider to filter for credits
           var sliderRange = d3
             .sliderBottom()
@@ -1092,6 +1112,17 @@
               .map(d3.format('.2%'))
               .join('-')
           );
+        
+        d3.select('#detailedViewButton').on('click',showDetailedView);
+        
+        function showDetailedView(){
+            fillSelectedCoursesTable();
+            timeTableGrid_page3 = timeTableGrid.cloneNode(true);
+            var courseTimes = document.getElementById("timeTable");
+            courseTimes.appendChild(timeTableGrid_page3);
+            document.getElementById("page2").style.display = "none";
+            document.getElementById("page3").style.display = "block";
+        } 
     
         //PAGE3--------------------------------------------------------------------------------      
         var titles = ["Delete","title","Recommendation","Credits_manual","Veranstaltungsart","Exam","Location","Sprache","link"];
@@ -1188,11 +1219,9 @@
                             d3.select(this.parentNode)
                                 .append('text')
                                 .on('click',function(){
-                                    alert(selectedCourses.length);
                                     var index = selectedCourses.indexOf(d);
                                     selectedCourses.splice(index,1);
                                     fillSelectedCoursesTable();
-                                    alert(selectedCourses.length);
                                 })
                                 .attr("style","font-size:19px;")
                                 .attr("x","50%")
@@ -1202,9 +1231,79 @@
                                 .text('×');
                         })
                 });
-            });                
+            });  
+            
+            //Show time of courses visually in timetable
+//            alert('removing');
+////            d3.selectAll('.courseMarker').remove();
+//            alert('drawing');
+//            d3.selectAll('tr.table-data').each(function(d){
+//                var times = [];
+//                var time;
+//                var courseTimes = d.Times_manual;
+//                if(courseTimes.includes(';')){
+//                    var times = courseTimes.split(';');
+//                }
+//                else{
+//                    times.push(courseTimes);
+//                }
+//                alert(times);
+//                
+//                for(t=0; t<times.length;t++){
+////                    alert(times[t]);
+//                    time = times[t];
+//                    d3.select('#radarChart') 
+////                        .each(function(){
+////                                        alert(this.parentNode.tagName);
+//                        //when selecting #radarChart it works, when selecting this.parentNode or this it does not
+////                            d3.select(this)
+//                                .append('p')
+//                                .on('click',function(){
+//                                alert('hello?');
+//                            })
+//                            .text('HELLLLOOOOOOO');
+////                                .attr('width','5px')
+////                                .attr('height','5px')
+////                                .attr('fill','blue')
+////                                .attr('class','courseMarker');
+////                    });
+//                } 
+//            });
+                    
+            selectedCourses.forEach(function(d){
+//                alert(d.Times_manual);
+                var times = [];
+                var time;
+                var courseTimes = d.Times_manual;
+                if(courseTimes.includes(';')){
+                    var times = courseTimes.split(';');
+                }
+                else{
+                    times.push(courseTimes);
+                }
+                
+                for(t=0; t<times.length;t++){
+//                    alert(times[t]);
+                    time = times[t];
+                    
+                    d3.select('#'+time).each(
+                        function(){
+                            d3.select(this.parentNode).each(function(){
+                                d3.select(this)
+                        .append('rect')
+                        .attr('width','3px')
+                        .attr('height','3px')
+                        .attr('fill','black')
+                        .on('click',function(){
+                        alert('hi ?')
+                    })
+                        .text('HELLO');});
+                    })
+                }
+            })
+            
+            
         }
-        
     });
     
    
