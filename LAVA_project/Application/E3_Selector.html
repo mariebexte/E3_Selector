@@ -12,6 +12,7 @@
     <script type="text/javascript" src="d3.min.js"></script>
     <script type="text/javascript" src="c3.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="RadarChart.js"></script>
         
     <style>
     
@@ -1267,8 +1268,8 @@
                             time = times[t];
                             var name = '#'+time;
                             timeTable.select(name)
-                                .transition()
-                                .duration(500)
+//                                .transition()
+//                                .duration(300)
                                 .attr('fill','aliceblue');
                         }
                     }                   
@@ -1300,6 +1301,23 @@
                     }                   
                 });
         }
+        
+        var config = {
+            w: 300,
+            h: 300,
+            maxValue: 5,
+            levels: 5,
+//            ExtraWidthX: 300
+        }
+        
+        var chartData = JSON.parse(
+            "[[{\"area\": \"Central \", \"value\": 4},{\"area\": \"Kirkdale\", \"value\": 1},{\"area\": \"Kensington \", \"value\": 3},{\"area\": \"Everton \", \"value\": 2}, {\"area\": \"Picton \", \"value\": 5}, {\"area\": \"Riverside \", \"value\": 3}]]");
+
+        //Call function to draw the Radar chart
+//        d3.json(chartData, function(error, data) {
+//            if (error) throw error;
+            RadarChart.draw("#radarChart", chartData, config);
+//        });
     });
     
    
