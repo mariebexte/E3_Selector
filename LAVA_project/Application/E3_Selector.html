@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -12,6 +12,7 @@
     <script type="text/javascript" src="d3.min.js"></script>
     <script type="text/javascript" src="c3.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="RadarChart.js"></script>
         
     <style>
     
@@ -108,7 +109,6 @@
 
         #leftPanel {
            display:block;
-           overflow:scroll;
             width: 200px;
             height: auto;
             position:absolute;
@@ -380,1001 +380,947 @@
     </div>
     
     <div id="page2" style="display:none">
-        <div class="row">
-            <div id="leftPanel" class="col-3">
-                <p class="panelTitle">
-                    Filter Courses
-                </p>
-                <div class="row align-items-center filterClass" style="background-color:white;" >
-                    <p id="value-range">Credits</p>
-                    <div class="col-sm"><div id="slider-range"></div></div>
-                </div>
-                <div style="background-color:white;" class="filterClass">
-                    <p>Course Type</p>
-                    <input type="checkbox" name="Type" value="VL/Übung" id="lec_ex" class="courseTypeSelection">
+        <div id=leftPanel>
+            <p class="panelTitle">
+                Filter Courses
+            </p>
+            <div class="row align-items-center filterClass" style="background-color:white;" class="filterClass">
+                <p id="value-range">Credits</p>
+                <div class="col-sm"><div id="slider-range"></div></div>
+            </div>
+            <div style="background-color:white;" class="filterClass">
+                <p>Course Type</p>
+                <input type="checkbox" name="Type" value="VL/Übung" id="lec_ex" class = "courseTypeSelection">
                     <label for="lec_ex" style="background-color:lightgreen;">Lecture + Exercise</label><br>
-                    <input type="checkbox" name="Type" value="Vorlesung" id="lec" class="courseTypeSelection">
+                <input type="checkbox" name="Type" value="Vorlesung" id="lec" class = "courseTypeSelection">
                     <label for="lec" style="background-color:powderblue;">Lecture</label><br>
-                    <input type="checkbox" name="Type" value="Seminar" id="sem" class="courseTypeSelection">
+                <input type="checkbox" name="Type" value="Seminar" id="sem" class = "courseTypeSelection">
                     <label for="sem" style="background-color:peachpuff">Seminar</label><br>
-                    <input type="checkbox" name="Type" value="Blockseminar" id="sem_bl" class="courseTypeSelection">
+                <input type="checkbox" name="Type" value="Blockseminar" id="sem_bl" class = "courseTypeSelection">
                     <label for="sem_bl" style=background-color:salmon>Blocked Seminar</label><br>
-                    <input type="checkbox" name="Type" value="E-Learning" id="e_learn" class="courseTypeSelection">
+                <input type="checkbox" name="Type" value="E-Learning" id="e_learn" class = "courseTypeSelection">
                     <label for="e_learn" style="background-color:thistle">E-Learning</label><br>
-                </div>
-                <!--            Make sure to also exclude 'unknown' exam type when filtering-->
-                <div style="background-color:white;" class="filterClass">
-                    <p>Exam Type</p>
-                    <input type="checkbox" name="Exam" value="Klausur" id="exam" class="examSelection">
+            </div>
+<!--            Make sure to also exclude 'unknown' exam type when filtering-->
+            <div style="background-color:white;" class="filterClass">
+                <p>Exam Type</p>
+                <input type="checkbox" name="Exam" value="Klausur" id="exam" class = "examSelection">
                     <label for="exam">Written Exam</label><br>
-                    <input type="checkbox" name="Exam" value="Mündliche Prüfung" id="oral" class="examSelection">
+                <input type="checkbox" name="Exam" value="Mündliche Prüfung" id="oral" class = "examSelection">
                     <label for="oral">Oral Exam</label><br>
-                    <input type="checkbox" name="Exam" value="Schriftliche Ausarbeitung" id="report" class="examSelection">
+                <input type="checkbox" name="Exam" value="Schriftliche Ausarbeitung" id="report" class = "examSelection">
                     <label for="report">Written Report</label><br>
-                    <input type="checkbox" name="Exam" value="Präsentation" id="presentation" class="examSelection">
+                <input type="checkbox" name="Exam" value="Präsentation" id="presentation" class = "examSelection">
                     <label for="presentation">Presentation</label><br>
-                </div>
-                <div style="background-color:white;" class="filterClass">
-                    <p>Location</p>
-                    <input type="checkbox" name="Location" value="Essen" id="essen" class="locationSelection">
+            </div>
+            <div style="background-color:white;" class="filterClass">
+                <p>Location</p>
+                <input type="checkbox" name="Location" value="Essen" id="essen" class = "locationSelection">
                     <label for="essen">Essen</label><br>
-                    <input type="checkbox" name="Location" value="Duisburg" id="duisburg" class="locationSelection">
+                <input type="checkbox" name="Location" value="Duisburg" id="duisburg" class = "locationSelection">
                     <label for="duisburg">Duisburg</label><br>
-                    <input type="checkbox" name="Location" value="Bochum" id="bochum" class="locationSelection">
+                <input type="checkbox" name="Location" value="Bochum" id="bochum" class = "locationSelection">
                     <label for="bochum">Bochum</label><br>
-                    <input type="checkbox" name="Location" value="Dortmund" id="dortmund" class="locationSelection">
+                <input type="checkbox" name="Location" value="Dortmund" id="dortmund" class = "locationSelection">
                     <label for="dortmund">Dortmund</label><br>
-                </div>
-            </div>
-            </div>
-            <div id="middlePanel">
-                <svg id="treeSVG">
-                </svg>
-            </div>
-            <div id=rightPanel>
-                <p class="panelTitle">
-                    Your Selected Courses
-                </p>
-                <div id=selectedCoursesPanel>
-                </div>
-                <button type="button" class="panelTitle" id="detailedViewButton">Detailed Overview</button>
             </div>
         </div>
-
-        <div id="page3" style="display:none">
-            <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
-            <div id="selectedCoursesTable">
-            </div>
-            <div id="timeTable">
-            </div>
-            <div id="radarChart">
-            </div>
-
+        <div id="middlePanel">
+            <svg id="treeSVG" >
+            </svg>
         </div>
+        <div id=rightPanel>
+            <p class="panelTitle">
+                Your Selected Courses
+            </p>
+            <div id=selectedCoursesPanel>
+            </div>
+            <button type="button" class="panelTitle" id="detailedViewButton">Detailed Overview</button>
+        </div> 
+    </div>
+    
+    <div id="page3" style="display:none">
+        <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
+        <div id="selectedCoursesTable">
+        </div>
+        <div id="timeTable">
+        </div>
+        <div id="radarChart">
+        </div>
+        
+    </div>
 
-        <script>
+<script>
+    
+    function showFirstPage(){
+        document.getElementById('landingPage').style.display = "none";
+        document.getElementById('page1').style.display = "block";
+        
+    }
+    
+        var seminarColor="peachpuff";
+        var blockSeminarColor="salmon";
+        var lectureColor="powderblue";
+        var lectureExerciseColor="lightgreen";
+        var eLearningColor="thistle";
 
-            function showFirstPage() {
-                document.getElementById('landingPage').style.display = "none";
-                document.getElementById('page1').style.display = "block";
+        var seminarColorDark="orange";
+        var blockSeminarColorDark="red";
+        var lectureColorDark="dodgerblue";
+        var lectureExerciseColorDark="limegreen";
+        var eLearningColorDark="darkorchid";
+    
+    //PAGE1-------------------------------------------------------------------------------- 
 
-            }
+    var times_userNotAvailable = new Set();
+    var colorText = "black";
+    var colorAvailable = "lightgreen";
+    var colorUnavailable = "peachpuff"; 
+    var noColor = "none";
+    
+    document.createSvg = function(tagName) {
+        var svgNS = "http://www.w3.org/2000/svg";
+        return this.createElementNS(svgNS, tagName);
+    };
 
-            var seminarColor = "peachpuff";
-            var blockSeminarColor = "salmon";
-            var lectureColor = "powderblue";
-            var lectureExerciseColor = "lightgreen";
-            var eLearningColor = "thistle";
+    var grid = function(numberW, numberPerSide, sizeW, size, pixelsW, pixelsPerSide) {
+        var svg = document.createSvg("svg");
+        svg.setAttribute("class", "mainElement")
+        svg.setAttribute("width", pixelsW);
+        svg.setAttribute("height", pixelsPerSide);
+        svg.setAttribute("viewBox", [0, 0, numberW * sizeW + numberW, numberPerSide * size + numberPerSide].join(" "));
 
-            var seminarColorDark = "orange";
-            var blockSeminarColorDark = "red";
-            var lectureColorDark = "dodgerblue";
-            var lectureExerciseColorDark = "limegreen";
-            var eLearningColorDark = "darkorchid";
+        var times_display = ["8 - 10","10 - 12","12 - 14","14 - 16","16 - 18","18 - 20"];
+        var times = ["8-10","10-12","12-14","14-16","16-18","18-20"];
+        var days_display = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+        var days = ["Mo","Di","Mi","Do","Fr","Sa","So"];
 
-            //PAGE1--------------------------------------------------------------------------------
+        for(var i = 0; i < numberW; i++) {
+            for(var j = 0; j < numberPerSide; j++) {
 
-            var times_userNotAvailable = new Set();
-            var colorText = "black";
-            var colorAvailable = "lightgreen";
-            var colorUnavailable = "peachpuff";
-            var noColor = "none";
+              var g = document.createSvg("g");
+              g.setAttribute("transform", ["translate(", i*sizeW + i, ",", j*size + j, ")"].join(""));
+              var number = numberPerSide * i + j;
+              var box = document.createSvg("rect");
+              box.setAttribute("width", sizeW);
+              box.setAttribute("height", size);
+                if(i==0 || j == 0){
+                    box.setAttribute("fill", noColor);
+                    if(i==0 && j>0){
+                        box.setAttribute("fill", noColor);
 
-            document.createSvg = function (tagName) {
-                var svgNS = "http://www.w3.org/2000/svg";
-                return this.createElementNS(svgNS, tagName);
-            };
-
-            var grid = function (numberW, numberPerSide, sizeW, size, pixelsW, pixelsPerSide) {
-                var svg = document.createSvg("svg");
-                svg.setAttribute("class", "mainElement")
-                svg.setAttribute("width", pixelsW);
-                svg.setAttribute("height", pixelsPerSide);
-                svg.setAttribute("viewBox", [0, 0, numberW * sizeW + numberW, numberPerSide * size + numberPerSide].join(" "));
-
-                var times_display = ["8 - 10", "10 - 12", "12 - 14", "14 - 16", "16 - 18", "18 - 20"];
-                var times = ["8-10", "10-12", "12-14", "14-16", "16-18", "18-20"];
-                var days_display = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-                var days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-
-                for (var i = 0; i < numberW; i++) {
-                    for (var j = 0; j < numberPerSide; j++) {
-
-                        var g = document.createSvg("g");
-                        g.setAttribute("transform", ["translate(", i * sizeW + i, ",", j * size + j, ")"].join(""));
-                        var number = numberPerSide * i + j;
-                        var box = document.createSvg("rect");
-                        box.setAttribute("width", sizeW);
-                        box.setAttribute("height", size);
-                        if (i == 0 || j == 0) {
-                            box.setAttribute("fill", noColor);
-                            if (i == 0 && j > 0) {
-                                box.setAttribute("fill", noColor);
-
-                                var text = document.createSvg("text");
-                                text.appendChild(document.createTextNode(times_display[j - 1]));
-                                text.setAttribute("fill", colorText);
-                                text.setAttribute("font-size", 4);
-                                text.setAttribute("x", size / 4);
-                                text.setAttribute("y", size / 1.7);
-                                g.appendChild(text);
-                            }
-                            if (j == 0 && i > 0) {
-                                box.setAttribute("fill", noColor);
-                                var text = document.createSvg("text");
-                                text.appendChild(document.createTextNode(days_display[i - 1]));
-                                text.setAttribute("fill", colorText);
-                                text.setAttribute("font-size", 4);
-                                text.setAttribute("x", size / 2);
-                                text.setAttribute("y", sizeW / 2.5);
-                                g.appendChild(text);
-                            }
-                        }
-                        else {
-                            box.setAttribute("fill", colorUnavailable);
-                            box.setAttribute("id", days[i - 1] + times[j - 1]);
-                            times_userNotAvailable.add("" + days[i - 1] + times[j - 1]);
-                        }
-                        g.appendChild(box);
-                        svg.appendChild(g);
+                        var text = document.createSvg("text");
+                        text.appendChild(document.createTextNode(times_display[j-1]));
+                        text.setAttribute("fill", colorText);
+                        text.setAttribute("font-size", 4);
+                        text.setAttribute("x", size/4);
+                        text.setAttribute("y", size/1.7);
+                        g.appendChild(text);
+                    }
+                    if(j==0 && i>0){
+                        box.setAttribute("fill", noColor);
+                        var text = document.createSvg("text");
+                        text.appendChild(document.createTextNode(days_display[i-1]));
+                        text.setAttribute("fill", colorText);
+                        text.setAttribute("font-size", 4);
+                        text.setAttribute("x", size/2);
+                        text.setAttribute("y", sizeW/2.5);
+                        g.appendChild(text);
                     }
                 }
-                svg.addEventListener(
-                    "click",
-                    function (e) {
-                        var id = e.target.id;
-                        var cell = e.target;
-                        if (!id == "") {
-                            if (times_userNotAvailable.has(id)) {
-                                times_userNotAvailable.delete(id);
-                                cell.setAttribute("fill", colorAvailable);
-                            }
-                            else {
-                                times_userNotAvailable.add(id);
-                                cell.setAttribute("fill", colorUnavailable);
+                else{
+                    box.setAttribute("fill", colorUnavailable);
+                    box.setAttribute("id", days[i-1] + times[j-1]);
+                    times_userNotAvailable.add(""+days[i-1] + times[j-1]);
+                }
+              g.appendChild(box);
+              svg.appendChild(g);
+            }  
+        }
+        svg.addEventListener(
+            "click",
+            function(e){
+                var id = e.target.id;
+                var cell = e.target;
+                if(!id==""){
+                if(times_userNotAvailable.has(id)){
+                    times_userNotAvailable.delete(id);
+                    cell.setAttribute("fill",colorAvailable);
+                }
+                else{
+                    times_userNotAvailable.add(id);
+                    cell.setAttribute("fill",colorUnavailable);
+                }}
+            },
+            false);
+        return svg;
+    };
+    
+    var container = document.getElementById("availability");
+    var timeTableGrid = grid(8, 7, 22, 12, 700, 350);
+    container.appendChild(timeTableGrid);
+
+    //PAGE2-------------------------------------------------------------------------------
+
+    // Check all filtering options in the beginning
+    d3.select('#page2').selectAll('input').attr('checked','true');  
+    
+    //Data filtered according to study program, availabilities and languages
+    var data_filteredAccToPage1;
+    //Data used to draw tree
+    var treeData;
+ 
+    d3.json('e3_courses_190120_2.json').then(function (data) {
+        
+        //Node indexes
+        var i = 0;
+        var root;
+        
+        // Diagram measurements
+        var margin = {top: 20, right: 10, bottom: 10, left: 30},
+            width = 800 - margin.left - margin.right,
+            height = 830 - margin.top - margin.bottom;
+        
+        // Layout of tree
+        var treemap = d3.tree().size([height, width]);
+        
+        var selectedCourses = [];
+        var catalogNames = ["BNE","IOS","Kultur und Gesellschaft","Natur und Technik","Wirtschaft"];
+            
+        var showPage2Button = d3.select('#showPage2Button');
+        showPage2Button.on('click',filterAccordingToHardConstraints);
+
+        var svg = d3.select("#treeSVG")
+            .attr("class", "mainElement")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .append("g") 
+            .attr("transform", "translate("
+              + margin.left + "," + margin.top + ")");
+
+        var selectionPanel = d3.select("#selectedCoursesPanel");
+
+        data_filteredAccToPage1 = data;
+        treeData = data_filteredAccToPage1;
+
+        // Assigns parent, children, height, depth
+        root = d3.hierarchy(treeData, function(d) {return d.children; });
+        root.x0 = height / 2;
+        root.y0 = 0;
+
+        // All nodes collapsed
+        collapse(root);
+
+        // Collapse node and all children
+         function collapse(d) {
+           if(d.children) {
+             d._children = d.children
+             d._children.forEach(collapse)
+             d.children = null
+           }
+         }
+              
+        update(root, false);
+        
+        function filterAccordingToHardConstraints(){
+            
+            //Count how many courses remain after filtering
+            var sumOfCourses = 0;
+            var deleteCourse = false;
+            var subtree;
+            var course;
+            
+            //Copy full data
+            var tempData = JSON.parse(JSON.stringify(data));
+            
+            var studyProgram = d3.select("#studyProgram").node().value;
+            
+            //Select which languages the user does not want
+            var deselectedLanguages = []; 
+            var inputElements = document.getElementsByClassName('languageSelection');
+            for(var k=0; k<inputElements.length; ++k){
+                if(!inputElements[k].checked){
+                    deselectedLanguages.push(inputElements[k].value);
+                }
+            }
+
+            //Remove all courses not matching selections; iterate through level 2 nodes
+            for(i=0; i<tempData.children.length; i++){
+                
+                subtree = tempData.children[i].children;
+                deleteCourse = false;
+                
+                for(k=subtree.length-1; k>=0; k--){
+                    
+                    course = subtree[k];
+                    deleteCourse = false;
+                    
+                    for(j=0; j<deselectedLanguages.length; j++){
+                        if(course.Language.includes(deselectedLanguages[j])){
+                            deleteCourse = true;
+                        }
+                        if(course.Ausgeschlossen_Ingenieurwissenschaften_Bachelor.includes(studyProgram)){
+                            deleteCourse = true;
+                        }
+                        for(timestamp of times_userNotAvailable){
+//                            alert(course.Times_manual);
+//                            alert(timestamp);
+                            if(course.Times_manual.includes(timestamp)){
+                                deleteCourse = true;
                             }
                         }
-                    },
-                    false);
-                return svg;
-            };
-
-            var container = document.getElementById("availability");
-            var timeTableGrid = grid(8, 7, 22, 12, 700, 350);
-            container.appendChild(timeTableGrid);
-
-            //PAGE2-------------------------------------------------------------------------------
-
-            // Check all filtering options in the beginning
-            d3.select('#page2').selectAll('input').attr('checked', 'true');
-
-            //Data filtered according to study program, availabilities and languages
-            var data_filteredAccToPage1;
-            //Data used to draw tree
-            var treeData;
-
-            d3.json('e3_courses_190120_2.json').then(function (data) {
-
-                //Node indexes
-                var i = 0;
-                var root;
-
-                // Diagram measurements
-                var margin = { top: 20, right: 10, bottom: 10, left: 30 },
-                    width = 800 - margin.left - margin.right,
-                    height = 830 - margin.top - margin.bottom;
-
-                // Layout of tree
-                var treemap = d3.tree().size([height, width]);
-
-                var selectedCourses = [];
-                var catalogNames = ["BNE", "IOS", "Kultur und Gesellschaft", "Natur und Technik", "Wirtschaft"];
-
-                var showPage2Button = d3.select('#showPage2Button');
-                showPage2Button.on('click', filterAccordingToHardConstraints);
-
-                //var svg = d3.select("#treeSVG")
-                //    .attr("class", "mainElement")
-                //    .attr("width", "100%")
-                //    .attr("height", "100%")
-                //    .append("g")
-                //    .attr("transform", "translate("
-                //        + margin.left + "," + margin.top + ")");
-                 var svg = d3.select("#treeSVG")
-                    .attr("class", "mainElement")
-                    
-                     .attr("preserveAspectRatio","xMinYMax meet")
-   			.attr("viewBox", "0 0 420 910")	
-                 .append("g")
-                    .attr("transform", "translate("
-                      + margin.left + "," + margin.top + ")");
+                        
+                    }
+                    if(deleteCourse){
+                        tempData.children[i].children.splice(tempData.children[i].children.indexOf(course),1);
+                    }
+                }
+                sumOfCourses = sumOfCourses + tempData.children[i].children.length;
+            }
+           
+            if(sumOfCourses > 0){
                 
-
-                var selectionPanel = d3.select("#selectedCoursesPanel");
-
-                data_filteredAccToPage1 = data;
+//              Use filtered data to draw tree
+                data_filteredAccToPage1 = tempData;
                 treeData = data_filteredAccToPage1;
 
-                // Assigns parent, children, height, depth
-                root = d3.hierarchy(treeData, function (d) { return d.children; });
+//              Reassign tree structure
+                root = d3.hierarchy(treeData, function(d) {return d.children; });
                 root.x0 = height / 2;
                 root.y0 = 0;
 
-                // All nodes collapsed
-                collapse(root);
-
-                // Collapse node and all children
-                function collapse(d) {
-                    if (d.children) {
-                        d._children = d.children
-                        d._children.forEach(collapse)
-                        d.children = null
-                    }
-                }
+//              Collapse after the second level
+                root.children.forEach(collapse);
+                
+//              Expand first catalog
+                root.children[0].children = root.children[0]._children;
+                root.children[0]._children = null;
 
                 update(root, false);
-
-                function filterAccordingToHardConstraints() {
-
-                    //Count how many courses remain after filtering
-                    var sumOfCourses = 0;
-                    var deleteCourse = false;
-                    var subtree;
-                    var course;
-
-                    //Copy full data
-                    var tempData = JSON.parse(JSON.stringify(data));
-
-                    var studyProgram = d3.select("#studyProgram").node().value;
-
-                    //Select which languages the user does not want
-                    var deselectedLanguages = [];
-                    var inputElements = document.getElementsByClassName('languageSelection');
-                    for (var k = 0; k < inputElements.length; ++k) {
-                        if (!inputElements[k].checked) {
-                            deselectedLanguages.push(inputElements[k].value);
-                        }
-                    }
-
-                    //Remove all courses not matching selections; iterate through level 2 nodes
-                    for (i = 0; i < tempData.children.length; i++) {
-
-                        subtree = tempData.children[i].children;
-                        deleteCourse = false;
-
-                        for (k = subtree.length - 1; k >= 0; k--) {
-
-                            course = subtree[k];
-                            deleteCourse = false;
-
-                            for (j = 0; j < deselectedLanguages.length; j++) {
-                                if (course.Language.includes(deselectedLanguages[j])) {
-                                    deleteCourse = true;
-                                }
-                                if (course.Ausgeschlossen_Ingenieurwissenschaften_Bachelor.includes(studyProgram)) {
-                                    deleteCourse = true;
-                                }
-                                for (timestamp of times_userNotAvailable) {
-                                    //                            alert(course.Times_manual);
-                                    //                            alert(timestamp);
-                                    if (course.Times_manual.includes(timestamp)) {
-                                        deleteCourse = true;
-                                    }
-                                }
-
-                            }
-                            if (deleteCourse) {
-                                tempData.children[i].children.splice(tempData.children[i].children.indexOf(course), 1);
-                            }
-                        }
-                        sumOfCourses = sumOfCourses + tempData.children[i].children.length;
-                    }
-
-                    if (sumOfCourses > 0) {
-
-                        //              Use filtered data to draw tree
-                        data_filteredAccToPage1 = tempData;
-                        treeData = data_filteredAccToPage1;
-
-                        //              Reassign tree structure
-                        root = d3.hierarchy(treeData, function (d) { return d.children; });
-                        root.x0 = height / 2;
-                        root.y0 = 0;
-
-                        //              Collapse after the second level
-                        root.children.forEach(collapse);
-
-                        //              Expand first catalog
-                        root.children[0].children = root.children[0]._children;
-                        root.children[0]._children = null;
-
-                        update(root, false);
-
-                        //              Continue to tree view of courses
-                        document.getElementById("page1").style.display = "none";
-                        document.getElementById("page2").style.display = "block";
-                    }
-                    else {
-                        alert("Your selected options leave no courses to display!");
-                    }
+                
+//              Continue to tree view of courses
+                document.getElementById("page1").style.display = "none";
+                document.getElementById("page2").style.display = "block";
+            }
+            else{
+                alert("Your selected options leave no courses to display!");
+            }
+        }
+        
+        // Add filtering to checkboxes
+        d3.select('#page2').selectAll('input').on('click',filterCourses_leftPanel);
+        
+        var credit_range = ["1","9"];
+        
+        function filterCourses_leftPanel(){
+            
+            // Copy data
+            var tempData = JSON.parse(JSON.stringify(data_filteredAccToPage1)); 
+            
+            // Grab all unchecked checkboxes > courses matching their values have to be excluded
+            var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");          
+           
+            //Remember which 2nd level nodes were collapsed before filtering
+            var collapsed = [];
+            
+            var subtree;
+            var course;
+            var key;
+            var value;
+            var minCred;
+            var maxCred;
+            var courseCred;
+            var courseCredArr;
+            var courseMin;
+            var courseMax;
+            
+            for(a = 0; a<root.children.length; a++){
+                if(root.children[a]._children || (!root.children[a]._children && !root.children[a].children)){
+                    collapsed.push(true);
                 }
-
-                // Add filtering to checkboxes
-                d3.select('#page2').selectAll('input').on('click', filterCourses_leftPanel);
-
-                var credit_range = ["1", "9"];
-
-                function filterCourses_leftPanel() {
-
-                    // Copy data
-                    var tempData = JSON.parse(JSON.stringify(data_filteredAccToPage1));
-
-                    // Grab all unchecked checkboxes > courses matching their values have to be excluded
-                    var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");
-
-                    //Remember which 2nd level nodes were collapsed before filtering
-                    var collapsed = [];
-
-                    var subtree;
-                    var course;
-                    var key;
-                    var value;
-                    var minCred;
-                    var maxCred;
-                    var courseCred;
-                    var courseCredArr;
-                    var courseMin;
-                    var courseMax;
-
-                    for (a = 0; a < root.children.length; a++) {
-                        if (root.children[a]._children || (!root.children[a]._children && !root.children[a].children)) {
-                            collapsed.push(true);
-                        }
-                        else {
-                            collapsed.push(false);
-                        }
-                    }
-
-                    for (a = 0; a < tempData.children.length; a++) {
-                        subtree = tempData.children[a].children;
-                        deleteCourse = false;
-
-                        for (k = subtree.length - 1; k >= 0; k--) {
-                            course = subtree[k];
-                            deleteCourse = false;
-
-                            checkboxes.each(
-                                function () {
-
-                                    key = this.name;
-                                    value = this.value;
-
-                                    //Relaxed condition to also match fields with multiple entries
-                                    if (course[key].includes(value) || course[key] == "unknown") {
-                                        deleteCourse = true;
-                                    }
-
-                                }
-                            );
-
-                            //See if course falls within selected range of credits
-                            minCred = credit_range[0];
-                            maxCred = credit_range[1];
-                            courseCred = course["Credits"];
-                            if (courseCred.includes('-')) {
-                                courseCredArr = courseCred.split("-");
-                                courseMin = courseCredArr[0];
-                                courseMax = courseCredArr[1];
-                            }
-                            else {
-                                courseMin = courseCred;
-                                courseMax = courseCred;
-                            }
-
-                            if (courseMax < minCred) {
-                                deleteCourse = true;
-                            }
-                            if (maxCred < courseMin) {
-                                deleteCourse = true;
-                            }
-
-                            if (deleteCourse) {
-                                tempData.children[a].children.splice(tempData.children[a].children.indexOf(course), 1);
-                            }
-                        }
-                    }
-
-                    // Replace tree data with newly filtered data
-                    treeData = tempData;
-
-                    // Reassign tree structure
-                    root = d3.hierarchy(treeData, function (d) { return d.children; });
-                    root.x0 = height / 2;
-                    root.y0 = 0;
-
-                    // Reinstate collapsed nodes
-                    for (a = 0; a < root.children.length; a++) {
-                        if (collapsed[a]) {
-                            collapse(root.children[a]);
-                        }
-                    }
-
-                    update(root, true);
-
+                else{
+                    collapsed.push(false);
                 }
-
-                function update(source, filtering) {
-
-                    var duration;
-
-                    //          When user is just filitering, do not animate tree changes
-                    if (filtering) {
-                        duration = 0;
-                    }
-                    else {
-                        duration = 750;
-                    }
-
-                    // Assigns the x and y position for the nodes
-                    var treeData = treemap(root);
-
-                    // Compute new tree layout.
-                    var nodes = treeData.descendants();
-                    var links = treeData.descendants().slice(1);
-
-                    // Fixed depth
-                    nodes.forEach(function (d) { d.y = d.depth * 160 });
-
-                    // ****************** Nodes section ***************************
-
-                    // Update the nodes...
-                    var node = svg.selectAll('g.node')
-                        .data(nodes, function (d) {
-                            return d.id || (d.id = ++i);
-                        });
-
-                    // Enter any new nodes at the parent's previous position.
-                    var nodeEnter = node.enter().append('g')
-                        .attr('class', 'node')
-                        .attr("transform", function (d) {
-                            return "translate(" + source.y0 + "," + source.x0 + ")";
-                        })
-                        .on('click', click);
-
-                    // Add Circle for the nodes
-                    nodeEnter.append('circle')
-                        .attr('class', 'node')
-                        .attr('r', 1e-6)
-                        .style("fill", function (d) {
-                            return d._children ? "lightsteelblue" : "#fff";
-                        });
-
-                    // Add labels for the nodes
-                    nodeEnter.append('text')
-                        .attr('class', 'node')
-                        .attr("dy", ".35em")
-                        .attr("x", function (d) {
-                            //Node labels for empty catalog nodes (2nd level) should appear left
-                            if (!d.children && !d._children) {
-                                if (catalogNames.includes(d.data.Title)) {
-                                    return -13;
-                                }
-                            }
-                            return d.children || d._children ? -13 : 13;
-                        })
-                        .attr("text-anchor", function (d) {
-                            //Node labels for empty catalog nodes should appear left
-                            if (!d.children && !d._children) {
-                                if (catalogNames.includes(d.data.Title)) {
-                                    return "end";
-                                }
-                            }
-                            return d.children || d._children ? "end" : "start";
-                        })
-                        .text(function (d) { return d.data.Title; });
-
-                    // UPDATE
-                    var nodeUpdate = nodeEnter.merge(node);
-
-                    // Transition to the proper position for the node
-                    nodeUpdate.transition()
-                        .duration(duration)
-                        .attr("transform", function (d) {
-                            return "translate(" + d.y + "," + d.x + ")";
-                        });
-
-                    // Update the node attributes and style
-                    nodeUpdate.select('circle.node')
-                        .attr('r', 9)
-                        .style('fill', function (d) {
-                            //Node is expanded
-                            if (d._children) {
-                                if (d._children.length > 0) {
-                                    return "black";
-                                }
-                            }
-                            else {
-                                switch (d.data.Type) {
-                                    case "Seminar": return seminarColor;
-                                    case "Blockseminar": return blockSeminarColor;
-                                    case "Vorlesung": return lectureColor;
-                                    case "VL/Übung": return lectureExerciseColor;
-                                    case "E-Learning": return eLearningColor;
-                                    default: return "white";
-                                }
-                            }
-                        })
-                        .style('stroke', function (d) {
-                            switch (d.data.Type) {
-                                case "Seminar": return seminarColorDark;
-                                case "Blockseminar": return blockSeminarColorDark;
-                                case "Vorlesung": return lectureColorDark;
-                                case "VL/Übung": return lectureExerciseColorDark;
-                                case "E-Learning": return eLearningColorDark;
-                                default: return "black";
-                            }
-                        })
-                        .attr('cursor', 'pointer');
-
-                    //Update node labels
-                    nodeUpdate.select('text')
-                        .style('fill', function (d) {
-                            if (selectedCourses.includes(d.data)) {
-                                switch (d.data.Type) {
-                                    case "Seminar": return seminarColorDark;
-                                    case "Blockseminar": return blockSeminarColorDark;
-                                    case "Vorlesung": return lectureColorDark;
-                                    case "VL/Übung": return lectureExerciseColorDark;
-                                    case "E-Learning": return eLearningColorDark;
-                                    default: return "black";
-                                }
-                            }
-                            return "black";
-                        });
-
-                    // Remove any exiting nodes
-                    var nodeExit = node.exit().transition()
-                        .duration(duration)
-                        .attr("transform", function (d) {
-                            return "translate(" + source.y + "," + source.x + ")";
-                        })
-                        .remove();
-
-                    // On exit reduce the node circles size to 0
-                    nodeExit.select('circle')
-                        .attr('r', 1e-6);
-
-                    // On exit reduce the opacity of text labels
-                    nodeExit.select('text')
-                        .style('fill-opacity', 1e-6);
-
-                    // ****************** links section ***************************
-
-                    // Update the links...
-                    var link = svg.selectAll('path.link')
-                        .data(links, function (d) { return d.id; });
-
-                    // Enter any new links at the parent's previous position.
-                    var linkEnter = link.enter().insert('path', "g")
-                        .attr("class", "link")
-                        .attr('d', function (d) {
-                            var o = { x: source.x0, y: source.y0 }
-                            return diagonal(o, o)
-                        });
-
-                    // UPDATE
-                    var linkUpdate = linkEnter.merge(link);
-
-                    // Transition back to the parent element position
-                    linkUpdate.transition()
-                        .duration(duration)
-                        .attr('d', function (d) { return diagonal(d, d.parent) });
-
-                    // Remove any exiting links
-                    var linkExit = link.exit().transition()
-                        .duration(duration)
-                        .attr('d', function (d) {
-                            var o = { x: source.x, y: source.y }
-                            return diagonal(o, o)
-                        })
-                        .remove();
-
-                    // Store the old positions for transition.
-                    nodes.forEach(function (d) {
-                        d.x0 = d.x;
-                        d.y0 = d.y;
-                    });
-
-                    // Creates a curved (diagonal) path from parent to the child nodes
-                    function diagonal(s, d) {
-                        path = `M ${s.y} ${s.x}
-                        C ${(s.y + d.y) / 2} ${s.x},
-                        ${(s.y + d.y) / 2} ${d.x},
-                        ${d.y} ${d.x}`
-                        return path
-                    }
-
-                    // Toggle children on click.
-                    function click(d) {
-                        //Treat leaves differently: these are selectable courses
-                        if (!d.children && !d._children) {
-                            if (catalogNames.includes(d.data.Title)) {
-                                //Empty catalog: should be a non-responsive node
-                            } else {
-                                if (selectedCourses.includes(d.data)) {
-                                    var index = selectedCourses.indexOf(d.data);
-                                    selectedCourses.splice(index, 1);
-                                }
-                                else {
-                                    selectedCourses.push(d.data);
-                                }
-                                updateSelectedCourses();
-                            }
-                        }
-                        else {
-                            if (d.children) {
-                                d._children = d.children;
-                                d.children = null;
-                            } else {
-                                root.children.forEach(collapse);
-                                d.children = d._children;
-                                d._children = null;
-                            }
-                            update(d, false);
-                        }
-                    }
-
-                }
-
-                function updateSelectedCourses() {
-                    //Update node labels according to selection
-                    d3.select('#treeSVG').selectAll('text')
-                        .style('fill', function (d) {
-                            if (selectedCourses.includes(d.data)) {
-                                switch (d.data.Type) {
-                                    case "Seminar": return seminarColorDark;
-                                    case "Blockseminar": return blockSeminarColorDark;
-                                    case "Vorlesung": return lectureColorDark;
-                                    case "VL/Übung": return lectureExerciseColorDark;
-                                    case "E-Learning": return eLearningColorDark;
-                                    default: return "black";
-                                }
-                            }
-                            return "black";
-                        });
-
-                    selectionPanel.selectAll("p").remove();
-                    selectionPanel.selectAll('p')
-                        .data(selectedCourses).enter()
-                        .append('p')
-                        .attr('class', 'text')
-                        .on('click', function (d) {
-                            var index = selectedCourses.indexOf(d);
-                            selectedCourses.splice(index, 1);
-                            updateSelectedCourses();
-                        })
-                        .text(function (d) {
-                            return d.Title;
-                        })
-                        .attr('style', function (d) {
-                            return "background-color:white;"
-                        })
-                        .style("position", "relative")
-                        .append("svg")
-                        .attr("style", "position:absolute;top:-4;right:-10")
-                        .attr("height", "24px")
-                        .attr("width", "24px")
-                        .append("circle")
-                        .attr("r", "10px")
-                        .attr("cx", "12px")
-                        .attr("cy", "12px")
-                        .attr("stroke", function (d) {
-                            switch (d.Type) {
-                                case "Seminar": return seminarColorDark;
-                                case "Blockseminar": return blockSeminarColorDark;
-                                case "Vorlesung": return lectureColorDark;
-                                case "VL/Übung": return lectureExerciseColorDark;
-                                case "E-Learning": return eLearningColorDark;
-                                default: return "black";
-                            }
-                        })
-                        .attr("stroke-width", "2px")
-                        .attr("fill", function (d) {
-                            switch (d.Type) {
-                                case "Seminar": return seminarColor;
-                                case "Blockseminar": return blockSeminarColor;
-                                case "Vorlesung": return lectureColor;
-                                case "VL/Übung": return lectureExerciseColor;
-                                case "E-Learning": return eLearningColor;
-                                default: return "black";
-                            }
-                        });
-
-                    selectionPanel.selectAll("p svg")
-                        .append("text")
-                        .attr("style", "font-size:19px;")
-                        .attr("x", "50%")
-                        .attr("y", "60%")
-                        .attr("dominant-baseline", "middle")
-                        .attr("text-anchor", "middle")
-                        .text("×");
-                }
-
-                //Slider to filter for credits
-                var sliderRange = d3
-                    .sliderBottom()
-                    .min(1)
-                    .max(9)
-                    .step(1)
-                    .width(150)
-                    .ticks(10)
-                    .default([1, 9])
-                    .fill('darkslategray')
-                    .on('onchange', val => {
-                        credit_range = val;
-                        filterCourses_leftPanel();
-                    });
-
-                var gRange = d3
-                    .select('div#slider-range')
-                    .append('svg')
-                    .attr('width', 500)
-                    .attr('height', 80)
-                    .append('g')
-                    .attr('transform', 'translate(12,20)');
-
-                gRange.call(sliderRange);
-
-                d3.select('#detailedViewButton').on('click', showDetailedView);
-
-                function showDetailedView() {
-                    fillSelectedCoursesTable();
-                    timeTableGrid_page3 = timeTableGrid.cloneNode(true);
-                    var courseTimes = document.getElementById("timeTable");
-                    courseTimes.appendChild(timeTableGrid_page3);
-                    document.getElementById("page2").style.display = "none";
-                    document.getElementById("page3").style.display = "block";
-                }
-
-                //PAGE3--------------------------------------------------------------------------------
-                var titles = ["Delete", "Title", "Recommendation", "Credits", "Type", "Exam", "Location", "Language", "Link"];
-
-                //Define basic table structure
-                var sortAscending = true;
-                var table = d3.select('#selectedCoursesTable').append('table').attr("id", 'courseTable');
-                var headers = table.append('thead').append('tr')
-                    .selectAll('th')
-                    .data(titles)
-                    .enter()
-                    .append('th')
-                    .text(function (d) {
-                        return d;
-                    })
-               
-                    .on('click', function (d) {
-		                	   headers.attr('class', 'header');
-		                	   
-		                	   if (sortAscending) {
-		                	     rows.sort(function(a, b) { return b[d] < a[d]; });
-		                	     sortAscending = false;
-		                	     this.className = 'aes';
-		                	   } else {
-		                		 rows.sort(function(a, b) { return b[d] > a[d]; });
-		                		 sortAscending = true;
-		                		 this.className = 'des';
-		                	   }
+            }
+            
+            for(a=0; a<tempData.children.length; a++){
+                subtree = tempData.children[a].children;
+                deleteCourse = false;
+                        
+                for(k=subtree.length-1; k>=0; k--){
+                    course = subtree[k];
+                    deleteCourse = false;
+            
+                    checkboxes.each(
+                        function(){
                     
+                            key = this.name;
+                            value = this.value;
+                    
+                            //Relaxed condition to also match fields with multiple entries
+                            if(course[key].includes(value) || course[key] == "unknown"){
+                                deleteCourse = true;
+                            }
 
+                        }
+                    );
+                    
+                    //See if course falls within selected range of credits
+                    minCred = credit_range[0];
+                    maxCred = credit_range[1];
+                    courseCred = course["Credits"];
+                    if(courseCred.includes('-')){
+                        courseCredArr = courseCred.split("-");
+                        courseMin = courseCredArr[0];
+                        courseMax = courseCredArr[1];
+                    }
+                    else{
+                        courseMin = courseCred;
+                        courseMax = courseCred;
+                    }
+                    
+                    if(courseMax < minCred){
+                        deleteCourse = true;
+                    }
+                    if(maxCred < courseMin){
+                        deleteCourse = true;
+                    }
+                    
+                    if(deleteCourse){
+                        tempData.children[a].children.splice(tempData.children[a].children.indexOf(course),1);
+                    }
+                } 
+            }
+                        
+            // Replace tree data with newly filtered data               
+            treeData = tempData;
+
+            // Reassign tree structure
+            root = d3.hierarchy(treeData, function(d) {return d.children; });
+            root.x0 = height / 2;
+            root.y0 = 0;
+
+            // Reinstate collapsed nodes
+            for(a = 0; a<root.children.length; a++){
+                if(collapsed[a]){
+                    collapse(root.children[a]);
+                }
+            }
+            
+            update(root, true); 
+      
+        }
+        
+        function update(source, filtering) {
+            
+            var duration;
+            
+//          When user is just filitering, do not animate tree changes
+            if(filtering){
+                duration = 0;
+            }
+            else{
+                duration = 750;
+            }
+            
+            // Assigns the x and y position for the nodes
+            var treeData = treemap(root);
+
+            // Compute new tree layout.
+            var nodes = treeData.descendants();
+            var links = treeData.descendants().slice(1);
+
+            // Fixed depth
+            nodes.forEach(function(d){ d.y = d.depth * 160});
+
+            // ****************** Nodes section ***************************
+
+            // Update the nodes...
+            var node = svg.selectAll('g.node')
+                .data(nodes, function(d) {
+                    return d.id || (d.id = ++i); });  
+
+            // Enter any new nodes at the parent's previous position.
+            var nodeEnter = node.enter().append('g')
+                .attr('class', 'node')
+                .attr("transform", function(d) {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";})
+                .on('click', click);
+
+            // Add Circle for the nodes
+            nodeEnter.append('circle')
+                .attr('class', 'node')
+                .attr('r', 1e-6)
+                .style("fill", function(d) {
+                    return d._children ? "lightsteelblue" : "#fff";});
+
+            // Add labels for the nodes     
+            nodeEnter.append('text')
+                .attr('class','node')
+                .attr("dy", ".35em")
+                .attr("x", function(d) {
+                    //Node labels for empty catalog nodes (2nd level) should appear left
+                    if(!d.children && !d._children){
+                        if(catalogNames.includes(d.data.Title)){
+                            return -13;
+                        }
+                    }
+                    return d.children || d._children ? -13 : 13;})
+                .attr("text-anchor", function(d) {
+                    //Node labels for empty catalog nodes should appear left
+                    if(!d.children && !d._children){
+                        if(catalogNames.includes(d.data.Title)){
+                            return "end";
+                        }
+                    }
+                    return d.children || d._children ? "end" : "start";})
+                .text(function(d) { return d.data.Title; });
+
+            // UPDATE
+            var nodeUpdate = nodeEnter.merge(node);
+
+            // Transition to the proper position for the node
+            nodeUpdate.transition()
+                .duration(duration)
+                .attr("transform", function(d) { 
+                    return "translate(" + d.y + "," + d.x + ")";});
+
+            // Update the node attributes and style
+            nodeUpdate.select('circle.node')
+                .attr('r', 9)
+                .style('fill', function(d) {
+                    //Node is expanded
+                    if(d._children){
+                        if(d._children.length > 0){
+                            return "black";
+                        }
+                    }
+                    else{
+                        switch(d.data.Type){
+                            case "Seminar":return seminarColor;
+                            case "Blockseminar": return blockSeminarColor;
+                            case "Vorlesung": return lectureColor;
+                            case "VL/Übung":return lectureExerciseColor;
+                            case "E-Learning":return eLearningColor;    
+                            default: return "white";
+                        }
+                    }
+                })
+                .style('stroke', function(d) {
+                        switch(d.data.Type){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "VL/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;    
+                            default: return "black";
+                        }
+                })
+                .attr('cursor', 'pointer');
+
+            //Update node labels
+            nodeUpdate.select('text')
+                .style('fill', function(d) {
+                    if(selectedCourses.includes(d.data)){
+                        switch(d.data.Type){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "VL/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;  
+                            default: return "black";
+                        }
+                    }
+                    return "black";
+                });
+
+            // Remove any exiting nodes
+            var nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + source.y + "," + source.x + ")";})
+                .remove();
+
+            // On exit reduce the node circles size to 0
+            nodeExit.select('circle')
+                .attr('r', 1e-6);
+
+            // On exit reduce the opacity of text labels
+            nodeExit.select('text')
+                .style('fill-opacity', 1e-6);
+
+            // ****************** links section ***************************
+
+            // Update the links...
+            var link = svg.selectAll('path.link')
+                .data(links, function(d) { return d.id; });
+
+            // Enter any new links at the parent's previous position.
+            var linkEnter = link.enter().insert('path', "g")
+                .attr("class", "link")
+                .attr('d', function(d){
+                    var o = {x: source.x0, y: source.y0}
+                    return diagonal(o, o)});
+
+            // UPDATE
+            var linkUpdate = linkEnter.merge(link);
+
+            // Transition back to the parent element position
+            linkUpdate.transition()
+                .duration(duration)
+                .attr('d', function(d){ return diagonal(d, d.parent) });
+
+            // Remove any exiting links
+            var linkExit = link.exit().transition()
+                .duration(duration)
+                .attr('d', function(d) {
+                    var o = {x: source.x, y: source.y}
+                    return diagonal(o, o)})
+                .remove();
+
+            // Store the old positions for transition.
+            nodes.forEach(function(d){
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+
+            // Creates a curved (diagonal) path from parent to the child nodes
+            function diagonal(s, d) {
+                path = `M ${s.y} ${s.x}
+                    C ${(s.y + d.y) / 2} ${s.x},
+                    ${(s.y + d.y) / 2} ${d.x},
+                    ${d.y} ${d.x}`
+                return path
+            }
+
+            // Toggle children on click.
+            function click(d) {
+                //Treat leaves differently: these are selectable courses
+                if(!d.children && !d._children){
+                    if(catalogNames.includes(d.data.Title)){
+                        //Empty catalog: should be a non-responsive node
+                    }else{
+                        if(selectedCourses.includes(d.data)){
+                            var index = selectedCourses.indexOf(d.data);
+                            selectedCourses.splice(index,1);
+                        }
+                        else{
+                            selectedCourses.push(d.data);
+                        } 
+                        updateSelectedCourses();
+                    }
+                } 
+                else{
+                    if (d.children) {
+                        d._children = d.children;
+                        d.children = null;
+                    } else {
+                        root.children.forEach(collapse);
+                        d.children = d._children;
+                        d._children = null;
+                    }
+                    update(d,false);
+                }
+            } 
+            
+        }
+        
+        function updateSelectedCourses(){
+            //Update node labels according to selection        
+            d3.select('#treeSVG').selectAll('text')
+                .style('fill', function(d) {
+                    if(selectedCourses.includes(d.data)){
+                        switch(d.data.Type){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "VL/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;  
+                            default: return "black";
+                        }
+                    }
+                    return "black";
+                });
+            
+            selectionPanel.selectAll("p").remove();  
+            selectionPanel.selectAll('p')
+                .data(selectedCourses).enter()
+                .append('p')
+                .attr('class','text')
+                .on('click',function(d){
+                    var index = selectedCourses.indexOf(d);
+                    selectedCourses.splice(index,1);
+                    updateSelectedCourses();})
+                .text(function(d){
+                    return d.Title;})
+                .attr('style',function(d){
+                        return "background-color:white;"})
+                    .style("position","relative")
+                    .append("svg")
+                    .attr("style","position:absolute;top:-4;right:-10")
+                    .attr("height","24px")
+                    .attr("width","24px")
+                    .append("circle")
+                    .attr("r","10px")
+                    .attr("cx","12px")
+                    .attr("cy","12px")
+                    .attr("stroke",function(d) {
+                        switch(d.Type){
+                            case "Seminar":return seminarColorDark;
+                            case "Blockseminar": return blockSeminarColorDark;
+                            case "Vorlesung": return lectureColorDark;
+                            case "VL/Übung":return lectureExerciseColorDark;
+                            case "E-Learning":return eLearningColorDark;    
+                            default: return "black";
+                        }
+                    })
+                    .attr("stroke-width","2px")
+                    .attr("fill",function(d) {
+                        switch(d.Type){
+                            case "Seminar":return seminarColor;
+                            case "Blockseminar": return blockSeminarColor;
+                            case "Vorlesung": return lectureColor;
+                            case "VL/Übung":return lectureExerciseColor;
+                            case "E-Learning":return eLearningColor;    
+                            default: return "black";
+                        }
                     });
-                var rows = table.append('tbody');
+            
+                selectionPanel.selectAll("p svg")
+                .append("text")
+                .attr("style","font-size:19px;")
+                .attr("x","50%")
+                .attr("y","60%")
+                .attr("dominant-baseline","middle")
+                .attr("text-anchor","middle")
+                .text("×");      
+        }
+        
+        //Slider to filter for credits
+          var sliderRange = d3
+            .sliderBottom()
+            .min(1)
+            .max(9)
+            .step(1)
+            .width(150)
+            .ticks(10)
+            .default([1, 9])
+            .fill('darkslategray')
+            .on('onchange', val => {
+                credit_range = val;
+                filterCourses_leftPanel();
+            });
 
-                function fillSelectedCoursesTable() {
+          var gRange = d3
+            .select('div#slider-range')
+            .append('svg')
+            .attr('width', 500)
+            .attr('height', 80)
+            .append('g')
+            .attr('transform', 'translate(12,20)');
 
-                    rows.selectAll('.table-data').remove();
-                    rows.selectAll('tr')
-                        .data(selectedCourses).enter()
-                        .append('tr')
-                        .attr('class', 'table-data')
-                        .selectAll('td')
-                        .data(function (d) {
-                            return titles.map(function (k) {
-                                return { 'value': d[k], 'name': k };
-                            });
-                        }).enter()
-                        .append('td')
-                        .attr('data-th', function (d) {
-                            return d.name;
+          gRange.call(sliderRange);
+        
+        d3.select('#detailedViewButton').on('click',showDetailedView);
+        
+        function showDetailedView(){
+            fillSelectedCoursesTable();
+            timeTableGrid_page3 = timeTableGrid.cloneNode(true);
+            var courseTimes = document.getElementById("timeTable");
+            courseTimes.appendChild(timeTableGrid_page3);
+            document.getElementById("page2").style.display = "none";
+            document.getElementById("page3").style.display = "block";
+        } 
+    
+        //PAGE3--------------------------------------------------------------------------------      
+        var titles = ["Delete","Title","Recommendation","Credits","Type","Exam","Location","Language","Link"];
+        
+        //Define basic table structure
+        var table = d3.select('#selectedCoursesTable').append('table').attr("id",'courseTable');
+        table.append('thead').append('tr')
+            .selectAll('th')
+            .data(titles)
+            .enter()
+            .append('th')
+            .text(function (d) {
+                return d;
+            });
+        var rows = table.append('tbody'); 
+        
+        function fillSelectedCoursesTable(){
+            
+            rows.selectAll('.table-data').remove();
+            rows.selectAll('tr')
+                .data(selectedCourses).enter()
+                .append('tr')
+                .attr('class','table-data')
+                .selectAll('td')
+                .data(function (d) {
+                    return titles.map(function (k) {
+                        return { 'value': d[k], 'name': k};
+                    });
+                }).enter()
+                .append('td')
+                .attr('data-th', function (d) {
+                    return d.name;
+                })
+                .attr('class',function(d){
+                    return d.name;
+                })
+                .text(function (d) {
+                    if(!(d.name == "Link") && !(d.name == "Recommendation") && !(d.name == "Delete")){
+                        return d.value;
+                    }
+                });
+  
+            rows.selectAll('.Link').append('a')
+                .attr('href',function(d){
+                        return d.value;
+                })
+                .attr('target','_blank')
+                .attr('class','fakeButton')
+                .text("LSF");
+   
+            rows.selectAll('.table-data').selectAll('.Recommendation')
+                .append('svg')
+                .attr('height','30px')
+                .attr('width',function(d){
+                      if(d.value > 0){
+                        return d.value+"px";
+                      }else{
+                          return "0px";
+                      }
+                      })
+                .append('rect')
+                .attr('fill','palegreen')
+                .attr('height','30px')
+                .attr('width',function(d){
+                      if(d.value > 0)
+                        return "100%";
+                      })
+                .each(function(d){
+                    d3.select(this.parentNode).append('text')
+                    .text(function(d){
+                        if(d.value > 0)
+                            return d.value+"%";
                         })
-                        .attr('class', function (d) {
-                            return d.name;
-                        })
-                        .text(function (d) {
-                            if (!(d.name == "Link") && !(d.name == "Recommendation") && !(d.name == "Delete")) {
-                                return d.value;
-                            }
-                        });
-
-                    rows.selectAll('.Link').append('a')
-                        .attr('href', function (d) {
-                            return d.value;
-                        })
-                        .attr('target', '_blank')
-                        .attr('class', 'fakeButton')
-                        .text("LSF");
-
-                    rows.selectAll('.table-data').selectAll('.Recommendation')
+                    .attr('x','5%')
+                    .attr('y','70%');
+                });
+            
+            // Make cells deletable
+            d3.selectAll('tr').each(function(d) {
+                d3.select(this).selectAll('.Delete').each(function() {
+                    d3.select(this)
                         .append('svg')
-                        .attr('height', '30px')
-                        .attr('width', function (d) {
-                            if (d.value > 0) {
-                                return d.value + "px";
-                            } else {
-                                return "0px";
-                            }
+                        .attr('height','30px')
+                        .attr('width','50px')
+                        .append('circle')
+                        .attr('r',14)
+                        .attr("cx",'50%')
+                        .attr('cy','50%')
+                        .attr('fill','white')
+                        .attr('stroke','black')
+                        .on('click',function(){
+                            var index = selectedCourses.indexOf(d);
+                            selectedCourses.splice(index,1);
+                            fillSelectedCoursesTable();
                         })
-                        .append('rect')
-                        .attr('fill', 'palegreen')
-                        .attr('height', '30px')
-                        .attr('width', function (d) {
-                            if (d.value > 0)
-                                return "100%";
-                        })
-                        .each(function (d) {
-                            d3.select(this.parentNode).append('text')
-                                .text(function (d) {
-                                    if (d.value > 0)
-                                        return d.value + "%";
-                                })
-                                .attr('x', '5%')
-                                .attr('y', '70%');
-                        });
-
-                    // Make cells deletable
-                    d3.selectAll('tr').each(function (d) {
-                        d3.select(this).selectAll('.Delete').each(function () {
-                            d3.select(this)
-                                .append('svg')
-                                .attr('height', '30px')
-                                .attr('width', '50px')
-                                .append('circle')
-                                .attr('r', 14)
-                                .attr("cx", '50%')
-                                .attr('cy', '50%')
-                                .attr('fill', 'white')
-                                .attr('stroke', 'black')
-                                .on('click', function () {
+                        .each(function(){
+                            d3.select(this.parentNode)
+                                .append('text')
+                                .on('click',function(){
                                     var index = selectedCourses.indexOf(d);
-                                    selectedCourses.splice(index, 1);
+                                    selectedCourses.splice(index,1);
                                     fillSelectedCoursesTable();
                                 })
-                                .each(function () {
-                                    d3.select(this.parentNode)
-                                        .append('text')
-                                        .on('click', function () {
-                                            var index = selectedCourses.indexOf(d);
-                                            selectedCourses.splice(index, 1);
-                                            fillSelectedCoursesTable();
-                                        })
-                                        .attr("style", "font-size:19px;")
-                                        .attr("x", "50%")
-                                        .attr("y", "60%")
-                                        .attr("dominant-baseline", "middle")
-                                        .attr("text-anchor", "middle")
-                                        .text('×');
-                                })
-                        });
-                    });
-
-                    //Show time of courses visually in timetable
-                    //            alert('removing');
-                    ////            d3.selectAll('.courseMarker').remove();
-                    //            alert('drawing');
-                    //            d3.selectAll('tr.table-data').each(function(d){
-                    //                var times = [];
-                    //                var time;
-                    //                var courseTimes = d.Times_manual;
-                    //                if(courseTimes.includes(';')){
-                    //                    var times = courseTimes.split(';');
-                    //                }
-                    //                else{
-                    //                    times.push(courseTimes);
-                    //                }
-                    //                alert(times);
-                    //
-                    //                for(t=0; t<times.length;t++){
-                    ////                    alert(times[t]);
-                    //                    time = times[t];
-                    //                    d3.select('#radarChart')
-                    ////                        .each(function(){
-                    ////                                        alert(this.parentNode.tagName);
-                    //                        //when selecting #radarChart it works, when selecting this.parentNode or this it does not
-                    ////                            d3.select(this)
-                    //                                .append('p')
-                    //                                .on('click',function(){
-                    //                                alert('hello?');
-                    //                            })
-                    //                            .text('HELLLLOOOOOOO');
-                    ////                                .attr('width','5px')
-                    ////                                .attr('height','5px')
-                    ////                                .attr('fill','blue')
-                    ////                                .attr('class','courseMarker');
-                    ////                    });
-                    //                }
-                    //            });
-
-                    selectedCourses.forEach(function (d) {
-                        //                alert(d.Times_manual);
-                        var times = [];
-                        var time;
-                        var courseTimes = d.Times_manual;
-                        if (courseTimes.includes(';')) {
+                                .attr("style","font-size:19px;")
+                                .attr("x","50%")
+                                .attr("y","60%")
+                                .attr("dominant-baseline","middle")
+                                .attr("text-anchor","middle")
+                                .text('×');
+                        })
+                });
+            });  
+            
+            var timeTable = d3.select('#timeTable');
+            var times = [];
+            var time;
+            var courseTimes;
+            
+            //Visually display couse hours in timetable
+            d3.selectAll('.table-data')
+                .on('mouseenter',function(d){
+                    d3.select(this)
+                        .attr('style','background-color:aliceblue;');
+                
+                    times = [];
+                    courseTimes = d.Times_manual;
+                    if(!courseTimes == ""){
+                        if(courseTimes.includes(';')){
+                            times = courseTimes.split(';');
+                        }
+                        else{
+                            times.push(courseTimes);
+                        }
+                        for(t=0; t<times.length;t++){
+                            time = times[t];
+                            var name = '#'+time;
+                            timeTable.select(name)
+//                                .transition()
+//                                .duration(300)
+                                .attr('fill','aliceblue');
+                        }
+                    }                   
+                });
+                        
+            d3.selectAll('.table-data')
+                .on('mouseleave',function(d){
+                    d3.select(this)
+                        .attr('style','background-color:white;');
+                
+                    times = [];
+                    courseTimes = d.Times_manual;
+                    if(!courseTimes == ""){
+                        if(courseTimes.includes(';')){
                             var times = courseTimes.split(';');
                         }
-                        else {
+                        else{
                             times.push(courseTimes);
                         }
 
-                        //                for(t=0; t<times.length;t++){
-                        ////                    alert(times[t]);
-                        //                    time = times[t];
-                        //
-                        //                    d3.select('#'+time).each(
-                        //                        function(){
-                        //                            d3.select(this.parentNode).each(function(){
-                        //                                d3.select(this)
-                        //                        .append('rect')
-                        //                        .attr('width','3px')
-                        //                        .attr('height','3px')
-                        //                        .attr('fill','black')
-                        //                        .on('click',function(){
-                        //                        alert('hi ?')
-                        //                    })
-                        //                        .text('HELLO');});
-                        //                    })
-                        //                }
-                    })
+                        for(t=0; t<times.length;t++){
+                            time = times[t];
+                            var name = '#'+time;
+                            timeTable.select(name)
+                                .attr('fill',function(){
+                                    return d3.select('#availability').select('#'+this.id).attr('fill');
+                                });
+                        }
+                    }                   
+                });
+        }
+        
+        var config = {
+            w: 300,
+            h: 300,
+            maxValue: 5,
+            levels: 5,
+//            ExtraWidthX: 300
+        }
+        
+        var chartData = JSON.parse(
+            "[[{\"area\": \"Central \", \"value\": 4},{\"area\": \"Kirkdale\", \"value\": 1},{\"area\": \"Kensington \", \"value\": 3},{\"area\": \"Everton \", \"value\": 2}, {\"area\": \"Picton \", \"value\": 5}, {\"area\": \"Riverside \", \"value\": 3}]]");
 
-
-                }
-            });
-
-    //headers
-    //.on("click", function(d) {
-    //  if (d == "Title") {
-    //    clicks.title++;
-    //    // even number of clicks
-    //    if (clicks.title % 2 == 0) {
-    //      // sort ascending: alphabetically
-    //      rows.sort(function(a,b) { 
-    //        if (a.title.toUpperCase() < b.title.toUpperCase()) { 
-    //          return -1; 
-    //        } else if (a.title.toUpperCase() > b.title.toUpperCase()) { 
-    //          return 1; 
-    //        } else {
-    //          return 0;
-    //        }
-    //      });
+        //Call function to draw the Radar chart
+//        d3.json(chartData, function(error, data) {
+//            if (error) throw error;
+            RadarChart.draw("#radarChart", chartData, config);
+//        });
+    });
+    
    
-        </script>
+
+</script>
 </body>
-</html>
