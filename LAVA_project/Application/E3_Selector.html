@@ -239,7 +239,7 @@
         th { 
             background: black; 
             color: white; 
-            cursor: s-resize;
+/*            cursor: s-resize;*/
             font-weight: normal;
             background-repeat: no-repeat;
             background-position: 3% center;
@@ -474,7 +474,7 @@
 
     var times_userNotAvailable = new Set();
     var colorText = "black";
-    var colorAvailable = "lightgreen";
+    var colorAvailable = "green";
     var colorUnavailable = "peachpuff"; 
     var noColor = "none";
     
@@ -1248,6 +1248,69 @@
             var times = [];
             var time;
             var courseTimes;
+            
+            //Enable selection of courses
+            d3.selectAll('.table-data')
+                .on('click',function(d){
+                    //Check if course is currently selected
+//                    alert(d3.select(this).selectAll('.Title').attr('style'));
+                    if(d3.select(this).selectAll('.Title').attr('style') != null && d3.select(this).selectAll('.Title').attr('style').includes('background-color:#A9CCE3')){
+                        d3.select(this).selectAll('.Title')
+                            .attr('style','background-color:none');
+                       
+                        times = [];
+                        courseTimes = d.Times_manual;
+                        if(!courseTimes == ""){
+                            if(courseTimes.includes(';')){
+                                times = courseTimes.split(';');
+                            }
+                            else{
+                                times.push(courseTimes);
+                            }
+                            for(t=0; t<times.length;t++){
+                                time = times[t];
+                                var name = '#'+time;
+                                timeTable.select(name).each(function(){
+                                    d3.select(this.parentNode)
+                                        .selectAll('.courseMarker').remove();})
+                            }
+                        } 
+                        
+                    }
+                    else{
+                        d3.select(this).selectAll('.Title')
+                            .attr('style','background-color:#A9CCE3');
+                        
+                        times = [];
+                        courseTimes = d.Times_manual;
+                        if(!courseTimes == ""){
+                            if(courseTimes.includes(';')){
+                                times = courseTimes.split(';');
+                            }
+                            else{
+                                times.push(courseTimes);
+                            }
+                            for(t=0; t<times.length;t++){
+                                time = times[t];
+                                var name = '#'+time;
+                                timeTable.select(name).each(function(){
+                                    d3.select(this.parentNode)
+                                        .append('g')
+//                                        .append('rect')
+                                        .append('circle')
+                                        .attr('r',5)
+                                        .attr('cx','11px')
+                                        .attr('cy','6px')
+                                        .attr('class','courseMarker')
+//                                        .attr('width','20px')
+//                                        .attr('height','10px')
+//                                        .attr('x','1px')
+//                                        .attr('y','1px')
+                                        .attr('fill','#A9CCE3');})
+                            }
+                        } 
+                    }                 
+                });
             
             //Visually display couse hours in timetable
             d3.selectAll('.table-data')

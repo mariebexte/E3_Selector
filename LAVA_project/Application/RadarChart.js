@@ -9,7 +9,7 @@
 //http://nbremer.blogspot.nl/2013/09/making-d3-radar-chart-look-bit-better.html
 
 var RadarChart = {
-  draw: function(id, d, options){
+  draw: function (id, d, options) {
   var cfg = {
 	 radius: 5,
 	 w: 600,
@@ -50,7 +50,6 @@ var RadarChart = {
 			.attr("height", cfg.h+cfg.ExtraWidthY)
 			.append("g")
 			.attr("transform", "translate(" + cfg.TranslateX + "," + cfg.TranslateY + ")");
-			;
 
 	var tooltip;
 	
