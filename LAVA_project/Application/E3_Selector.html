@@ -7,6 +7,10 @@
 
     <!-- CSS Files -->
     <link href="c3.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Aleo' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Archivo Narrow' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- JS Files -->
     <script type="text/javascript" src="d3.min.js"></script>
@@ -15,6 +19,81 @@
     <script src="RadarChart.js"></script>
         
     <style>
+        *{
+            font-family: 'Arsenal';
+        }
+        
+        div{
+            border-radius: 15px;
+        }
+        
+        h1{
+            margin-top:10%;
+            font-size: 40pt;
+        }
+        
+        h2{
+            font-size: 20pt;
+        }
+        
+        h3{
+            font-size: 18pt;
+        }
+        
+        .subtitle{
+            margin-bottom: 5%;
+        }
+        
+        .floatingDiv{
+            float:left;
+            text-align: center;
+        }
+        
+        .step{
+            text-align: center;
+            width:25%;
+        }
+        
+        .column{
+            background-color: darkslategray;
+            border-radius: 25px;
+            color: white;
+            padding:10px;
+            margin-top:10px;
+        }
+        
+        .left{
+            float:left;
+            display:inline-block;
+            margin-left:11.5%;
+        }
+        
+        .middle{
+            float:left;
+            display:inline-block;
+            margin-left:1%;
+            margin-right: 1%;
+        }
+        
+        .right{
+            float:left;
+            display:inline-block;
+            margin-right:11.5%;
+        }
+        
+        #landingPage{
+            background: #6EA2A5;
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:1%;
+        }
+        
+        #landingPage p{
+            font-size: 15pt;
+        }
     
         #page1 {
             margin:auto;
@@ -23,7 +102,7 @@
             width: 42%;
             height: 98%;
 /*            font-size: 12pt;*/
-            font-family: "Futura";
+            font-family: "Arsenal";
             background-color:lightblue;
             padding:2%;
             border-radius: 20px;
@@ -31,7 +110,7 @@
         
         #page2 p{
             margin:0;
-            font-family: "Futura";
+            font-family: "Arsenal";
             text-align: center;
         }
         
@@ -61,12 +140,12 @@
 
         select {
             font-size: 12pt;
-            font-family: "Futura";
+            font-family: "Arsenal";
         }
 
         input {
             font-size: 12pt;
-            font-family: "Futura";
+            font-family: "Arsenal";
             margin:5px;
             
         }
@@ -74,7 +153,7 @@
 
         label {
             font-size: 11pt;
-            font-family: "Futura";
+            font-family: "Arsenal";
         }
 
         .node circle {
@@ -85,7 +164,7 @@
 
         .node text {
           font: 12px sans-serif;
-          font-family: "Futura";  
+          font-family: "Arsenal";  
         }
 
         .link {
@@ -134,7 +213,7 @@
         }
         
         .panelTitle {
-            font-family: "Futura";  
+            font-family: "Arsenal";  
             font-size: 18px;
             text-align: center;
         }
@@ -147,7 +226,7 @@
         }
 
         #selectedCoursesPanel p { 
-            font-family: "Futura";  
+            font-family: "Arsenal";  
             font-size: 12px;
             text-align: left;
             margin: 9px;
@@ -179,9 +258,11 @@
         }
         
         #startSelectingButton {
+            width: 100px;
+            font-size: 20pt;
             position: absolute;
             left: 50%;
-            bottom: 10px;
+            bottom: 50px;
             -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
         }
@@ -192,7 +273,6 @@
             margin-left:auto;
             margin-right:auto;
             font-size: 14pt;
-            font-family: "Futura";
         }
         
         .selection{
@@ -227,12 +307,7 @@
             width: 100%; 
             border-collapse: collapse; 
         }
-        /* Zebra striping */
-/*
-        tr:nth-of-type(odd) { 
-            background: #eee; 
-        }
-*/
+
         tr{
             background:white;
         }
@@ -270,7 +345,7 @@
             right:0;
             height:auto;
             width:auto;
-            font-family: "Futura";
+            font-family: "Arsenal";
             font-size: 11pt;
             background-color:white;
         }
@@ -310,34 +385,20 @@
             background-color:whitesmoke;
             margin:0.5%;
         }
-        
-        #landingPage{
-            font-family: "Futura";
-            background: aliceblue;
-            position:absolute;
-            left:0;
-            right:0;
-            top:0;
-            bottom:0;
-            margin:1%;
-        }
-        
-/*
-        #landingPage p{
-            font-size: 30pt;
-        }
-*/
 
     </style>
 </head>
 <body>
     <div id='landingPage' class='centered'>
         <h1>Welcome to E3 Selector</h1>
-        <p>This is an application to help you select E3 courses more easily.<br>
-        We'll first ask you for some information so that we can get rid of all the courses that are not revant to you. <br>
-            You can then browse thorough the couses matching your criteria, filter them and select those that seem interesting to you.<br>
-            Finally, you can inspect your selected courses further and will be able to jump to their lsf page to apply for participation.
-        </p>    
+        <h2 class='subtitle'>An application intended to help you select E3 courses more easily.</h2>
+        <h3 class='subtitle'>The process consists of just three simple steps:</h3>
+        <div class='floatingDiv'>
+        <div class='step left'><p class='column'>We'll first ask you for some information enabling us to get rid of all the courses that are not relevant to you. </p></div>
+        <div class='step middle'><p class='column'>You can then browse thorough the courses matching your criteria, filter them and select those seeming most interesting to you.</p></div>
+        <div class='step right'><p class='column'>Finally, you can inspect your selected courses further and jump to their lsf page to apply for participation.
+        </p></div>
+        </div>    
         <button type='button' onclick='showFirstPage()' id='startSelectingButton'>Start</button>
     </div>
     <div id="page1" style="display:none">
@@ -451,6 +512,29 @@
     </div>
 
 <script>
+    
+    stepIndex = [1,2,3];
+    d3.select('#landingPage')
+        .selectAll('.step')
+        .insert("svg",":first-child")
+        .attr('height','40px')
+        .attr('width','40px')
+        .append('g')
+        .data(stepIndex)
+        .attr('transform',"translate(-30px, -30px)")
+        .append('circle')
+        .attr('r',20)
+        .attr('cx','50%')
+        .attr('cy','50%')
+        .attr('fill','white');
+    
+    d3.select('#landingPage')
+        .selectAll('g')
+        .append('text')
+        .text(function(d){return d;})
+        .attr('x','37%')
+        .attr('y','65%')
+        .attr('style','font-color:black;font-size:20pt')
     
     function showFirstPage(){
         document.getElementById('landingPage').style.display = "none";
