@@ -23,8 +23,17 @@
             font-family: 'Arsenal';
         }
         
-        div{
-            border-radius: 15px;
+        html,body { height:100%; }
+        
+        header{
+            text-align: center;
+            font-size: 25pt;
+            background:darkslategray;
+            color:white;
+/*
+            margin-top: 3px;
+            margin-bottom: 3px;
+*/
         }
         
         h1{
@@ -60,6 +69,7 @@
             color: white;
             padding:10px;
             margin-top:10px;
+            font-size: 20px;
         }
         
         .left{
@@ -88,72 +98,61 @@
             right:0;
             top:0;
             bottom:0;
+            height:auto;
+            width:auto;
             margin:1%;
+            border-radius: 20px;
         }
         
-        #landingPage p{
-            font-size: 15pt;
-        }
+/*        PAGE 1----*/
     
         #page1 {
-            margin:auto;
-            margin-top: 1%;
-            margin-bottom: 1%;
-            width: 42%;
-            height: 98%;
-/*            font-size: 12pt;*/
-            font-family: "Arsenal";
-            background-color:lightblue;
+            width: auto;
+            height: auto;
+            background-color:whitesmoke;
             padding:2%;
+/*            margin:1%;*/
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top:50px;
+        }
+        
+        div.selection{
+            margin-top:0;
+            margin-bottom:2px;
+            font-size:15pt;
+            width:45%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: whitesmoke;
+        }
+        
+        .selection p{
+            margin-top:20px;
+            background-color: white;
             border-radius: 20px;
+            padding-left: 10px;
         }
         
         #page2 p{
             margin:0;
-            font-family: "Arsenal";
             text-align: center;
-        }
-        
-/*
-        #page2 div{
-            border-radius: 15px;
-            padding: 15px;
-            margin:2%;
-        }
-*/
-        
-        .selection p{
-            padding:0;
-            margin:0 0 5px 0;
-            font-size:14pt;
-        }
-
-/*
-        #page1 div {
-            margin-bottom: 30px;
-        }
-*/
-        
-        #container{
-            width: auto;
         }
 
         select {
             font-size: 12pt;
-            font-family: "Arsenal";
         }
 
         input {
             font-size: 12pt;
-            font-family: "Arsenal";
-            margin:5px;
-            
+            margin:5px;    
         }
 
 
         label {
-            font-size: 11pt;
-            font-family: "Arsenal";
+            font-size: 14pt;
         }
 
         .node circle {
@@ -178,7 +177,7 @@
             display:block;
             width: 300px;
             height: auto;
-            top:0;
+            top:50px;
             bottom: 0;
            right:0;
             padding: 10px;
@@ -188,10 +187,10 @@
 
         #leftPanel {
            display:block;
-            width: 200px;
+            width: 250px;
             height: auto;
             position:absolute;
-           top:0;
+           top:50px;
             left: 0;
            bottom:0;
             padding: 10px;
@@ -237,10 +236,10 @@
         #middlePanel {
             display:block;
             position:absolute;
-            top:0;
+            top:50px;
             bottom:0;
-            left:240px;
-            right:340px;
+            left:270px;
+            right:320px;
 /*            width:64%;*/
             height:auto;
             margin-top:0.5%;
@@ -275,24 +274,9 @@
             font-size: 14pt;
         }
         
-        .selection{
-            background-color:white;
-            border-radius:15px;
-            padding:2%;
-            width:auto;
-            margin-bottom: 3%;
-        }
-        
         .centered{
-            margin:0;
+            margin-top:15px;
             text-align: center;
-        }
-        
-        .header{
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 2%;
-            font-size: 18pt;
         }
         
         svg.mainElement {
@@ -339,7 +323,7 @@
         
         #page3 {
             position: absolute;
-            top:0;
+            top:50px;
             bottom:0;
             left:0;
             right:0;
@@ -389,6 +373,7 @@
     </style>
 </head>
 <body>
+    <header id='head' style="display:none">E3 Selector</header>
     <div id='landingPage' class='centered'>
         <h1>Welcome to E3 Selector</h1>
         <h2 class='subtitle'>An application intended to help you select E3 courses more easily.</h2>
@@ -402,9 +387,6 @@
         <button type='button' onclick='showFirstPage()' id='startSelectingButton'>Start</button>
     </div>
     <div id="page1" style="display:none">
-        <p class="header">
-            E3 Selector
-        </p>
         <div class = "selection">
             <p>Select your study program:</p>
             <select id=studyProgram>
@@ -501,8 +483,8 @@
     </div>
     
     <div id="page3" style="display:none">
-        <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
         <div id="selectedCoursesTable">
+                    <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
         </div>
         <div id="timeTable">
         </div>
@@ -539,6 +521,7 @@
     function showFirstPage(){
         document.getElementById('landingPage').style.display = "none";
         document.getElementById('page1').style.display = "block";
+        document.getElementById('head').style.display = "block";
         
     }
     
