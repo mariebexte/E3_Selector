@@ -264,14 +264,15 @@
         */
         table { 
             width: 100%; 
-            border-collapse: collapse; 
+            border-collapse: collapse;
+            font-size: 15px;
         }
 
         tr{
             background:white;
         }
         th { 
-            background: black; 
+            background: #6EA2A5; 
             color: white; 
 /*            cursor: s-resize;*/
             font-weight: normal;
@@ -357,17 +358,18 @@
             left: 0;
             bottom: 0;
             height:38%;
-            width:40%;
+            width:49.3%;
             background-color:whitesmoke;
             margin:0.5%;
         }
         
         #radarChart{
             position: absolute;
+            text-align: center;
             right: 0;
             bottom: 0;
             height:38%;
-            width:58.5%;
+            width:49.3%;
             background-color:whitesmoke;
             margin:0.5%;
         }
@@ -486,7 +488,7 @@
     
     <div id="page3" style="display:none">
         <div id="selectedCoursesTable">
-                    <p>Narrow down your selection and follow the link to lsf to apply for participation</p>
+<!--                    <p>Narrow down your selection and follow the link to lsf to apply for participation</p>-->
         </div>
         <div id="timeTable">
         </div>
@@ -1001,7 +1003,8 @@
                         }
                     }
                     return "black";
-                });
+                })
+                .attr('cursor', 'pointer');
 
             // Remove any exiting nodes
             var nodeExit = node.exit().transition()
@@ -1162,7 +1165,8 @@
                 .attr("y","55%")
                 .attr("dominant-baseline","middle")
                 .attr("text-anchor","middle")
-                .text("×");      
+                .text("×")
+                .attr('cursor', 'pointer');      
         }
         
         //Slider to filter for credits
@@ -1193,12 +1197,17 @@
         d3.select('#detailedViewButton').on('click',showDetailedView);
         
         function showDetailedView(){
+            if(selectedCourses.length > 0){
             fillSelectedCoursesTable();
             timeTableGrid_page3 = timeTableGrid.cloneNode(true);
             var courseTimes = document.getElementById("timeTable");
             courseTimes.appendChild(timeTableGrid_page3);
             document.getElementById("page2").style.display = "none";
             document.getElementById("page3").style.display = "block";
+            }
+            else{
+                alert('Please select some courses to compare!')
+            }
         } 
     
         //PAGE3--------------------------------------------------------------------------------      
@@ -1303,9 +1312,9 @@
                                     selectedCourses.splice(index,1);
                                     fillSelectedCoursesTable();
                                 })
-                                .attr("style","font-size:19px;")
+                                .attr("style","font-size:17pt;")
                                 .attr("x","50%")
-                                .attr("y","60%")
+                                .attr("y","55%")
                                 .attr("dominant-baseline","middle")
                                 .attr("text-anchor","middle")
                                 .text('×');
