@@ -23,17 +23,16 @@
             font-family: 'Arsenal';
         }
         
-        html,body { height:100%; }
+        html,body
+        { 
+            height:100%;
+        }
         
         header{
             text-align: center;
             font-size: 25pt;
             background:darkslategray;
             color:white;
-/*
-            margin-top: 3px;
-            margin-bottom: 3px;
-*/
         }
         
         h1{
@@ -48,6 +47,13 @@
         h3{
             font-size: 18pt;
         }
+    
+        svg.mainElement {
+            width: 100%;
+            height: 100%;
+        }
+            
+/*        ---- Landing Page*/
         
         .subtitle{
             margin-bottom: 5%;
@@ -135,11 +141,6 @@
             border-radius: 20px;
             padding-left: 10px;
         }
-        
-        #page2 p{
-            margin:0;
-            text-align: center;
-        }
 
         select {
             font-size: 12pt;
@@ -151,8 +152,15 @@
         }
 
 
-        label {
+        #page1 label {
             font-size: 14pt;
+        }
+        
+/*        ---- Page2*/
+        
+        #page2 p{
+            margin:0;
+            text-align: center;
         }
 
         .node circle {
@@ -162,8 +170,7 @@
         }
 
         .node text {
-          font: 12px sans-serif;
-          font-family: "Arsenal";  
+          font: 16px; 
         }
 
         .link {
@@ -211,8 +218,7 @@
             padding-right:5px;
         }
         
-        .panelTitle {
-            font-family: "Arsenal";  
+        .panelTitle { 
             font-size: 18px;
             text-align: center;
         }
@@ -225,8 +231,7 @@
         }
 
         #selectedCoursesPanel p { 
-            font-family: "Arsenal";  
-            font-size: 12px;
+            font-size: 15px;
             text-align: left;
             margin: 9px;
             padding: 7px 15px 7px 10px;
@@ -247,43 +252,12 @@
 /*            margin-right: auto;*/
             background-color:whitesmoke;
         }
-
-        #detailedViewButton {
-            position: absolute;
-            left: 50%;
-            bottom: 10px;
-            -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
-        }
-        
-        #startSelectingButton {
-            width: 100px;
-            font-size: 20pt;
-            position: absolute;
-            left: 50%;
-            bottom: 50px;
-            -webkit-transform: translateX(-50%);
-            transform: translateX(-50%);
-        }
-        
-        button{
-            border-radius: 15px;
-            padding:10px;
-            margin-left:auto;
-            margin-right:auto;
-            font-size: 14pt;
-        }
         
         .centered{
             margin-top:15px;
             text-align: center;
         }
-        
-        svg.mainElement {
-            width: 100%;
-            height: 100%;
-        }
-            
+    
         /* 
         Generic Styling, for Desktops/Laptops 
         */
@@ -319,6 +293,33 @@
           border-bottom: 1px solid #333333;
           border-left: 1px solid #CCCCCC;
             border-radius: 15px;
+        }
+        
+        #detailedViewButton {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+            width:180px;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        
+        #startSelectingButton {
+            width: 100px;
+            font-size: 20pt;
+            position: absolute;
+            left: 50%;
+            bottom: 50px;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        
+        button{
+            border-radius: 15px;
+            padding:10px;
+            margin-left:auto;
+            margin-right:auto;
+            font-size: 14pt;
         }
         
         #page3 {
@@ -427,8 +428,8 @@
             <p class="panelTitle">
                 Filter Courses
             </p>
-            <div class="row align-items-center filterClass" style="background-color:white;" class="filterClass">
-                <p id="value-range">Credits</p>
+            <div class="filterClass" style="background-color:white;" class="filterClass">
+                <p>Credits</p>
                 <div class="col-sm"><div id="slider-range"></div></div>
             </div>
             <div style="background-color:white;" class="filterClass">
@@ -1155,9 +1156,9 @@
             
                 selectionPanel.selectAll("p svg")
                 .append("text")
-                .attr("style","font-size:19px;")
-                .attr("x","50%")
-                .attr("y","60%")
+                .attr("style","font-size:17pt;")
+                .attr("x","52%")
+                .attr("y","55%")
                 .attr("dominant-baseline","middle")
                 .attr("text-anchor","middle")
                 .text("×");      
