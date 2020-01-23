@@ -76,7 +76,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		}
 	}
 	maxValue = max(cfg.maxValue, maxValue);
-    alert(maxValue);
 
 	const allAxis = data[0].axes.map((i, j) => i.axis),	//Names of each axis
 		total = allAxis.length,					//The number of different axes

@@ -1356,11 +1356,16 @@
                         
                     }
                     else{
+                        timeTable.select('.courseMarker').remove();
+                        d3.select('#courseTable').selectAll('.Title')
+                            .attr('style','background-color:none');
+                        
                         d3.select(this).selectAll('.Title')
                             .attr('style','background-color:#A9CCE3');
                         
                         times = [];
                         courseTimes = d.Times_manual;
+                        
                         if(!courseTimes == ""){
                             if(courseTimes.includes(';')){
                                 times = courseTimes.split(';');
@@ -1443,50 +1448,26 @@
                 });
         }
         
-//        var config = {
-//            w: 300,
-//            h: 300,
-//            maxValue: 5,
-//            levels: 5,
-////            ExtraWidthX: 300
-//        }
         
-        var chartData = 
-            JSON.parse(
-            "[[{\"area\": \"Central \", \"value\": 4},{\"area\": \"Kirkdale\", \"value\": 1},{\"area\": \"Kensington \", \"value\": 3},{\"area\": \"Everton \", \"value\": 2}, {\"area\": \"Picton \", \"value\": 5}, {\"area\": \"Riverside \", \"value\": 3}]]"
-        );
-        
-//        			var data_r = [
-//				{ name: 'Course X',
-//					axes: [
-//						{axis: 'Sales', value: 5},
-//						{axis: 'Marketing', value: 4},
-//						{axis: 'Development', value: 3},
-//						{axis: 'Information Technology', value: 2},
-//						{axis: 'Administration', value: 2}
-//					],
-//         color: '#26AF32'
-//				}
-//			];
-        
-                			var data_r = [
-				{ name: 'Average',
-					axes: [
-						{axis: 'fair', value: 4.05},
-						{axis: 'support', value: 3.91},
-						{axis: 'material', value: 3.77},
-						{axis: 'comprehensible', value: 4.02},
-						{axis: 'fun', value: 3.67},
-                        {axis: 'interesting', value: 3.82},
-                        {axis: 'grade/effort', value: 4.07}
+//        RadarChart
+        var data_r = [
+            { name: 'Average',
+				axes: [
+				    {axis: 'fair', value: 4.05},
+				    {axis: 'support', value: 3.91},
+				    {axis: 'material', value: 3.77},
+				    {axis: 'comprehensible', value: 4.02},
+				    {axis: 'fun', value: 3.67},
+                    {axis: 'interesting', value: 3.82},
+                    {axis: 'grade/effort', value: 4.07}
 					],
-         color: '#26AF32'
-				}
+            color: '#26AF32'
+            }
 			];
       
-      console.log(data_r[0].color);
+//      console.log(data_r[0].color);
         
-        			var radarMargin = { top: 50, right: 80, bottom: 50, left: 80 },
+        var radarMargin = { top: 50, right: 80, bottom: 50, left: 80 },
 				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
 				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
         
