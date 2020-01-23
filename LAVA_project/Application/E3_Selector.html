@@ -1331,7 +1331,6 @@
             d3.selectAll('.table-data')
                 .on('click',function(d){
                     //Check if course is currently selected
-//                    alert(d3.select(this).selectAll('.Title').attr('style'));
                     if(d3.select(this).selectAll('.Title').attr('style') != null && d3.select(this).selectAll('.Title').attr('style').includes('background-color:#A9CCE3')){
                         d3.select(this).selectAll('.Title')
                             .attr('style','background-color:none');
@@ -1356,6 +1355,7 @@
                         
                     }
                     else{
+                        //Reset selection
                         timeTable.select('.courseMarker').remove();
                         d3.select('#courseTable').selectAll('.Title')
                             .attr('style','background-color:none');
@@ -1379,21 +1379,59 @@
                                 timeTable.select(name).each(function(){
                                     d3.select(this.parentNode)
                                         .append('g')
-//                                        .append('rect')
                                         .append('circle')
                                         .attr('r',5)
                                         .attr('cx','11px')
                                         .attr('cy','6px')
                                         .attr('class','courseMarker')
-//                                        .attr('width','20px')
-//                                        .attr('height','10px')
-//                                        .attr('x','1px')
-//                                        .attr('y','1px')
                                         .attr('fill','#A9CCE3');})
                             }
                         } 
                     }                 
                 });
+            
+        //RadarChart properties 
+        var data_r = [
+            { name: 'Average',
+				axes: [
+				    {axis: 'fair', value: 4.05},
+				    {axis: 'support', value: 3.91},
+				    {axis: 'material', value: 3.77},
+				    {axis: 'comprehensible', value: 4.02},
+				    {axis: 'fun', value: 3.67},
+                    {axis: 'interesting', value: 3.82},
+                    {axis: 'grade/effort', value: 4.07}
+					],
+            color: '#26AF32'
+            }
+			];
+        
+        var radarMargin = { top: 50, right: 80, bottom: 50, left: 80 },
+				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+        
+        var radarChartOptions = {
+			  w: 550,
+			  h: 250,
+			  margin: radarMargin,
+			  levels: 5,
+            maxValue: 5,
+            legend: { title: '', translateX: 100, translateY: 100 },
+			  roundStrokes: false,
+				color: d3.scaleOrdinal().range(["darkslategray", "darkslategray", "#A9CCE3", '#A9CCE3']),
+				format: '.0f'
+			};
+            
+        var svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
+            
+                    var fair;
+                    var support;
+                    var material;
+                    var comprehensible;
+                    var fun;
+                    var interesting;
+                    var grade_effort;
+            
             
             //Visually display couse hours in timetable
             d3.selectAll('.table-data')
@@ -1418,7 +1456,82 @@
 //                                .duration(300)
                                 .attr('fill','aliceblue');
                         }
-                    }                   
+                    } 
+                
+                    //Display course ratings in radar chart
+                
+                    //if it has ratings: show them, else show that there aren't any
+                
+                    fair = d.fairness;
+                    support = d.support;
+                    material = d.material;
+                    comprehensible = d.comprehensibility;
+                    fun = d.fun;
+                    interesting = d.interesting;
+                    grade_effort = d.grade_effort;
+                
+                
+                if((! fair == '') && (! support == '') && (! material == '') && (! comprehensible == '') && (! fun == '') && (! interesting == '') && (! grade_effort == '')){
+                
+//                    alert('ratings');
+                    //Reset radar chart to avoid having dupliciate of average ratings
+//                    d3.select('#radarChart').selectAll('svg').remove();
+                
+                        var data_r_withSelectedCourse = [
+                            { name: 'Average',
+                                axes: [
+                                    {axis: 'fair', value: 4.05},
+                                    {axis: 'support', value: 3.91},
+                                    {axis: 'material', value: 3.77},
+                                    {axis: 'comprehensible', value: 4.02},
+                                    {axis: 'fun', value: 3.67},
+                                    {axis: 'interesting', value: 3.82},
+                                    {axis: 'grade/effort', value: 4.07}
+                                    ],
+                            color: '#26AF32'
+                            },
+                            { name: d.Title,
+                            axes: [
+                                {axis: 'fair', value: fair},
+                                {axis: 'support', value: support},
+                                {axis: 'material', value: material},
+                                {axis: 'comprehensible', value: comprehensible},
+                                {axis: 'fun', value: fun},
+                                {axis: 'interesting', value: interesting},
+                                {axis: 'grade/effort', value: grade_effort}
+                                ],
+                        color: 'blue'
+                        }
+                        ];
+                
+                        svg_radar1 = RadarChart("#radarChart", data_r_withSelectedCourse, radarChartOptions);
+                    }
+                    else{
+//                        alert('no ratings');
+                        var noRatings = svg_radar1.append('g');
+//                            .append('rect')
+//                            .attr('fill','#A9CCE3')
+//                            .attr('width','200px')
+//                            .attr('height','200px');
+                        noRatings
+                            .append('rect')
+                            .attr('transform','translate(310,120)')
+                            .attr('fill','#A9CCE3')
+                            .attr('width','100px')
+                            .attr('height','100px');
+                        noRatings
+                            .append('text')
+                            .attr('x','46%')
+                            .attr('y','45%')
+                            .text('NO RATINGS');
+                        noRatings
+                            .append('text')
+                            .attr('x','47%')
+                            .attr('y','50%')
+                            .text('AVAILABLE');
+                    }
+                    
+                    
                 });
                         
             d3.selectAll('.table-data')
@@ -1444,46 +1557,18 @@
                                     return d3.select('#availability').select('#'+this.id).attr('fill');
                                 });
                         }
-                    }                   
+                    } 
+                
+                    //Reset radar chart to only show average ratings
+                    d3.select('#radarChart').selectAll('svg').remove();
+                    svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
+                    
                 });
         }
         
         
-//        RadarChart
-        var data_r = [
-            { name: 'Average',
-				axes: [
-				    {axis: 'fair', value: 4.05},
-				    {axis: 'support', value: 3.91},
-				    {axis: 'material', value: 3.77},
-				    {axis: 'comprehensible', value: 4.02},
-				    {axis: 'fun', value: 3.67},
-                    {axis: 'interesting', value: 3.82},
-                    {axis: 'grade/effort', value: 4.07}
-					],
-            color: '#26AF32'
-            }
-			];
-      
-//      console.log(data_r[0].color);
-        
-        var radarMargin = { top: 50, right: 80, bottom: 50, left: 80 },
-				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
-				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
-        
-        var radarChartOptions = {
-			  w: 550,
-			  h: 250,
-			  margin: radarMargin,
-			  levels: 5,
-            maxValue: 5,
-            legend: { title: '', translateX: 100, translateY: 100 },
-			  roundStrokes: false,
-				color: d3.scaleOrdinal().range(["darkslategray", "darkslategray", "#2a2fd4"]),
-				format: '.1f'
-			};
 
-			let svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
+
         
     });
     
