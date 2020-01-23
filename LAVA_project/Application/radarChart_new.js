@@ -22,7 +22,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 				lineHeight = 1.4, // ems
 				y = text.attr("y"),
 				x = text.attr("x"),
-				dy = parseFloat(text.attr("dy")),
+//				dy = parseFloat(text.attr("dy")),
+                dy=0,
 				tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
 
 			while (word = words.pop()) {
@@ -45,7 +46,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 levels: 3,				//How many levels or inner circles should there be drawn
 	 maxValue: 0, 			//What is the value that the biggest circle will represent
 	 labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
-	 wrapWidth: 60, 		//The number of pixels after which a label needs to be given a new line
+	 wrapWidth: 200, 		//The number of pixels after which a label needs to be given a new line
 	 opacityArea: 0.35, 	//The opacity of the area of the blob
 	 dotRadius: 4, 			//The size of the colored circles of each blog
 	 opacityCircles: 0.1, 	//The opacity of the circles of each blob
@@ -104,7 +105,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 
 	//Append a g element
 	let g = svg.append("g")
-			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
+        .attr("transform", "translate(" + (cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
+//			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
 
 	/////////////////////////////////////////////////////////
 	////////// Glow filter for some extra pizzazz ///////////
@@ -323,7 +325,9 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .attr("y", (d,i) => i * 20 + 9)
 		  .attr("font-size", "11px")
 		  .attr("fill", "#737373")
-		  .text(d => d);
-	}
+		  .text(d => d)
+            .call(wrap,cfg.wrapWidth);
+	}   
+    
 	return svg;
 }
