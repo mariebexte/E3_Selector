@@ -51,6 +51,7 @@
         svg.mainElement {
             width: 100%;
             height: 100%;
+            
         }
             
 /*        ---- Landing Page*/
@@ -117,7 +118,7 @@
     
         #page1 {
             width: auto;
-            height: auto;
+            height: 200%;
             background-color:whitesmoke;
             padding:2%;
 /*          margin:1%;*/
@@ -311,8 +312,9 @@ margin-left:2%
         
         #detailedViewButton {
             position: absolute;
-            left: 50%;
-            bottom: 10px;
+            /*left: 50%;*/
+            bottom: 20px;
+            /*right:0;*/
             width:180px;
             -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
@@ -410,7 +412,7 @@ margin-left:2%
             </div>
         </div>   
     
-    <button class="btn btn-outline-primary" onclick="showFirstPage()" id="StartButton" >Start</button>
+    <button class="btn btn-outline-secondary" onclick="showFirstPage()" id="StartButton" >Start</button>
     </div>
         
     <div id="page1" style="display:none">
@@ -501,15 +503,18 @@ margin-left:2%
                 <svg id="treeSVG" preserveAspectRatio="xMinYMin meet" style="margin-left:10px">
                 </svg>
             </div>
-            <div class="col-3" id=rightPanel>
+            <div class="col-3 centered" id=rightPanel>
                 <p class="panelTitle">
                     Your Selected Courses
                 </p>
                 <div id=selectedCoursesPanel>
                 </div>
-                <button type="button" class="panelTitle " id="detailedViewButton">Detailed Overview</button>
+                <button type="button" class=" btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
             </div>
+           
         </div>
+        
+
     </div>
         <div id="page3" style="display:none">
             <div id="selectedCoursesTable">
@@ -697,7 +702,8 @@ margin-left:2%
 
                 var svg = d3.select("#treeSVG")
                     .attr("class", "mainElement")
-                    .attr("viewBox", "0 0 420 910")
+                    .attr("viewBox", "-15 0 420 910")
+                   
                     .append("g");
 
                 var selectionPanel = d3.select("#selectedCoursesPanel");
