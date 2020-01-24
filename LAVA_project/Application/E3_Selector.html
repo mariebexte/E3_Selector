@@ -51,6 +51,7 @@
         svg.mainElement {
             width: 100%;
             height: 100%;
+            
         }
             
 /*        ---- Landing Page*/
@@ -117,7 +118,7 @@
     
         #page1 {
             width: auto;
-            height: auto;
+            height: 200%;
             background-color:whitesmoke;
             padding:2%;
 /*          margin:1%;*/
@@ -312,8 +313,8 @@ margin-left:2%
         #detailedViewButton {
             position: absolute;
             /*left: 50%;*/
-            bottom: 0;
-            right:0;
+            bottom: 20px;
+            /*right:0;*/
             width:180px;
             -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
@@ -505,17 +506,17 @@ margin-left:2%
                 <svg id="treeSVG" preserveAspectRatio="xMinYMin meet" style="margin-left:10px">
                 </svg>
             </div>
-            <div class="col-3" id=rightPanel>
+            <div class="col-3 centered" id=rightPanel>
                 <p class="panelTitle">
                     Your Selected Courses
                 </p>
                 <div id=selectedCoursesPanel>
                 </div>
-
+                <button type="button" class=" btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
             </div>
            
         </div>
-         <button type="button" class=" btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
+        
 
     </div>
         <div id="page3" style="display:none">
