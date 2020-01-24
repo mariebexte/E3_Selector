@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -405,13 +405,10 @@ margin-left:2%
             <div class='step middle'><p class='column'>You can then browse thorough the courses matching your criteria, filter them and select those seeming most interesting to you.</p></div>
             <div class='step right'>
                 <p class='column'>
-                    Finally, you can inspect your selected courses further and jump to their lsf page to apply for participation or any more information.
+                    Finally, you can inspect your selected courses further and jump to their lsf page to apply for participation.
                 </p>
             </div>
-            <!--<button type='button' onclick='showFirstPage()' id='startSelectingButton'>Start</button>-->
         </div>   
-      
-        <!--<button type='button' onclick='showFirstPage()' id='startSelectingButton'>Start</button>-->
     
     <button class="btn btn-outline-primary" onclick="showFirstPage()" id="StartButton" >Start</button>
     </div>
@@ -813,7 +810,7 @@ margin-left:2%
                 }
 
                 // Add filtering to checkboxes
-                d3.select('#page2').selectAll('input').on('click', filterCourses_leftPanel);
+                d3.select('#page2').selectAll('input').on('click', function(){update(root,true);});
 
                 var credit_range = ["1", "9"];
 				
@@ -822,7 +819,6 @@ margin-left:2%
             
 		            if(d.data.Title == " " || catalogNames.includes(d.data.Title))
 		                {
-		//                    alert('kept');
 		                    return true;
 		                }
                 
@@ -835,7 +831,6 @@ margin-left:2%
                     
 		                    //Relaxed condition to also match fields with multiple entries
 		                    if(d.data[key].includes(value) || d.data[key] == "unknown"){
-		//                        alert(d.data.Title);
 		                        keepCourse = false;
 		                    }
 
@@ -865,164 +860,11 @@ margin-left:2%
 		                return keepCourse;
 		        }
 
-                function filterCourses_leftPanel() {
-
-                    // Copy data
-                    // var tempData = JSON.parse(JSON.stringify(data_filteredAccToPage1));
-
-                    // Grab all unchecked checkboxes > courses matching their values have to be excluded
-                    var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");
-
-                    //Remember which 2nd level nodes were collapsed before filtering
-                    var collapsed = [];
-
-                    var subtree;
-                    var course;
-                    var key;
-                    var value;
-                    var minCred;
-                    var maxCred;
-                    var courseCred;
-                    var courseCredArr;
-                    var courseMin;
-                    var courseMax;
-
-                    // for (a = 0; a < root.children.length; a++) {
-//                         if (root.children[a]._children || (!root.children[a]._children && !root.children[a].children)) {
-//                             collapsed.push(true);
-//                         }
-//                         else {
-//                             collapsed.push(false);
-//                         }
-//                     }
-
-            	var filtered_tree = d3.selectAll('g.node').filter(function(d){
-                
-//                                    alert('title'+d.data.Title+'here');
-                return true;});
-                
-//                if(d.data.Title == " " || catalogNames.includes(d.data.Title))
-//                {
-//                    alert('kept');
-//                    return true;
-//                }
-//                
-//                keepCourse = true;
-//                    checkboxes.each(
-//                        function(){
-//                    
-//                            key = this.name;
-//                            value = this.value;
-//                    
-//                            //Relaxed condition to also match fields with multiple entries
-//                            if(d.data[key].includes(value) || d.data[key] == "unknown"){
-//                                alert(d.data.Title);
-//                                keepCourse = false;
-//                            }
-//
-//                        }
-//                    );
-//                
-//                //See if course falls within selected range of credits
-//                    minCred = credit_range[0];
-//                    maxCred = credit_range[1];
-//                    courseCred = d.data["Credits"];
-//                    if(courseCred.includes('-')){
-//                        courseCredArr = courseCred.split("-");
-//                        courseMin = courseCredArr[0];
-//                        courseMax = courseCredArr[1];
-//                    }
-//                    else{
-//                        courseMin = courseCred;
-//                        courseMax = courseCred;
-//                    }
-//                    
-//                    if(courseMax < minCred){
-//                        keepCourse = false;
-//                    }
-//                    if(maxCred < courseMin){
-//                        keepCourse = false;
-//                    }
-//                
-//                return keepCourse;
-//            });
-            
-//            for(a=0; a<tempData.children.length; a++){
-//                subtree = tempData.children[a].children;
-//                deleteCourse = false;
-//                        
-//                for(k=subtree.length-1; k>=0; k--){
-//                    course = subtree[k];
-//                    deleteCourse = false;
-//            
-//                    checkboxes.each(
-//                        function(){
-//                    
-//                            key = this.name;
-//                            value = this.value;
-//                    
-//                            //Relaxed condition to also match fields with multiple entries
-//                            if(course[key].includes(value) || course[key] == "unknown"){
-//                                deleteCourse = true;
-//                            }
-//
-//                        }
-//                    );
-//                    
-//                    //See if course falls within selected range of credits
-//                    minCred = credit_range[0];
-//                    maxCred = credit_range[1];
-//                    courseCred = course["Credits"];
-//                    if(courseCred.includes('-')){
-//                        courseCredArr = courseCred.split("-");
-//                        courseMin = courseCredArr[0];
-//                        courseMax = courseCredArr[1];
-//                    }
-//                    else{
-//                        courseMin = courseCred;
-//                        courseMax = courseCred;
-//                    }
-//                    
-//                    if(courseMax < minCred){
-//                        deleteCourse = true;
-//                    }
-//                    if(maxCred < courseMin){
-//                        deleteCourse = true;
-//                    }
-//                    
-//                    if(deleteCourse){
-//                        tempData.children[a].children.splice(tempData.children[a].children.indexOf(course),1);
-//                    }
-//                } 
-//            }
-                        
-            // Replace tree data with newly filtered data               
-//            treeData = tempData;
-
-            alert(Object.getOwnPropertyNames(filtered_tree));
-            
-            // Reassign tree structure
-//            root = d3.hierarchy(filtered_tree, function(d) {return d.children; });
-//            root.x0 = height / 2;
-//            root.y0 = 0;
-
-            // Reinstate collapsed nodes
-//            for(a = 0; a<root.children.length; a++){
-//                if(collapsed[a]){
-//                    collapse(root.children[a]);
-//                }
-//            }
-            
-            update(root, true);
-//            updateSelectedCourses();
-      
-        }
-
                 function update(source, filtering) {
 
                     var duration;
 
-                    //          When user is just filitering, do not animate tree changes
+                    //          When user is just filtering, do not animate tree changes
                     if (filtering) {
                         duration = 0;
                     }
@@ -1174,7 +1016,9 @@ margin-left:2%
 
                     // Update the links...
                     var link = svg.selectAll('path.link')
-                        .data(links, function (d) { return d.id; });
+                        .data(links.filter(function(d){
+		                    return filter_checkboxes(d);
+		                }), function (d) { return d.id; });
 
                     // Enter any new links at the parent's previous position.
                     var linkEnter = link.enter().insert('path', "g")
@@ -1335,7 +1179,7 @@ margin-left:2%
                     .fill('darkslategray')
                     .on('onchange', val => {
                         credit_range = val;
-                        filterCourses_leftPanel();
+                        update(root,true);
                     });
 
                 var gRange = d3
