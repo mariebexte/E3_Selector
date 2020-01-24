@@ -816,11 +816,59 @@ margin-left:2%
                 d3.select('#page2').selectAll('input').on('click', filterCourses_leftPanel);
 
                 var credit_range = ["1", "9"];
+				
+		        function filter_checkboxes(d){
+		            var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");  
+            
+		            if(d.data.Title == " " || catalogNames.includes(d.data.Title))
+		                {
+		//                    alert('kept');
+		                    return true;
+		                }
+                
+		            keepCourse = true;
+		            checkboxes.each(
+		                function(){
+                    
+		                    key = this.name;
+		                    value = this.value;
+                    
+		                    //Relaxed condition to also match fields with multiple entries
+		                    if(d.data[key].includes(value) || d.data[key] == "unknown"){
+		//                        alert(d.data.Title);
+		                        keepCourse = false;
+		                    }
+
+		                });
+                
+		                //See if course falls within selected range of credits
+		                    minCred = credit_range[0];
+		                    maxCred = credit_range[1];
+		                    courseCred = d.data["Credits"];
+		                    if(courseCred.includes('-')){
+		                        courseCredArr = courseCred.split("-");
+		                        courseMin = courseCredArr[0];
+		                        courseMax = courseCredArr[1];
+		                    }
+		                    else{
+		                        courseMin = courseCred;
+		                        courseMax = courseCred;
+		                    }
+                    
+		                    if(courseMax < minCred){
+		                        keepCourse = false;
+		                    }
+		                    if(maxCred < courseMin){
+		                        keepCourse = false;
+		                    }
+                
+		                return keepCourse;
+		        }
 
                 function filterCourses_leftPanel() {
 
                     // Copy data
-                    var tempData = JSON.parse(JSON.stringify(data_filteredAccToPage1));
+                    // var tempData = JSON.parse(JSON.stringify(data_filteredAccToPage1));
 
                     // Grab all unchecked checkboxes > courses matching their values have to be excluded
                     var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");
@@ -839,82 +887,136 @@ margin-left:2%
                     var courseMin;
                     var courseMax;
 
-                    for (a = 0; a < root.children.length; a++) {
-                        if (root.children[a]._children || (!root.children[a]._children && !root.children[a].children)) {
-                            collapsed.push(true);
-                        }
-                        else {
-                            collapsed.push(false);
-                        }
-                    }
+                    // for (a = 0; a < root.children.length; a++) {
+//                         if (root.children[a]._children || (!root.children[a]._children && !root.children[a].children)) {
+//                             collapsed.push(true);
+//                         }
+//                         else {
+//                             collapsed.push(false);
+//                         }
+//                     }
 
-                    for (a = 0; a < tempData.children.length; a++) {
-                        subtree = tempData.children[a].children;
-                        deleteCourse = false;
+            	var filtered_tree = d3.selectAll('g.node').filter(function(d){
+                
+//                                    alert('title'+d.data.Title+'here');
+                return true;});
+                
+//                if(d.data.Title == " " || catalogNames.includes(d.data.Title))
+//                {
+//                    alert('kept');
+//                    return true;
+//                }
+//                
+//                keepCourse = true;
+//                    checkboxes.each(
+//                        function(){
+//                    
+//                            key = this.name;
+//                            value = this.value;
+//                    
+//                            //Relaxed condition to also match fields with multiple entries
+//                            if(d.data[key].includes(value) || d.data[key] == "unknown"){
+//                                alert(d.data.Title);
+//                                keepCourse = false;
+//                            }
+//
+//                        }
+//                    );
+//                
+//                //See if course falls within selected range of credits
+//                    minCred = credit_range[0];
+//                    maxCred = credit_range[1];
+//                    courseCred = d.data["Credits"];
+//                    if(courseCred.includes('-')){
+//                        courseCredArr = courseCred.split("-");
+//                        courseMin = courseCredArr[0];
+//                        courseMax = courseCredArr[1];
+//                    }
+//                    else{
+//                        courseMin = courseCred;
+//                        courseMax = courseCred;
+//                    }
+//                    
+//                    if(courseMax < minCred){
+//                        keepCourse = false;
+//                    }
+//                    if(maxCred < courseMin){
+//                        keepCourse = false;
+//                    }
+//                
+//                return keepCourse;
+//            });
+            
+//            for(a=0; a<tempData.children.length; a++){
+//                subtree = tempData.children[a].children;
+//                deleteCourse = false;
+//                        
+//                for(k=subtree.length-1; k>=0; k--){
+//                    course = subtree[k];
+//                    deleteCourse = false;
+//            
+//                    checkboxes.each(
+//                        function(){
+//                    
+//                            key = this.name;
+//                            value = this.value;
+//                    
+//                            //Relaxed condition to also match fields with multiple entries
+//                            if(course[key].includes(value) || course[key] == "unknown"){
+//                                deleteCourse = true;
+//                            }
+//
+//                        }
+//                    );
+//                    
+//                    //See if course falls within selected range of credits
+//                    minCred = credit_range[0];
+//                    maxCred = credit_range[1];
+//                    courseCred = course["Credits"];
+//                    if(courseCred.includes('-')){
+//                        courseCredArr = courseCred.split("-");
+//                        courseMin = courseCredArr[0];
+//                        courseMax = courseCredArr[1];
+//                    }
+//                    else{
+//                        courseMin = courseCred;
+//                        courseMax = courseCred;
+//                    }
+//                    
+//                    if(courseMax < minCred){
+//                        deleteCourse = true;
+//                    }
+//                    if(maxCred < courseMin){
+//                        deleteCourse = true;
+//                    }
+//                    
+//                    if(deleteCourse){
+//                        tempData.children[a].children.splice(tempData.children[a].children.indexOf(course),1);
+//                    }
+//                } 
+//            }
+                        
+            // Replace tree data with newly filtered data               
+//            treeData = tempData;
 
-                        for (k = subtree.length - 1; k >= 0; k--) {
-                            course = subtree[k];
-                            deleteCourse = false;
+            alert(Object.getOwnPropertyNames(filtered_tree));
+            
+            // Reassign tree structure
+//            root = d3.hierarchy(filtered_tree, function(d) {return d.children; });
+//            root.x0 = height / 2;
+//            root.y0 = 0;
 
-                            checkboxes.each(
-                                function () {
-
-                                    key = this.name;
-                                    value = this.value;
-
-                                    //Relaxed condition to also match fields with multiple entries
-                                    if (course[key].includes(value) || course[key] == "unknown") {
-                                        deleteCourse = true;
-                                    }
-
-                                }
-                            );
-
-                            //See if course falls within selected range of credits
-                            minCred = credit_range[0];
-                            maxCred = credit_range[1];
-                            courseCred = course["Credits"];
-                            if (courseCred.includes('-')) {
-                                courseCredArr = courseCred.split("-");
-                                courseMin = courseCredArr[0];
-                                courseMax = courseCredArr[1];
-                            }
-                            else {
-                                courseMin = courseCred;
-                                courseMax = courseCred;
-                            }
-
-                            if (courseMax < minCred) {
-                                deleteCourse = true;
-                            }
-                            if (maxCred < courseMin) {
-                                deleteCourse = true;
-                            }
-
-                            if (deleteCourse) {
-                                tempData.children[a].children.splice(tempData.children[a].children.indexOf(course), 1);
-                            }
-                        }
-                    }
-
-                    // Replace tree data with newly filtered data
-                    treeData = tempData;
-
-                    // Reassign tree structure
-                    root = d3.hierarchy(treeData, function (d) { return d.children; });
-                    root.x0 = height / 2;
-                    root.y0 = 0;
-
-                    // Reinstate collapsed nodes
-                    for (a = 0; a < root.children.length; a++) {
-                        if (collapsed[a]) {
-                            collapse(root.children[a]);
-                        }
-                    }
-
-                    update(root, true);
-
-                }
+            // Reinstate collapsed nodes
+//            for(a = 0; a<root.children.length; a++){
+//                if(collapsed[a]){
+//                    collapse(root.children[a]);
+//                }
+//            }
+            
+            update(root, true);
+//            updateSelectedCourses();
+      
+        }
 
                 function update(source, filtering) {
 
@@ -941,10 +1043,16 @@ margin-left:2%
                     // ****************** Nodes section ***************************
 
                     // Update the nodes...
-                    var node = svg.selectAll('g.node')
-                        .data(nodes, function (d) {
-                            return d.id || (d.id = ++i);
-                        });
+                    // var node = svg.selectAll('g.node')
+                    //     .data(nodes, function (d) {
+                    //         return d.id || (d.id = ++i);
+                    //     });
+						
+		            var node = svg.selectAll('g.node')
+		                .data(nodes.filter(function(d){
+		                    return filter_checkboxes(d);
+		                }), function(d) {
+		                    return d.id || (d.id = ++i); });  
 
                     // Enter any new nodes at the parent's previous position.
                     var nodeEnter = node.enter().append('g')
