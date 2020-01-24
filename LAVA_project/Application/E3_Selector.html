@@ -311,8 +311,9 @@ margin-left:2%
         
         #detailedViewButton {
             position: absolute;
-            left: 50%;
-            bottom: 10px;
+            /*left: 50%;*/
+            bottom: 0;
+            right:0;
             width:180px;
             -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
@@ -510,9 +511,12 @@ margin-left:2%
                 </p>
                 <div id=selectedCoursesPanel>
                 </div>
-                <button type="button" class="panelTitle btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
+
             </div>
+           
         </div>
+         <button type="button" class=" btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
+
     </div>
         <div id="page3" style="display:none">
             <div id="selectedCoursesTable">
@@ -700,7 +704,8 @@ margin-left:2%
 
                 var svg = d3.select("#treeSVG")
                     .attr("class", "mainElement")
-                    .attr("viewBox", "0 0 420 910")
+                    .attr("viewBox", "-15 0 420 910")
+                   
                     .append("g");
 
                 var selectionPanel = d3.select("#selectedCoursesPanel");
