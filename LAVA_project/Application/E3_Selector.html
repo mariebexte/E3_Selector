@@ -11,7 +11,7 @@
     <link href='https://fonts.googleapis.com/css?family=Archivo Narrow' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
 
     <!-- JS Files -->
     <script type="text/javascript" src="d3.min.js"></script>
@@ -92,7 +92,6 @@
 
             vertical-align: middle;
             height:75%;
-/*            display:table-cell;*/
         }
         
         #StartButton {
@@ -1248,7 +1247,7 @@ margin-left:2%
 
                 //Define basic table structure
                 var table = d3.select('#selectedCoursesTable').append('table').attr("id", 'courseTable');
-                var sortAscending = true;
+                var sortAscending = false;
                 
                 var rows = table.append('tbody');
                 var headers = table.append('thead').append('tr')
@@ -1264,22 +1263,80 @@ margin-left:2%
                 headers.append('p')
                     .attr('class','sort-marker');
                 
+                d3.select('#Delete_title').selectAll('.sort-marker').remove();
+                d3.select('#Link_title').selectAll('.sort-marker').remove();
+                
                     headers.on('click', function (d) {
                         if(this.id.localeCompare('Delete_title')==0 || this.id.localeCompare('Link_title')==0){
+//                            d3.select(this).selectAll('.sort-marker').remove();
                             return null;
-                        }else{
+                        }else if(this.id.localeCompare('Recommendation_title')==0){
+                            
+                        var table_rows = d3.selectAll('tbody').selectAll('.table-data')
+                           headers.attr('class', 'header');
+                            
+                           if (sortAscending) {
+
+                             table_rows.sort(
+                                 function(a, b) {
+                                     var first = a[d];
+                                     var second = b[d];
+                                     
+                                     if(first != ''){
+                                     first = parseInt(first);
+                                     }
+                                     else{
+                                         first = -1;
+                                     }
+                                     if(second != ''){
+                                     second = parseInt(second);
+                                    }
+                                     else{
+                                         second = -1;
+                                     }
+                                     return d3.ascending(first,second);
+                                 });
+                             sortAscending = false;
+                             this.className = 'aes';
+                               headers.selectAll('p.sort-marker').text('');
+                               d3.select(this).selectAll('.sort-marker')
+                                   .text('▲');
+                           } else {
+                             table_rows.sort(
+                                 function(a, b) {
+                                    var first = a[d];
+                                     var second = b[d];
+                                     
+                                     if(first != ''){
+                                     first = parseInt(first);
+                                     }
+                                     else{
+                                         first = -1;
+                                     }
+                                     if(second != ''){
+                                     second = parseInt(second);
+                                    }
+                                     else{
+                                         second = -1;
+                                     }
+                                     return d3.descending(first,second);
+                                 });
+                             sortAscending = true;
+                             this.className = 'des';
+                               headers.selectAll('p.sort-marker').text('');
+                               d3.select(this).selectAll('.sort-marker')
+                                   .text('▼');
+                           }
+                            
+                                 
+                         }
+                         else{
                         var table_rows = d3.selectAll('tbody').selectAll('.table-data')
                            headers.attr('class', 'header');
 
                            if (sortAscending) {
                              table_rows.sort(
                                  function(a, b) {
-                                     if(a[d].localeCompare('') && !b[d].localeCompare('')){
-                                         return -1;
-                                     }
-                                     if(!a[d].localeCompare('') && b[d].localeCompare('')){
-                                         return 1;
-                                     }
                                      return d3.ascending(a[d], b[d]);
                                  });
                              sortAscending = false;
@@ -1290,12 +1347,6 @@ margin-left:2%
                            } else {
                              table_rows.sort(
                                  function(a, b) {
-                                    if(a[d].localeCompare('') && !b[d].localeCompare('')){
-                                         return 1;
-                                     }
-                                    if(!a[d].localeCompare('') && b[d].localeCompare('')){
-                                         return -1;
-                                     }
                                      return d3.descending(a[d], b[d]);
                                  });
                              sortAscending = true;
@@ -1328,10 +1379,13 @@ margin-left:2%
                             return d.name;
                         })
                         .text(function (d) {
-                            if (!(d.name == "Link") && !(d.name == "Recommendation") && !(d.name == "Delete")) {
+                            if (!(d.name == "Link") 
+//                                && !(d.name == "Recommendation") 
+                                && !(d.name == "Delete")) {
                                 return d.value;
                             }
                         });
+                    
 
                     rows.selectAll('.Link').append('a')
                         .attr('href', function (d) {
@@ -1340,6 +1394,8 @@ margin-left:2%
                         .attr('target', '_blank')
                         .attr('class', 'fakeButton')
                         .text("LSF");
+                    
+                    rows.selectAll('.table-data').selectAll('.Recommendation').attr('style','font-size:1pt;');
 
                     rows.selectAll('.table-data').selectAll('.Recommendation')
                         .append('svg')
@@ -1365,7 +1421,8 @@ margin-left:2%
                                         return d.value + "%";
                                 })
                                 .attr('x', '5%')
-                                .attr('y', '70%');
+                                .attr('y', '70%')
+                                .attr('style','font-size:11pt;');
                         });
 
                     // Make cells deletable
@@ -1477,14 +1534,14 @@ margin-left:2%
                     //RadarChart properties
                     var data_r = [
                         {
-                            name: 'Average',
+                            name: 'Average Rating',
                             axes: [
-                                { axis: 'fair', value: 4.05 },
+                                { axis: 'interesting', value: 3.82 },
                                 { axis: 'support', value: 3.91 },
                                 { axis: 'material', value: 3.77 },
                                 { axis: 'comprehensible', value: 4.02 },
                                 { axis: 'fun', value: 3.67 },
-                                { axis: 'interesting', value: 3.82 },
+                                { axis: 'fair', value: 4.05 },
                                 { axis: 'grade/effort', value: 4.07 }
                             ],
                             color: '#26AF32'
@@ -1576,13 +1633,13 @@ margin-left:2%
 
                             var data_r_withSelectedCourse = [
                                 {
-                                    name: 'Average',
+                                    name: 'Average Rating',
                                     axes: [
                                         { axis: 'fair', value: 4.05 },
                                         { axis: 'support', value: 3.91 },
-                                        { axis: 'material', value: 3.77 },
-                                        { axis: 'comprehensible', value: 4.02 },
                                         { axis: 'fun', value: 3.67 },
+                                        { axis: 'comprehensible', value: 4.02 },
+                                        { axis: 'material', value: 3.77 },
                                         { axis: 'interesting', value: 3.82 },
                                         { axis: 'grade/effort', value: 4.07 }
                                     ],

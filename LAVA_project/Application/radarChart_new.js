@@ -45,11 +45,11 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
 	 levels: 3,				//How many levels or inner circles should there be drawn
 	 maxValue: 0, 			//What is the value that the biggest circle will represent
-	 labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
+	 labelFactor: 1.3, 	//How much farther than the radius of the outer circle should the labels be placed
 	 wrapWidth: 200, 		//The number of pixels after which a label needs to be given a new line
 	 opacityArea: 0.35, 	//The opacity of the area of the blob
 	 dotRadius: 4, 			//The size of the colored circles of each blog
-	 opacityCircles: 0.00, 	//The opacity of the circles of each blob
+	 opacityCircles: 0.01, 	//The opacity of the circles of each blob
 	 strokeWidth: 2, 		//The width of the stroke around each blob
 	 roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
 	 color: d3.scaleOrdinal(d3.schemeCategory10),	//Color function,
@@ -135,7 +135,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.attr("r", d => radius / cfg.levels * d)
 		.style("fill", "#D5DBDB")
 		.style("stroke", "#D5DBDB")
-//		.style("fill-opacity", cfg.opacityCircles)
+		.style("fill-opacity", cfg.opacityCircles)
 		.style("filter" , "url(#glow)");
 
 	//Text indicating at what % each level is
@@ -173,7 +173,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	//Append the labels at each axis
 	axis.append("text")
 		.attr("class", "legend")
-		.style("font-size", "10pt")
+		.style("font-size", "11pt")
 		.attr("text-anchor", "middle")
 		.attr("dy", "0.35em")
 		.attr("x", (d,i) => rScale(maxValue * cfg.labelFactor) * cos(angleSlice * i - HALF_PI))
@@ -283,7 +283,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.attr("class", "tooltip")
 		.attr('x', 0)
 		.attr('y', 0)
-		.style("font-size", "12px")
+		.style("font-size", "11px")
 		.style('display', 'none')
 		.attr("text-anchor", "middle")
 		.attr("dy", "0.35em");
@@ -297,7 +297,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 				.attr('transform', `translate(${cfg.legend.translateX},${cfg.legend.translateY})`)
 				.attr("x", cfg.w - 70)
 				.attr("y", 10)
-				.attr("font-size", "10pt")
+				.attr("font-size", "11pt")
 				.attr("fill", "#404040")
 				.text(cfg.legend.title);
 		}
@@ -323,7 +323,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .append("text")
 		  .attr("x", cfg.w - 52)
 		  .attr("y", (d,i) => i * 20 + 9)
-		  .attr("font-size", "10pt")
+		  .attr("font-size", "11pt")
 		  .attr("fill", "#737373")
 		  .text(d => d)
             .call(wrap,cfg.wrapWidth);
