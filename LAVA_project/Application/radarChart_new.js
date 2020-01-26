@@ -47,10 +47,10 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 maxValue: 0, 			//What is the value that the biggest circle will represent
 	 labelFactor: 1.3, 	//How much farther than the radius of the outer circle should the labels be placed
 	 wrapWidth: 200, 		//The number of pixels after which a label needs to be given a new line
-	 opacityArea: 0.35, 	//The opacity of the area of the blob
+	 opacityArea: 0.55, 	//The opacity of the area of the blob
 	 dotRadius: 4, 			//The size of the colored circles of each blog
-	 opacityCircles: 0.01, 	//The opacity of the circles of each blob
-	 strokeWidth: 2, 		//The width of the stroke around each blob
+	 opacityCircles: 0.1, 	//The opacity of the circles of each blob
+	 strokeWidth: 4, 		//The width of the stroke around each blob
 	 roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
 	 color: d3.scaleOrdinal(d3.schemeCategory10),	//Color function,
 	 format: '.2%',
@@ -235,15 +235,18 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 //		.style("filter" , "url(#glow)");
 
 	//Append the circles
-	blobWrapper.selectAll(".radarCircle")
-		.data(d => d.axes)
-		.enter()
-		.append("circle")
-		.attr("class", "radarCircle")
-		.attr("r", cfg.dotRadius)
-		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
-		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
-		.style("fill", (d) => cfg.color(d.id));
+//	blobWrapper.selectAll(".radarCircle")
+//		.data(d => d.axes)
+//		.enter()
+//		.append("circle")
+//		.attr("class", "radarCircle")
+//		.attr("r", cfg.dotRadius)
+//		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
+//		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+//		.style("fill", function (d){
+//               alert(Object.getOwnPropertyNames(d[0]));
+//                alert(cfg.color(d));
+//               return cfg.color(d.id);});
 //		.style("fill-opacity", 0.8);
 
 	/////////////////////////////////////////////////////////
@@ -251,42 +254,42 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	/////////////////////////////////////////////////////////
 
 	//Wrapper for the invisible circles on top
-	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
-		.data(data)
-		.enter().append("g")
-		.attr("class", "radarCircleWrapper");
+//	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
+//		.data(data)
+//		.enter().append("g")
+//		.attr("class", "radarCircleWrapper");
 
 	//Append a set of invisible circles on top for the mouseover pop-up
-	blobCircleWrapper.selectAll(".radarInvisibleCircle")
-		.data(d => d.axes)
-		.enter().append("circle")
-		.attr("class", "radarInvisibleCircle")
-		.attr("r", cfg.dotRadius * 1.5)
-		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice*i - HALF_PI))
-		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice*i - HALF_PI))
-		.style("fill", "none")
-		.style("pointer-events", "all")
-		.on("mouseover", function(d,i) {
-			tooltip
-				.attr('x', this.cx.baseVal.value - 10)
-				.attr('y', this.cy.baseVal.value - 10)
-				.transition()
-				.style('display', 'block')
-				.text(Format(d.value) + cfg.unit);
-		})
-		.on("mouseout", function(){
-			tooltip.transition()
-				.style('display', 'none').text('');
-		});
+//	blobCircleWrapper.selectAll(".radarInvisibleCircle")
+//		.data(d => d.axes)
+//		.enter().append("circle")
+//		.attr("class", "radarInvisibleCircle")
+//		.attr("r", cfg.dotRadius * 1.5)
+//		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice*i - HALF_PI))
+//		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice*i - HALF_PI))
+//		.style("fill", "none")
+//		.style("pointer-events", "all")
+//		.on("mouseover", function(d,i) {
+//			tooltip
+//				.attr('x', this.cx.baseVal.value - 10)
+//				.attr('y', this.cy.baseVal.value - 10)
+//				.transition()
+//				.style('display', 'block')
+//				.text(Format(d.value) + cfg.unit);
+//		})
+//		.on("mouseout", function(){
+//			tooltip.transition()
+//				.style('display', 'none').text('');
+//		});
 
-	const tooltip = g.append("text")
-		.attr("class", "tooltip")
-		.attr('x', 0)
-		.attr('y', 0)
-		.style("font-size", "11px")
-		.style('display', 'none')
-		.attr("text-anchor", "middle")
-		.attr("dy", "0.35em");
+//	const tooltip = g.append("text")
+//		.attr("class", "tooltip")
+//		.attr('x', 0)
+//		.attr('y', 0)
+//		.style("font-size", "11px")
+//		.style('display', 'none')
+//		.attr("text-anchor", "middle")
+//		.attr("dy", "0.35em");
 
 	if (cfg.legend !== false && typeof cfg.legend === "object") {
 		let legendZone = svg.append('g');

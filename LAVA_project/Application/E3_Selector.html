@@ -593,7 +593,7 @@ margin-left:2%
             var colorUnavailable = "#D5DBDB";
             var noColor = "none";
             
-            var highlightColor = '#FCB8A0';
+            var highlightColor = '#FBC9B6';
             var selectedCourseColor = '#E79274';
 
             document.createSvg = function (tagName) {
@@ -1440,6 +1440,61 @@ margin-left:2%
                                 .attr('stroke', 'black')
                                 .on('click', function () {
                                     var index = selectedCourses.indexOf(d);
+//                                alert(this.parentNode.parentNode.parentNode.tagName);
+                                    d3.select(this.parentNode.parentNode.parentNode).each(
+                                        function (d) {
+                                            d3.select(this)
+                                                .attr('style', 'background-color:white;');
+
+                                            times = [];
+                                            courseTimes = d.Times_manual;
+                                            if (!courseTimes == "") {
+                                                if (courseTimes.includes(';')) {
+                                                    var times = courseTimes.split(';');
+                                                }
+                                                else {
+                                                    times.push(courseTimes);
+                                                }
+
+                                                for (t = 0; t < times.length; t++) {
+                                                    time = times[t];
+                                                    var name = '#' + time;
+                                                    timeTable.select(name)
+                                                        .attr('fill', function () {
+                                                            return d3.select('#availability').select('#' + this.id).attr('fill');
+                                                        });
+                                                }
+                                            }
+                                            
+                                            if (d3.select(this).attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
+                                                d3.select(this).select('.Title')
+                                                    .attr('style', 'background-color:none');
+
+
+                                                times = [];
+                                                courseTimes = d.Times_manual;
+                                                if (!courseTimes == "") {
+                                                    if (courseTimes.includes(';')) {
+                                                        times = courseTimes.split(';');
+                                                    }
+                                                    else {
+                                                        times.push(courseTimes);
+                                                    }
+                                                    for (t = 0; t < times.length; t++) {
+                                                        time = times[t];
+                                                        var name = '#' + time;
+                                                        timeTable.select(name).each(function () {
+                                                            d3.select(this.parentNode)
+                                                                .selectAll('.courseMarker').remove();
+                                                        })
+                                                    }
+                                                }
+                                                }
+                                            });                                            
+
+                                    //Reset radar chart to only show average ratings
+        //                            d3.select('#radarChart').selectAll('svg').remove();
+                                    svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions); 
                                     selectedCourses.splice(index, 1);
                                     fillSelectedCoursesTable();
                                 })
@@ -1449,6 +1504,35 @@ margin-left:2%
                                         .on('click', function () {
                                             var index = selectedCourses.indexOf(d);
                                             selectedCourses.splice(index, 1);
+                                            //Reset hover manipulations
+//                                            alert(this.parentNode.parentNode.parentNode.tagName);
+
+                                            d3.select(this.parentNode.parentNode.parentNode).each(
+                                            function (d) {
+                                                d3.select(this)
+                                                    .attr('style', 'background-color:white;');
+
+                                                times = [];
+                                                courseTimes = d.Times_manual;
+                                                if (!courseTimes == "") {
+                                                    if (courseTimes.includes(';')) {
+                                                        var times = courseTimes.split(';');
+                                                    }
+                                                    else {
+                                                        times.push(courseTimes);
+                                                    }
+
+                                                    for (t = 0; t < times.length; t++) {
+                                                        time = times[t];
+                                                        var name = '#' + time;
+                                                        timeTable.select(name)
+                                                            .attr('fill', function () {
+                                                                return d3.select('#availability').select('#' + this.id).attr('fill');
+                                                            });
+                                                    }
+                                                }
+                                            });
+                                        
                                             fillSelectedCoursesTable();
                                         })
                                         .attr("style", "font-size:17pt;")
@@ -1457,7 +1541,7 @@ margin-left:2%
                                         .attr("dominant-baseline", "middle")
                                         .attr("text-anchor", "middle")
                                         .text('×');
-                                })
+                                });
                         });
                     });
 
@@ -1467,12 +1551,14 @@ margin-left:2%
                     var courseTimes;
 
                     //Enable selection of courses
-                    d3.selectAll('.table-data')
-                        .on('click', function (d) {
+                    d3.selectAll('.table-data').selectAll('.Title')
+                        .on('click', function () {
                             //Check if course is currently selected
-                            if (d3.select(this).selectAll('.Title').attr('style') != null && d3.select(this).selectAll('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
-                                d3.select(this).selectAll('.Title')
+                            if (d3.select(this).attr('style') != null && d3.select(this).attr('style').includes('background-color:'+selectedCourseColor)) {
+                                d3.select(this)
                                     .attr('style', 'background-color:none');
+                                
+                                d3.select(this.parentNode).each(function(d){
 
                                 times = [];
                                 courseTimes = d.Times_manual;
@@ -1492,17 +1578,20 @@ margin-left:2%
                                         })
                                     }
                                 }
+                                });
 
                             }
                             else {
                                 //Reset selection
-                                timeTable.select('.courseMarker').remove();
+                                timeTable.selectAll('.courseMarker').remove();
                                 d3.select('#courseTable').selectAll('.Title')
                                     .attr('style', 'background-color:none');
 
-                                d3.select(this).selectAll('.Title')
+                                d3.select(this)
                                     .attr('style', 'background-color:'+selectedCourseColor);
-
+                                
+                                d3.select(this.parentNode).each(function(d){
+                                
                                 times = [];
                                 courseTimes = d.Times_manual;
 
@@ -1528,6 +1617,7 @@ margin-left:2%
                                         })
                                     }
                                 }
+                                });
                             }
                         });
 
@@ -1543,7 +1633,8 @@ margin-left:2%
                                 { axis: 'fun', value: 3.67 },
                                 { axis: 'fair', value: 4.05 },
                                 { axis: 'grade/effort', value: 4.07 }
-                            ],
+                            ]
+                            ,
                             color: '#26AF32'
                         }
                     ];
@@ -1560,7 +1651,7 @@ margin-left:2%
                         maxValue: 5,
                         legend: { title: '', translateX: -50, translateY: 100 },
                         roundStrokes: false,
-                        color: d3.scaleOrdinal().range(["darkslategray", "darkslategray", highlightColor, highlightColor]),
+                        color: d3.scaleOrdinal().range(["#6EA2A5", "FAB094"]),
                         format: '.0f'
                     };
 
@@ -1635,12 +1726,12 @@ margin-left:2%
                                 {
                                     name: 'Average Rating',
                                     axes: [
-                                        { axis: 'fair', value: 4.05 },
-                                        { axis: 'support', value: 3.91 },
-                                        { axis: 'fun', value: 3.67 },
-                                        { axis: 'comprehensible', value: 4.02 },
-                                        { axis: 'material', value: 3.77 },
                                         { axis: 'interesting', value: 3.82 },
+                                        { axis: 'support', value: 3.91 },
+                                        { axis: 'material', value: 3.77 },  
+                                        { axis: 'comprehensible', value: 4.02 },  
+                                        { axis: 'fun', value: 3.67 },                                        
+                                        { axis: 'fair', value: 4.05 },
                                         { axis: 'grade/effort', value: 4.07 }
                                     ],
                                     color: '#26AF32'
@@ -1719,7 +1810,7 @@ margin-left:2%
                             }
 
                             //Reset radar chart to only show average ratings
-                            d3.select('#radarChart').selectAll('svg').remove();
+//                            d3.select('#radarChart').selectAll('svg').remove();
                             svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
 
                         });
