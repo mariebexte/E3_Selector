@@ -10,12 +10,13 @@
     <link href='https://fonts.googleapis.com/css?family=Aleo' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Archivo Narrow' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <!-- JS Files -->
     <script type="text/javascript" src="d3.min.js"></script>
     <script type="text/javascript" src="c3.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="d3-simple-slider.min.js.css"></script>
     <script src="radarChart_new.js"></script>
         
     <style>
@@ -254,7 +255,7 @@
             top:50px;
             bottom:0;
             left:270px;
-            right:360px;
+            right:320px;
 /*            width:64%;*/
             height:auto;
             margin-top:0.5%;
@@ -272,9 +273,6 @@ margin-left:2%
 
     }
         
-        /* 
-        Generic Styling, for Desktops/Laptops 
-        */
         table { 
             width: 100%; 
             border-collapse: collapse;
@@ -284,6 +282,7 @@ margin-left:2%
         tr{
             background:white;
         }
+        
         th { 
             background: #6EA2A5; 
             color: white; 
@@ -291,7 +290,16 @@ margin-left:2%
             font-weight: normal;
             background-repeat: no-repeat;
             background-position: 3% center;
+/*            float: left;*/
         }
+        
+        th p{
+            float:right;
+            text-align:right;
+            margin:0;
+            min-width: 17px;
+        }
+        
         td, th { 
             padding: 5px; 
             border: 2px solid whitesmoke; 
@@ -347,7 +355,6 @@ margin-left:2%
             right:0;
             height:auto;
             width:auto;
-            font-family: "Arsenal";
             font-size: 11pt;
             background-color:white;
         }
@@ -373,7 +380,8 @@ margin-left:2%
             left: 0;
             bottom: 0;
             height:38%;
-            width:49.3%;
+/*            width:49.3%;*/
+            width:50%;
             background-color:whitesmoke;
             margin:0.5%;
         }
@@ -389,10 +397,18 @@ margin-left:2%
             right: 0;
             bottom: 0;
             height:38%;
-            width:49.3%;
+            width:50%;
+/*            width:49.3%;*/
             background-color:whitesmoke;
             margin:0.5%;
         }
+        
+        .caption{
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        
 
     </style>
 </head>
@@ -412,7 +428,7 @@ margin-left:2%
             </div>
         </div>   
     
-    <button class="btn btn-outline-secondary" onclick="showFirstPage()" id="StartButton" >Start</button>
+    <button class="btn btn-outline-light btn-lg" onclick="showFirstPage()" id="StartButton" >Start</button>
     </div>
         
     <div id="page1" style="display:none">
@@ -447,22 +463,22 @@ margin-left:2%
             <p>When are you free to take courses?</p>
         </div>
         <div class="centered">
-        <button type="button" id="showPage2Button" class="centered btn btn-outline-secondary">Show Courses</button>
+        <button type="button" id="showPage2Button" class="centered btn btn-outline-dark">Show Courses</button>
         </div>
     </div>
     
     <div id="page2" style="display:none">
         <div class="row">
             <div id=leftPanel class="col-3">
-                <p class="panelTitle">
+                <p class="panelTitle caption">
                     Filter Courses
                 </p>
                 <div class="filterClass" style="background-color:white;">
-                    <p>Credits</p>
-                    <div class="col-sm"><div id="slider-range"></div></div>
+                    <p class='caption'>Credits</p>
+                    <div><div id="slider-range"></div></div>
                 </div>
                 <div style="background-color:white;" class="filterClass">
-                    <p>Course Type</p>
+                    <p class='caption'>Course Type</p>
                     <input type="checkbox" name="Type" value="VL/Übung" id="lec_ex" class="courseTypeSelection">
                     <label for="lec_ex" style="background-color:lightgreen;">Lecture + Exercise</label><br>
                     <input type="checkbox" name="Type" value="Vorlesung" id="lec" class="courseTypeSelection">
@@ -476,7 +492,7 @@ margin-left:2%
                 </div>
                 <!--            Make sure to also exclude 'unknown' exam type when filtering-->
                 <div style="background-color:white;" class="filterClass">
-                    <p>Exam Type</p>
+                    <p class='caption'>Exam Type</p>
                     <input type="checkbox" name="Exam" value="Klausur" id="exam" class="examSelection">
                     <label for="exam">Written Exam</label><br>
                     <input type="checkbox" name="Exam" value="Mündliche Prüfung" id="oral" class="examSelection">
@@ -487,7 +503,7 @@ margin-left:2%
                     <label for="presentation">Presentation</label><br>
                 </div>
                 <div style="background-color:white;" class="filterClass">
-                    <p>Location</p>
+                    <p class='caption'>Location</p>
                     <input type="checkbox" name="Location" value="Essen" id="essen" class="locationSelection">
                     <label for="essen">Essen</label><br>
                     <input type="checkbox" name="Location" value="Duisburg" id="duisburg" class="locationSelection">
@@ -499,17 +515,17 @@ margin-left:2%
                 </div>
             </div>
 
-            <div class="col-6" id="middlePanel">
-                <svg id="treeSVG" preserveAspectRatio="xMinYMin meet" style="margin-left:10px">
+            <div id="middlePanel">
+                <svg class="col-6" id="treeSVG" preserveAspectRatio="xMinYMin meet" style="margin-left:10px">
                 </svg>
             </div>
             <div class="col-3 centered" id=rightPanel>
-                <p class="panelTitle">
+                <p class="panelTitle caption">
                     Your Selected Courses
                 </p>
                 <div id=selectedCoursesPanel>
                 </div>
-                <button type="button" class=" btn btn-outline-secondary " id="detailedViewButton">Detailed Overview</button>
+                <button type="button" class=" btn btn-outline-dark " id="detailedViewButton">Detailed Overview</button>
             </div>
            
         </div>
@@ -520,7 +536,7 @@ margin-left:2%
             <div id="selectedCoursesTable">
                 <!--                    <p>Narrow down your selection and follow the link to lsf to apply for participation</p>-->
             </div>
-            <div id="timeTable">
+            <div style='text-align:right;' id="timeTable">
             </div>
             <div id="radarChart">
             </div>
@@ -576,8 +592,11 @@ margin-left:2%
             var times_userNotAvailable = new Set();
             var colorText = "black";
             var colorAvailable = "green";
-            var colorUnavailable = "peachpuff";
+            var colorUnavailable = "#D5DBDB";
             var noColor = "none";
+            
+            var highlightColor = '#FCB8A0';
+            var selectedCourseColor = '#E79274';
 
             document.createSvg = function (tagName) {
                 var svgNS = "http://www.w3.org/2000/svg";
@@ -956,7 +975,17 @@ margin-left:2%
                     nodeUpdate.select('circle.node')
                         .attr('r', 9)
                         .style('fill', function (d) {
-                            //Node is expanded
+                            //Node is not expanded
+                        
+
+                            if(d.children){
+//                            console.log('CHILDREN '+d.children.length);
+                                console.log('TITLE '+Object.getOwnPropertyNames(d.children));
+                            }
+//                            if(d._children){
+//                            console.log('_CHILDREN '+d._children.length);
+//                            }
+                        
                             if (d._children) {
                                 if (d._children.length > 0) {
                                     return "black";
@@ -1203,6 +1232,7 @@ margin-left:2%
                 function showDetailedView() {
                     if (selectedCourses.length > 0) {
                         fillSelectedCoursesTable();
+                        document.getElementById('Recommendation_title').click();
                         timeTableGrid_page3 = timeTableGrid.cloneNode(true);
                         var courseTimes = document.getElementById("timeTable");
                         courseTimes.appendChild(timeTableGrid_page3);
@@ -1219,16 +1249,65 @@ margin-left:2%
 
                 //Define basic table structure
                 var table = d3.select('#selectedCoursesTable').append('table').attr("id", 'courseTable');
-                table.append('thead').append('tr')
+                var sortAscending = true;
+                
+                var rows = table.append('tbody');
+                var headers = table.append('thead').append('tr')
                     .selectAll('th')
                     .data(titles)
                     .enter()
                     .append('th')
+                    .attr('id',function(d){return d+'_title';})
                     .text(function (d) {
                         return d;
                     });
-                var rows = table.append('tbody');
+                
+                headers.append('p')
+                    .attr('class','sort-marker');
+                
+                    headers.on('click', function (d) {
+                        if(this.id.localeCompare('Delete_title')==0 || this.id.localeCompare('Link_title')==0){
+                            return null;
+                        }else{
+                        var table_rows = d3.selectAll('tbody').selectAll('.table-data')
+                           headers.attr('class', 'header');
 
+                           if (sortAscending) {
+                             table_rows.sort(
+                                 function(a, b) {
+                                     if(a[d].localeCompare('') && !b[d].localeCompare('')){
+                                         return -1;
+                                     }
+                                     if(!a[d].localeCompare('') && b[d].localeCompare('')){
+                                         return 1;
+                                     }
+                                     return d3.ascending(a[d], b[d]);
+                                 });
+                             sortAscending = false;
+                             this.className = 'aes';
+                               headers.selectAll('p.sort-marker').text('');
+                               d3.select(this).selectAll('.sort-marker')
+                                   .text('▲');
+                           } else {
+                             table_rows.sort(
+                                 function(a, b) {
+                                    if(a[d].localeCompare('') && !b[d].localeCompare('')){
+                                         return 1;
+                                     }
+                                    if(!a[d].localeCompare('') && b[d].localeCompare('')){
+                                         return -1;
+                                     }
+                                     return d3.descending(a[d], b[d]);
+                                 });
+                             sortAscending = true;
+                             this.className = 'des';
+                               headers.selectAll('p.sort-marker').text('');
+                               d3.select(this).selectAll('.sort-marker')
+                                   .text('▼');
+                           }
+
+                    }});
+                
                 function fillSelectedCoursesTable() {
 
                     rows.selectAll('.table-data').remove();
@@ -1335,7 +1414,7 @@ margin-left:2%
                     d3.selectAll('.table-data')
                         .on('click', function (d) {
                             //Check if course is currently selected
-                            if (d3.select(this).selectAll('.Title').attr('style') != null && d3.select(this).selectAll('.Title').attr('style').includes('background-color:#A9CCE3')) {
+                            if (d3.select(this).selectAll('.Title').attr('style') != null && d3.select(this).selectAll('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
                                 d3.select(this).selectAll('.Title')
                                     .attr('style', 'background-color:none');
 
@@ -1366,7 +1445,7 @@ margin-left:2%
                                     .attr('style', 'background-color:none');
 
                                 d3.select(this).selectAll('.Title')
-                                    .attr('style', 'background-color:#A9CCE3');
+                                    .attr('style', 'background-color:'+selectedCourseColor);
 
                                 times = [];
                                 courseTimes = d.Times_manual;
@@ -1389,7 +1468,7 @@ margin-left:2%
                                                 .attr('cx', '11px')
                                                 .attr('cy', '6px')
                                                 .attr('class', 'courseMarker')
-                                                .attr('fill', '#A9CCE3');
+                                                .attr('fill', selectedCourseColor);
                                         })
                                     }
                                 }
@@ -1413,19 +1492,19 @@ margin-left:2%
                         }
                     ];
 
-                    var radarMargin = { top: 50, right: 80, bottom: 50, left: 200 },
+                    var radarMargin = { top: 65, right: 80, bottom: 50, left: 300 },
                         width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
                         height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
 
                     var radarChartOptions = {
                         w: 600,
-                        h: 250,
+                        h: 200,
                         margin: radarMargin,
                         levels: 5,
                         maxValue: 5,
-                        legend: { title: '', translateX: -150, translateY: 100 },
+                        legend: { title: '', translateX: -50, translateY: 100 },
                         roundStrokes: false,
-                        color: d3.scaleOrdinal().range(["darkslategray", "darkslategray", "#A9CCE3", '#A9CCE3']),
+                        color: d3.scaleOrdinal().range(["darkslategray", "darkslategray", highlightColor, highlightColor]),
                         format: '.0f'
                     };
 
@@ -1444,7 +1523,7 @@ margin-left:2%
                     d3.selectAll('.table-data')
                         .on('mouseenter', function (d) {
                             d3.select(this)
-                                .attr('style', 'background-color:aliceblue;');
+                                .attr('style', 'background-color:'+highlightColor+';');
 
                             times = [];
                             courseTimes = d.Times_manual;
@@ -1461,7 +1540,7 @@ margin-left:2%
                                     timeTable.select(name)
                                         //                                .transition()
                                         //                                .duration(300)
-                                        .attr('fill', 'aliceblue');
+                                        .attr('fill', highlightColor);
                                 }
                             }
 
@@ -1536,21 +1615,23 @@ margin-left:2%
                                 //                            .attr('height','200px');
                                 noRatings
                                     .append('circle')
-                                    .attr('transform', 'translate(200,175)')
+                                    .attr('transform', 'translate(300,165)')
                                     //                            .attr('transform','translate(310,120)')
-                                    .attr('fill', '#A9CCE3')
+                                    .attr('fill', highlightColor)
                                     .attr('r', 50);
                                 //                            .attr('width','100px')
                                 //                            .attr('height','100px');
                                 noRatings
                                     .append('text')
-                                    .attr('x', '19%')
-                                    .attr('y', '48%')
+                                    .attr('x', '30.5%')
+                                    .attr('y', '50%')
+                                    .attr("text-anchor", "middle")
                                     .text('NO RATINGS');
                                 noRatings
                                     .append('text')
-                                    .attr('x', '19.5%')
-                                    .attr('y', '53%')
+                                    .attr('x', '30.5%')
+                                    .attr('y', '55%')
+                                    .attr("text-anchor", "middle")
                                     .text('AVAILABLE');
                             }
 
@@ -1587,9 +1668,6 @@ margin-left:2%
 
                         });
                 }
-
-
-
 
 
             });

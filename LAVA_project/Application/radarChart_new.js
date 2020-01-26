@@ -49,7 +49,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 wrapWidth: 200, 		//The number of pixels after which a label needs to be given a new line
 	 opacityArea: 0.35, 	//The opacity of the area of the blob
 	 dotRadius: 4, 			//The size of the colored circles of each blog
-	 opacityCircles: 0.1, 	//The opacity of the circles of each blob
+	 opacityCircles: 0.00, 	//The opacity of the circles of each blob
 	 strokeWidth: 2, 		//The width of the stroke around each blob
 	 roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
 	 color: d3.scaleOrdinal(d3.schemeCategory10),	//Color function,
@@ -133,22 +133,22 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.append("circle")
 		.attr("class", "gridCircle")
 		.attr("r", d => radius / cfg.levels * d)
-		.style("fill", "#CDCDCD")
-		.style("stroke", "#CDCDCD")
-		.style("fill-opacity", cfg.opacityCircles)
+		.style("fill", "#D5DBDB")
+		.style("stroke", "#D5DBDB")
+//		.style("fill-opacity", cfg.opacityCircles)
 		.style("filter" , "url(#glow)");
 
 	//Text indicating at what % each level is
-	axisGrid.selectAll(".axisLabel")
-	   .data(d3.range(1,(cfg.levels+1)).reverse())
-	   .enter().append("text")
-	   .attr("class", "axisLabel")
-	   .attr("x", 4)
-	   .attr("y", d => -d * radius / cfg.levels)
-	   .attr("dy", "0.4em")
-	   .style("font-size", "10px")
-	   .attr("fill", "#737373")
-	   .text(d => Format(maxValue * d / cfg.levels) + cfg.unit);
+//	axisGrid.selectAll(".axisLabel")
+//	   .data(d3.range(1,(cfg.levels+1)).reverse())
+//	   .enter().append("text")
+//	   .attr("class", "axisLabel")
+//	   .attr("x", 4)
+//	   .attr("y", d => -d * radius / cfg.levels)
+//	   .attr("dy", "0.4em")
+//	   .style("font-size", "15px")
+//	   .attr("fill", "#737373")
+//	   .text(d => Format(maxValue * d / cfg.levels) + cfg.unit);
 
 	/////////////////////////////////////////////////////////
 	//////////////////// Draw the axes //////////////////////
@@ -173,7 +173,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	//Append the labels at each axis
 	axis.append("text")
 		.attr("class", "legend")
-		.style("font-size", "11px")
+		.style("font-size", "10pt")
 		.attr("text-anchor", "middle")
 		.attr("dy", "0.35em")
 		.attr("x", (d,i) => rScale(maxValue * cfg.labelFactor) * cos(angleSlice * i - HALF_PI))
@@ -231,8 +231,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.attr("d", function(d,i) { return radarLine(d.axes); })
 		.style("stroke-width", cfg.strokeWidth + "px")
 		.style("stroke", (d,i) => cfg.color(i))
-		.style("fill", "none")
-		.style("filter" , "url(#glow)");
+		.style("fill", "none");
+//		.style("filter" , "url(#glow)");
 
 	//Append the circles
 	blobWrapper.selectAll(".radarCircle")
@@ -243,8 +243,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.attr("r", cfg.dotRadius)
 		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
 		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
-		.style("fill", (d) => cfg.color(d.id))
-		.style("fill-opacity", 0.8);
+		.style("fill", (d) => cfg.color(d.id));
+//		.style("fill-opacity", 0.8);
 
 	/////////////////////////////////////////////////////////
 	//////// Append invisible circles for tooltip ///////////
@@ -297,7 +297,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 				.attr('transform', `translate(${cfg.legend.translateX},${cfg.legend.translateY})`)
 				.attr("x", cfg.w - 70)
 				.attr("y", 10)
-				.attr("font-size", "12px")
+				.attr("font-size", "10pt")
 				.attr("fill", "#404040")
 				.text(cfg.legend.title);
 		}
@@ -323,7 +323,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .append("text")
 		  .attr("x", cfg.w - 52)
 		  .attr("y", (d,i) => i * 20 + 9)
-		  .attr("font-size", "11px")
+		  .attr("font-size", "10pt")
 		  .attr("fill", "#737373")
 		  .text(d => d)
             .call(wrap,cfg.wrapWidth);
