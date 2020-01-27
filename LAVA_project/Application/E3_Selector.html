@@ -1466,7 +1466,7 @@ margin-left:2%
                                                 }
                                             }
                                             
-                                            if (d3.select(this).attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
+                                            if (d3.select(this).select('.Title').attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
                                                 d3.select(this).select('.Title')
                                                     .attr('style', 'background-color:none');
 
@@ -1531,6 +1531,33 @@ margin-left:2%
                                                             });
                                                     }
                                                 }
+                                                
+                                                
+                                                if (d3.select(this).select('.Title').attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
+                                                d3.select(this).select('.Title')
+                                                    .attr('style', 'background-color:none');
+
+
+                                                times = [];
+                                                courseTimes = d.Times_manual;
+                                                if (!courseTimes == "") {
+                                                    if (courseTimes.includes(';')) {
+                                                        times = courseTimes.split(';');
+                                                    }
+                                                    else {
+                                                        times.push(courseTimes);
+                                                    }
+                                                    for (t = 0; t < times.length; t++) {
+                                                        time = times[t];
+                                                        var name = '#' + time;
+                                                        timeTable.select(name).each(function () {
+                                                            d3.select(this.parentNode)
+                                                                .selectAll('.courseMarker').remove();
+                                                        })
+                                                    }
+                                                }
+                                                }
+                                                
                                             });
                                         
                                             fillSelectedCoursesTable();
@@ -1540,7 +1567,8 @@ margin-left:2%
                                         .attr("y", "55%")
                                         .attr("dominant-baseline", "middle")
                                         .attr("text-anchor", "middle")
-                                        .text('×');
+                                        .text('×')
+                                        .attr('cursor','pointer');
                                 });
                         });
                     });
