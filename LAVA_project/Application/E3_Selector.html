@@ -1283,6 +1283,7 @@ margin-left:2%
                     .attr("id", 'courseTable');
                 var sortAscending = false;
                 var sorted_by;
+                var selected_row;
                 
                 var rows = table.append('tbody');
                 
@@ -1428,6 +1429,7 @@ margin-left:2%
                             }
                         });
                     
+                    rows.selectAll('.table-data').selectAll('.Title').attr('cursor','pointer');
 
                     rows.selectAll('.Link').append('a')
                         .attr('href', function (d) {
@@ -1574,8 +1576,10 @@ margin-left:2%
                                                     }
                                                 }
                                                 
-                                                
                                                 if (d3.select(this).select('.Title').attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
+                                                    
+//                                                    alert('Matched');
+                                                    
                                                 d3.select(this).select('.Title')
                                                     .attr('style', 'background-color:none');
 
@@ -1603,8 +1607,52 @@ margin-left:2%
                                             });
                                         
                                             fillSelectedCoursesTable();
+                                        
+                                            //Recreate status before refilling table: sort and select
                                             sortAscending = !sortAscending;
                                             document.getElementById(sorted_by).click();
+                                            if(selected_row != null){
+//                                                alert(selected_row.Title);
+
+                                                    d3.selectAll('tr.table-data').each(function(d){
+//                                                        alert(d.Title);
+                                                        if(d == selected_row){
+//                                                            alert('FOUND IT');
+                                                          d3.select(this).selectAll('.Title')                         
+                                                        .attr('style', 'background-color:'+selectedCourseColor);
+                                                    }
+                                                    });
+                                
+//                                                    d3.select(this.parentNode).each(function(d){
+//                                
+//                                                        times = [];
+//                                                        courseTimes = d.Times_manual;
+//
+//                                                        if (!courseTimes == "") {
+//                                                            if (courseTimes.includes(';')) {
+//                                                                times = courseTimes.split(';');
+//                                                            }
+//                                                            else {
+//                                                                times.push(courseTimes);
+//                                                            }
+//                                                            for (t = 0; t < times.length; t++) {
+//                                                                time = times[t];
+//                                                                var name = '#' + time;
+//                                                                timeTable.select(name).each(function () {
+//                                                                    d3.select(this.parentNode)
+//                                                                        .append('g')
+//                                                                        .append('circle')
+//                                                                        .attr('r', 5)
+//                                                                        .attr('cx', '11px')
+//                                                                        .attr('cy', '6px')
+//                                                                        .attr('class', 'courseMarker')
+//                                                                        .attr('fill', selectedCourseColor);
+//                                                                });
+//                                                            }
+//                                                        }
+//                                                    });
+                                                                                    
+                                            }
                                         })
                                         .attr("style", "font-size:17pt;")
                                         .attr("x", "50%")
@@ -1627,6 +1675,9 @@ margin-left:2%
                         .on('click', function () {
                             //Check if course is currently selected
                             if (d3.select(this).attr('style') != null && d3.select(this).attr('style').includes('background-color:'+selectedCourseColor)) {
+                                
+                                selected_row = null;
+                                
                                 d3.select(this)
                                     .attr('style', 'background-color:none');
                                 
@@ -1654,6 +1705,7 @@ margin-left:2%
 
                             }
                             else {
+                                
                                 //Reset selection
                                 timeTable.selectAll('.courseMarker').remove();
                                 d3.select('#courseTable').selectAll('.Title')
@@ -1663,6 +1715,9 @@ margin-left:2%
                                     .attr('style', 'background-color:'+selectedCourseColor);
                                 
                                 d3.select(this.parentNode).each(function(d){
+                                    
+//                                alert(d.Title);
+                                selected_row = d;
                                 
                                 times = [];
                                 courseTimes = d.Times_manual;
