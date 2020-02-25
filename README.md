@@ -1,3 +1,5 @@
+<h1>E3 Selector
+  
 This project was developed by Marie Bexte, Aynaz Khoshkoo and Yuewei Ma as part of the Learning Analytics and Visual Analtics (LAVA) lab at the University of Duisburg-Essen (Prof. Dr. Mohamed Amine Chatti, Dr. Arham Muslim).
 
 It presents a solution for a more easy selection of E3 courses, which are a special course catalog of the University of Duisburg-Essen from which every Bachelor student has to complete some courses. Before this project these courses could only be viewed as a list, but is was not possible to filter them. This shall be fixed by offering the application developed here. It consists of three pages:
