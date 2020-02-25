@@ -15,4 +15,4 @@ The application was developed in html, css, JavaScript and node.js.
 Bootstrap was used to enhance its appearance, while D3 was used to build the visualizations.
 
 It can be run locally after starting a local server, e.g. using node.js.
-A deployed version is available at: XXX.
+A deployed version is available at: https://mariebexte.github.io/E3_Selector/.
