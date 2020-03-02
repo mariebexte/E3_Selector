@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>E3 Selector</title>
+    <link rel="shortcut icon" href="../E3_icon.ico"/>
+
+    <!-- CSS Files -->
+    <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
+    <link rel="stylesheet" href="../scripts/bootstrap.min.css">
+    <link rel="stylesheet" href="../0-landing-page/landing-page.css">
+
+    <!-- JS Files -->
+    <script type="text/javascript" src="../scripts/d3.min.js"></script>
+        
+</head>
+<body>
+    
+    <div id='landingPage' class='centered'>
+        <h1>Welcome to E3 Selector</h1>
+        <h2 class='subtitle'>An application intended to help you select E3 courses more easily.</h2>
+        <h3 class='subtitle'>The process consists of just three simple steps:</h3>
+        <div class="smaller">
+            <div class='row'>
+                <div class='col-md-4 step'><p class='column'>
+                    We'll first ask you for some information enabling us to get rid of all the courses that are not relevant to you. 
+                </p></div>
+                <div class='col-md-4 step'><p class='column'>
+                    You can then browse thorough the courses matching your criteria, filter them and select those seeming most interesting to you.
+                </p></div>
+                <div class='col-md-4 step'><p class='column'>
+                        Finally, you can inspect your selected courses further and jump to their lsf page to apply for participation.
+                </p></div>
+            </div>  
+        </div> 
+    <button class="btn btn-outline-light btn-lg" onclick="showFirstPage()" id="startButton" >Start</button>
+    </div>
+
+    <script>
+    //Draw the steps describing the application
+        stepIndex = [1, 2, 3];
+        
+        //Append circles
+        d3.select('#landingPage')
+            .selectAll('.col-md-4')
+            .insert("svg", ":first-child")
+            .attr('height', '40px')
+            .attr('width', '40px')
+            .append('g')
+            .data(stepIndex)
+            .append('circle')
+            .attr('r', 20)
+            .attr('cx', '50%')
+            .attr('cy', '50%')
+            .attr('fill', 'white');
+
+        //Place text in circles
+        d3.select('#landingPage')
+            .selectAll('g')
+            .append('text')
+            .text(function (d) { return d; })
+            .attr('x', '36%')
+            .attr('y', '65%')
+            .attr('style', 'font-color:black;font-size:20pt')
+
+        function showFirstPage() {
+            window.location.href="../1-personal-information-page/personal-information-page.html"
+        }    
+    </script>
+</body>
+</html>

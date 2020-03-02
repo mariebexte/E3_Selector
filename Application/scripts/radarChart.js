@@ -2,7 +2,7 @@
 /////////////// The Radar Chart Function ////////////////
 /// mthh - 2017 /////////////////////////////////////////
 // Inspired by the code of alangrafu and Nadieh Bremer //
-// (VisualCinnamon.com) and modified for d3 v4 //////////
+// (VisualCinnamon.com) and modified for d3 v5 //////////
 /////////////////////////////////////////////////////////
 
 const max = Math.max;
@@ -37,7 +37,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 			  }
 			}
 	  });
-	}//wrap
+	}
 
 	const cfg = {
 	 w: 600,				//Width of the circle
@@ -66,7 +66,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	}//if
 
 	//If the supplied maxValue is smaller than the actual one, replace by the max in the data
-	// var maxValue = max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
 	let maxValue = 0;
 	for (let j=0; j < data.length; j++) {
 		for (let i = 0; i < data[j].axes.length; i++) {
@@ -106,7 +105,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	//Append a g element
 	let g = svg.append("g")
         .attr("transform", "translate(" + (cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
-//			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
 
 	/////////////////////////////////////////////////////////
 	////////// Glow filter for some extra pizzazz ///////////
@@ -137,18 +135,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.style("stroke", "#D5DBDB")
 		.style("fill-opacity", cfg.opacityCircles)
 		.style("filter" , "url(#glow)");
-
-	//Text indicating at what % each level is
-//	axisGrid.selectAll(".axisLabel")
-//	   .data(d3.range(1,(cfg.levels+1)).reverse())
-//	   .enter().append("text")
-//	   .attr("class", "axisLabel")
-//	   .attr("x", 4)
-//	   .attr("y", d => -d * radius / cfg.levels)
-//	   .attr("dy", "0.4em")
-//	   .style("font-size", "15px")
-//	   .attr("fill", "#737373")
-//	   .text(d => Format(maxValue * d / cfg.levels) + cfg.unit);
 
 	/////////////////////////////////////////////////////////
 	//////////////////// Draw the axes //////////////////////
@@ -232,64 +218,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.style("stroke-width", cfg.strokeWidth + "px")
 		.style("stroke", (d,i) => cfg.color(i))
 		.style("fill", "none");
-//		.style("filter" , "url(#glow)");
-
-	//Append the circles
-//	blobWrapper.selectAll(".radarCircle")
-//		.data(d => d.axes)
-//		.enter()
-//		.append("circle")
-//		.attr("class", "radarCircle")
-//		.attr("r", cfg.dotRadius)
-//		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
-//		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
-//		.style("fill", function (d){
-//               alert(Object.getOwnPropertyNames(d[0]));
-//                alert(cfg.color(d));
-//               return cfg.color(d.id);});
-//		.style("fill-opacity", 0.8);
-
-	/////////////////////////////////////////////////////////
-	//////// Append invisible circles for tooltip ///////////
-	/////////////////////////////////////////////////////////
-
-	//Wrapper for the invisible circles on top
-//	const blobCircleWrapper = g.selectAll(".radarCircleWrapper")
-//		.data(data)
-//		.enter().append("g")
-//		.attr("class", "radarCircleWrapper");
-
-	//Append a set of invisible circles on top for the mouseover pop-up
-//	blobCircleWrapper.selectAll(".radarInvisibleCircle")
-//		.data(d => d.axes)
-//		.enter().append("circle")
-//		.attr("class", "radarInvisibleCircle")
-//		.attr("r", cfg.dotRadius * 1.5)
-//		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice*i - HALF_PI))
-//		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice*i - HALF_PI))
-//		.style("fill", "none")
-//		.style("pointer-events", "all")
-//		.on("mouseover", function(d,i) {
-//			tooltip
-//				.attr('x', this.cx.baseVal.value - 10)
-//				.attr('y', this.cy.baseVal.value - 10)
-//				.transition()
-//				.style('display', 'block')
-//				.text(Format(d.value) + cfg.unit);
-//		})
-//		.on("mouseout", function(){
-//			tooltip.transition()
-//				.style('display', 'none').text('');
-//		});
-
-//	const tooltip = g.append("text")
-//		.attr("class", "tooltip")
-//		.attr('x', 0)
-//		.attr('y', 0)
-//		.style("font-size", "11px")
-//		.style('display', 'none')
-//		.attr("text-anchor", "middle")
-//		.attr("dy", "0.35em");
 
 	if (cfg.legend !== false && typeof cfg.legend === "object") {
 		let legendZone = svg.append('g');
@@ -331,6 +259,6 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .text(d => d)
             .call(wrap,cfg.wrapWidth);
 	}   
-    
+    svg.attr("viewBox", [50, 0, 900, 300].join(" "));
 	return svg;
 }

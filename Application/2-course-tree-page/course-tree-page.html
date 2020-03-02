@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>E3 Selector</title>
+    <link rel="shortcut icon" href="E3_icon.ico"/>
+
+    <!-- CSS Files -->
+    <link href="c3.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
+    <link rel="stylesheet" href="bootstrap.min.css">
+
+    <!-- JS Files -->
+    <script type="text/javascript" src="d3.min.js"></script>
+    <script src="slider.min.js.css"></script>
+    <script src="radarChart.js"></script>  
+    <script type="text/javascript" src="dataStorage.js"></script>
+        
+    <style>
+        *{
+            font-family: 'Arsenal';
+        }
+        
+        header{
+/*            height:5%;*/
+            text-align: center;
+            font-size: 25pt;
+            background:darkslategray;
+            color:white;
+        }
+        
+        html, body{
+            height: 100%;
+            margin:0;
+            padding:0;
+        }
+        
+        .flex-fill{
+            flex:1;
+        }
+/*
+        svg.mainElement {
+            width: 100%;
+            height: 100%;
+            
+        }
+*/
+        
+        #page2{
+            height: 100%;
+        }
+        
+        #page2 p{
+            margin:0;
+            text-align: center;
+        }
+
+        .node circle {
+          fill: #fff;
+          stroke: black;
+          stroke-width: 2px;
+        }
+
+        .node text {
+          font: 16px; 
+        }
+
+        .link {
+          fill: none;
+          stroke: lightgray;
+          stroke-width: 2px;
+        }
+
+        #rightPanel {
+/*            position:absolute;*/
+/*            display:block;*/
+/*            width: 300px;*/
+/*            height: 100%;*/
+/*
+            top:50px;
+            bottom: 0;
+            right:0;
+*/            display: flex;
+            padding: 10px;
+/*            margin-top: 0.5%;*/
+            background-color: whitesmoke;
+        }
+
+        #leftPanel {
+/*           display:block;*/
+/*            width: 230px;*/
+/*            height: auto;*/
+/*            position:absolute;*/
+/*
+            top:50px;
+            left: 0;
+            bottom:0;
+*/
+            padding: 10px;
+/*            margin-top: 0.5%;*/
+            background-color: whitesmoke;
+            overflow-y: auto; 
+        }
+        
+        .filterClass{
+            border-radius: 15px;
+            padding: 10px;
+            margin:4% 2% 4% 2%;
+        }
+        
+        .filterClass label{
+            display: inline-block;
+            width:70%;
+            padding-left:5px;
+            padding-right:5px;
+        }
+        
+        .panelTitle { 
+            font-size: 18px;
+            text-align: center;
+        }
+        
+/*
+        #selectedCoursesPanel{
+            height:90%;
+            margin-top:10px;
+            margin-bottom:30px;
+            overflow-y: auto;        
+        }
+*/
+
+        #selectedCoursesPanel p { 
+            font-size: 15px;
+            text-align: left;
+            margin: 9px;
+            padding: 7px 15px 7px 10px;
+            border-radius: 10px;
+        }
+
+        #middlePanel {
+/*
+            display:block;
+            position:absolute;
+*/
+            overflow:scroll;
+/*
+            top:50px;
+            bottom:0;
+*/
+/*
+            left:250px;
+            right:320px;
+*/
+/*            width:64%;*/
+/*            height:auto;*/
+/*
+            margin-top:0.5%;
+            margin-bottom: 0.5%;
+*/
+/*            margin-right: auto;*/
+            background-color:whitesmoke;
+        }
+        
+        .centered{
+            margin-top:15px;
+            text-align: center;
+        }
+        
+/*
+        #treeSVG{
+            margin-left:2%
+
+        }
+*/
+        
+        #detailedViewButton {
+            position: absolute;
+            /*left: 50%;*/
+            bottom: 20px;
+            /*right:0;*/
+            width:180px;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+        }
+        
+/*
+        #page3 {
+            position: absolute;
+            top:50px;
+            bottom:0;
+            left:0;
+            right:0;
+            height:auto;
+            width:auto;
+            font-size: 11pt;
+            background-color:white;
+        }
+*/
+        
+        .caption{
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+                   
+    </style>
+</head>
+<body>
+    <div id="page2">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand">
+                <img src="Logo4.png" width="90" height="22" class="d-inline-block align-top" alt="">
+            </a>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="0_landingPage.html">Home</a>
+                    <a class="nav-item nav-link" href="1_personalInformationPage.html">Your Information</a>
+                    <a class="nav-item nav-link active" href="2_selectFromCourseTree.html">Course Tree</a>
+                    <a class="nav-item nav-link" href="3_narrowDownSelection.html">Course Selection</a>
+                </div>
+        </nav>
+        <div class="row">
+            <div class="col-md-2">
+                <p class="panelTitle caption">
+                    Filter Courses
+                </p>
+                <div class="filterClass" style="background-color:white;">
+                    <p class='caption'>Credits</p>
+                    <div><div id="slider-range"></div></div>
+                </div>
+                <div style="background-color:white;" class="filterClass">
+                    <p class='caption'>Course Type</p>
+                    <input type="checkbox" name="Type" value="VL/Übung" id="lec_ex" class="courseTypeSelection">
+                    <label for="lec_ex" style="background-color:lightgreen;">Lecture + Exercise</label><br>
+                    <input type="checkbox" name="Type" value="Vorlesung" id="lec" class="courseTypeSelection">
+                    <label for="lec" style="background-color:powderblue;">Lecture</label><br>
+                    <input type="checkbox" name="Type" value="Seminar" id="sem" class="courseTypeSelection">
+                    <label for="sem" style="background-color:peachpuff">Seminar</label><br>
+                    <input type="checkbox" name="Type" value="Blockseminar" id="sem_bl" class="courseTypeSelection">
+                    <label for="sem_bl" style=background-color:salmon>Blocked Seminar</label><br>
+                    <input type="checkbox" name="Type" value="E-Learning" id="e_learn" class="courseTypeSelection">
+                    <label for="e_learn" style="background-color:thistle">E-Learning</label><br>
+                </div>
+                <div style="background-color:white;" class="filterClass">
+                    <p class='caption'>Exam Type</p>
+                    <input type="checkbox" name="Exam" value="Klausur" id="exam" class="examSelection">
+                    <label for="exam">Written Exam</label><br>
+                    <input type="checkbox" name="Exam" value="Mündliche Prüfung" id="oral" class="examSelection">
+                    <label for="oral">Oral Exam</label><br>
+                    <input type="checkbox" name="Exam" value="Schriftliche Ausarbeitung" id="report" class="examSelection">
+                    <label for="report">Written Report</label><br>
+                    <input type="checkbox" name="Exam" value="Präsentation" id="presentation" class="examSelection">
+                    <label for="presentation">Presentation</label><br>
+                </div>
+                <div style="background-color:white;" class="filterClass">
+                    <p class='caption'>Location</p>
+                    <input type="checkbox" name="Location" value="Essen" id="essen" class="locationSelection">
+                    <label for="essen">Essen</label><br>
+                    <input type="checkbox" name="Location" value="Duisburg" id="duisburg" class="locationSelection">
+                    <label for="duisburg">Duisburg</label><br>
+                    <input type="checkbox" name="Location" value="Bochum" id="bochum" class="locationSelection">
+                    <label for="bochum">Bochum</label><br>
+                    <input type="checkbox" name="Location" value="Dortmund" id="dortmund" class="locationSelection">
+                    <label for="dortmund">Dortmund</label><br>
+                </div>
+            </div>
+
+            <div class='col-md-8'>
+                <svg id="treeSVG">
+                </svg>
+            </div>
+            
+            <div class="col-md-2">
+                <p class="panelTitle caption">
+                    Your Selected Courses
+                </p>
+                <div id=selectedCoursesPanel>
+                </div>
+                <button type="button" class="btn btn-outline-dark" id="detailedViewButton">Detailed Overview</button>
+            </div>  
+        </div>
+    </div>
+
+    <script>
+           
+
+            var seminarColor = "peachpuff";
+            var blockSeminarColor = "salmon";
+            var lectureColor = "powderblue";
+            var lectureExerciseColor = "lightgreen";
+            var eLearningColor = "thistle";
+
+            var seminarColorDark = "orange";
+            var blockSeminarColorDark = "red";
+            var lectureColorDark = "dodgerblue";
+            var lectureExerciseColorDark = "limegreen";
+            var eLearningColorDark = "darkorchid";
+
+            //PAGE2-------------------------------------------------------------------------------
+
+            // Check all filtering options in the beginning
+            d3.select('#page2').selectAll('input').attr('checked', 'true');
+
+            //Data used to draw tree, already filtered according to constraints set on page1
+            var treeData = loadFilteredCourses();
+            
+                //Node indexes
+                var i = 0;
+
+                // Diagram measurements
+                var margin = { top: 20, right: 10, bottom: 10, left: 30},
+                    width = 800 - margin.left - margin.right,
+                    height = 830 - margin.top - margin.bottom;
+
+                // Layout of tree
+                var treemap = d3.tree().size([height, width]);
+
+                var selectedCourses = [];
+                var catalogNames = ["BNE", "IOS", "Kultur und Gesellschaft", "Natur und Technik", "Wirtschaft"]
+
+                var svg = d3.select("#treeSVG")
+                    .attr("class", "mainElement")
+                    .attr("viewBox", "-15 0 420 910")
+                    .append("g")
+                    .attr('transform',"translate(0,20)");
+
+                var selectionPanel = d3.select("#selectedCoursesPanel");
+
+                // Assigns parent, children, height, depth
+                var root = d3.hierarchy(treeData, function (d) { return d.children; });
+                root.x0 = height / 2;
+                root.y0 = 0;
+
+                //              Collapse after the second level
+                root.children.forEach(collapse);
+
+                //              Expand first catalog
+                root.children[0].children = root.children[0]._children;
+                root.children[0]._children = null;
+
+                // Collapse node and all children
+                function collapse(d) {
+                    if (d.children) {
+                        d._children = d.children
+                        d._children.forEach(collapse)
+                        d.children = null
+                    }
+                }
+            
+                var credit_range = ["1", "9"];
+
+                update(root, false);
+
+                // Add filtering to checkboxes
+                d3.select('#page2').selectAll('input').on('click', function(){update(root,true);});
+
+				
+		        function filter_checkboxes(d){
+		            var checkboxes = d3.select('#page2').selectAll("input[type='checkbox']:not(:checked)");  
+            
+		            if(d.data.Title == " " || catalogNames.includes(d.data.Title))
+		                {
+		                    return true;
+		                }
+                
+		            keepCourse = true;
+		            checkboxes.each(
+		                function(){
+                    
+		                    key = this.name;
+		                    value = this.value;
+                    
+		                    //Relaxed condition to also match fields with multiple entries
+		                    if(d.data[key].includes(value) || d.data[key] == "unknown"){
+		                        keepCourse = false;
+		                    }
+
+		                });
+                
+		                //See if course falls within selected range of credits
+		                    minCred = credit_range[0];
+		                    maxCred = credit_range[1];
+		                    courseCred = d.data["Credits"];
+		                    if(courseCred.includes('-')){
+		                        courseCredArr = courseCred.split("-");
+		                        courseMin = courseCredArr[0];
+		                        courseMax = courseCredArr[1];
+		                    }
+		                    else{
+		                        courseMin = courseCred;
+		                        courseMax = courseCred;
+		                    }
+                    
+		                    if(courseMax < minCred){
+		                        keepCourse = false;
+		                    }
+		                    if(maxCred < courseMin){
+		                        keepCourse = false;
+		                    }
+                
+		                return keepCourse;
+		        }
+
+                function update(source, filtering) {
+
+                    var duration;
+
+                    //          When user is just filtering, do not animate tree changes
+                    if (filtering) {
+                        duration = 0;
+                    }
+                    else {
+                        duration = 750;
+                    }
+
+                    // Assigns the x and y position for the nodes
+                    var treeData = treemap(root);
+
+                    // Compute new tree layout.
+                    var nodes = treeData.descendants();
+                    var links = treeData.descendants().slice(1);
+
+                    // Fixed depth
+                    nodes.forEach(function (d) { d.y = d.depth * 180 });
+
+                    // ****************** Nodes section ***************************
+
+                    // Update the nodes...
+                    // var node = svg.selectAll('g.node')
+                    //     .data(nodes, function (d) {
+                    //         return d.id || (d.id = ++i);
+                    //     });
+						
+		            var node = svg.selectAll('g.node')
+		                .data(nodes.filter(function(d){
+		                    return filter_checkboxes(d);
+		                }), function(d) {
+		                    return d.id || (d.id = ++i); });  
+
+                    // Enter any new nodes at the parent's previous position.
+                    var nodeEnter = node.enter().append('g')
+                        .attr('class', 'node')
+                        .attr("transform", function (d) {
+                            return "translate(" + source.y0 + "," + source.x0 + ")";
+                        })
+                        .on('click', click);
+
+                    // Add Circle for the nodes
+                    nodeEnter.append('circle')
+                        .attr('class', 'node')
+                        .attr('r', 1e-6)
+                        .style("fill", function (d) {
+                            return d._children ? "lightsteelblue" : "#fff";
+                        });
+
+                    // Add labels for the nodes
+                    nodeEnter.append('text')
+                        .attr('class', 'node')
+                        .attr("dy", ".35em")
+                        .attr("x", function (d) {
+                            //Node labels for empty catalog nodes (2nd level) should appear left
+                            if (!d.children && !d._children) {
+                                if (catalogNames.includes(d.data.Title)) {
+                                    return -13;
+                                }
+                            }
+                            return d.children || d._children ? -13 : 13;
+                        })
+                        .attr("text-anchor", function (d) {
+                            //Node labels for empty catalog nodes should appear left
+                            if (!d.children && !d._children) {
+                                if (catalogNames.includes(d.data.Title)) {
+                                    return "end";
+                                }
+                            }
+                            return d.children || d._children ? "end" : "start";
+                        })
+                        .text(function (d) { return d.data.Title; });
+
+                    // UPDATE
+                    var nodeUpdate = nodeEnter.merge(node);
+
+                    // Transition to the proper position for the node
+                    nodeUpdate.transition()
+                        .duration(duration)
+                        .attr("transform", function (d) {
+                            return "translate(" + d.y + "," + d.x + ")";
+                        });
+
+                    // Update the node attributes and style
+                    nodeUpdate.select('circle.node')
+                        .attr('r', 9)
+                        .style('fill', function (d) {
+                            //Node is not expanded
+                        
+
+                            if(d.children){
+//                            console.log('CHILDREN '+d.children.length);
+                                console.log('TITLE '+Object.getOwnPropertyNames(d.children));
+                            }
+//                            if(d._children){
+//                            console.log('_CHILDREN '+d._children.length);
+//                            }
+                        
+                            if (d._children) {
+                                if (d._children.length > 0) {
+                                    return "black";
+                                }
+                            }
+                            else {
+                                switch (d.data.Type) {
+                                    case "Seminar": return seminarColor;
+                                    case "Blockseminar": return blockSeminarColor;
+                                    case "Vorlesung": return lectureColor;
+                                    case "VL/Übung": return lectureExerciseColor;
+                                    case "E-Learning": return eLearningColor;
+                                    default: return "white";
+                                }
+                            }
+                        })
+                        .style('stroke', function (d) {
+                            switch (d.data.Type) {
+                                case "Seminar": return seminarColorDark;
+                                case "Blockseminar": return blockSeminarColorDark;
+                                case "Vorlesung": return lectureColorDark;
+                                case "VL/Übung": return lectureExerciseColorDark;
+                                case "E-Learning": return eLearningColorDark;
+                                default: return "black";
+                            }
+                        })
+                        .attr('cursor', 'pointer');
+
+                    //Update node labels
+                    nodeUpdate.select('text')
+                        .style('fill', function (d) {
+                            if (selectedCourses.includes(d.data)) {
+                                switch (d.data.Type) {
+                                    case "Seminar": return seminarColorDark;
+                                    case "Blockseminar": return blockSeminarColorDark;
+                                    case "Vorlesung": return lectureColorDark;
+                                    case "VL/Übung": return lectureExerciseColorDark;
+                                    case "E-Learning": return eLearningColorDark;
+                                    default: return "black";
+                                }
+                            }
+                            return "black";
+                        })
+                        .attr('cursor', 'pointer');
+
+                    // Remove any exiting nodes
+                    var nodeExit = node.exit().transition()
+                        .duration(duration)
+                        .attr("transform", function (d) {
+                            return "translate(" + source.y + "," + source.x + ")";
+                        })
+                        .remove();
+
+                    // On exit reduce the node circles size to 0
+                    nodeExit.select('circle')
+                        .attr('r', 1e-6);
+
+                    // On exit reduce the opacity of text labels
+                    nodeExit.select('text')
+                        .style('fill-opacity', 1e-6);
+
+                    // ****************** links section ***************************
+
+                    // Update the links...
+                    var link = svg.selectAll('path.link')
+                        .data(links.filter(function(d){
+		                    return filter_checkboxes(d);
+		                }), function (d) { return d.id; });
+
+                    // Enter any new links at the parent's previous position.
+                    var linkEnter = link.enter().insert('path', "g")
+                        .attr("class", "link")
+                        .attr('d', function (d) {
+                            var o = { x: source.x0, y: source.y0 }
+                            return diagonal(o, o)
+                        });
+
+                    // UPDATE
+                    var linkUpdate = linkEnter.merge(link);
+
+                    // Transition back to the parent element position
+                    linkUpdate.transition()
+                        .duration(duration)
+                        .attr('d', function (d) { return diagonal(d, d.parent) });
+
+                    // Remove any exiting links
+                    var linkExit = link.exit().transition()
+                        .duration(duration)
+                        .attr('d', function (d) {
+                            var o = { x: source.x, y: source.y }
+                            return diagonal(o, o)
+                        })
+                        .remove();
+
+                    // Store the old positions for transition.
+                    nodes.forEach(function (d) {
+                        d.x0 = d.x;
+                        d.y0 = d.y;
+                    });
+
+                    // Creates a curved (diagonal) path from parent to the child nodes
+                    function diagonal(s, d) {
+                        path = `M ${s.y} ${s.x}
+                        C ${(s.y + d.y) / 2} ${s.x},
+                        ${(s.y + d.y) / 2} ${d.x},
+                        ${d.y} ${d.x}`
+                        return path
+                    }
+
+                    // Toggle children on click.
+                    function click(d) {
+                        //Treat leaves differently: these are selectable courses
+                        if (!d.children && !d._children) {
+                            if (catalogNames.includes(d.data.Title)) {
+                                //Empty catalog: should be a non-responsive node
+                            } else {
+                                if (selectedCourses.includes(d.data)) {
+                                    var index = selectedCourses.indexOf(d.data);
+                                    selectedCourses.splice(index, 1);
+                                }
+                                else {
+                                    selectedCourses.push(d.data);
+                                }
+                                updateSelectedCourses();
+                            }
+                        }
+                        else {
+                            if (d.children) {
+                                d._children = d.children;
+                                d.children = null;
+                            } else {
+                                root.children.forEach(collapse);
+                                d.children = d._children;
+                                d._children = null;
+                            }
+                            update(d, false);
+                        }
+                    }
+
+                }
+
+                function updateSelectedCourses() {
+                    //Update node labels according to selection
+                    d3.select('#treeSVG').selectAll('text')
+                        .style('fill', function (d) {
+                            if (selectedCourses.includes(d.data)) {
+                                switch (d.data.Type) {
+                                    case "Seminar": return seminarColorDark;
+                                    case "Blockseminar": return blockSeminarColorDark;
+                                    case "Vorlesung": return lectureColorDark;
+                                    case "VL/Übung": return lectureExerciseColorDark;
+                                    case "E-Learning": return eLearningColorDark;
+                                    default: return "black";
+                                }
+                            }
+                            return "black";
+                        });
+
+                    selectionPanel.selectAll("p").remove();
+                    selectionPanel.selectAll('p')
+                        .data(selectedCourses).enter()
+                        .append('p')
+                        .attr('class', 'text')
+                        .on('click', function (d) {
+                            var index = selectedCourses.indexOf(d);
+                            selectedCourses.splice(index, 1);
+                            updateSelectedCourses();
+                        })
+                        .text(function (d) {
+                            return d.Title;
+                        })
+                        .attr('style', function (d) {
+                            return "background-color:white;"
+                        })
+                        .style("position", "relative")
+                        .append("svg")
+                        .attr("style", "position:absolute;top:-4;right:-10")
+                        .attr("height", "24px")
+                        .attr("width", "24px")
+                        .append("circle")
+                        .attr("r", "10px")
+                        .attr("cx", "12px")
+                        .attr("cy", "12px")
+                        .attr("stroke", function (d) {
+                            switch (d.Type) {
+                                case "Seminar": return seminarColorDark;
+                                case "Blockseminar": return blockSeminarColorDark;
+                                case "Vorlesung": return lectureColorDark;
+                                case "VL/Übung": return lectureExerciseColorDark;
+                                case "E-Learning": return eLearningColorDark;
+                                default: return "black";
+                            }
+                        })
+                        .attr("stroke-width", "2px")
+                        .attr("fill", function (d) {
+                            switch (d.Type) {
+                                case "Seminar": return seminarColor;
+                                case "Blockseminar": return blockSeminarColor;
+                                case "Vorlesung": return lectureColor;
+                                case "VL/Übung": return lectureExerciseColor;
+                                case "E-Learning": return eLearningColor;
+                                default: return "black";
+                            }
+                        });
+
+                    selectionPanel.selectAll("p svg")
+                        .append("text")
+                        .attr("style", "font-size:17pt;")
+                        .attr("x", "52%")
+                        .attr("y", "55%")
+                        .attr("dominant-baseline", "middle")
+                        .attr("text-anchor", "middle")
+                        .text("×")
+                        .attr('cursor', 'pointer');
+                    
+                    setSelectedCourses(selectedCourses);
+                }
+
+                //Slider to filter for credits
+                var sliderRange = d3
+                    .sliderBottom()
+                    .min(1)
+                    .max(9)
+                    .step(1)
+                    .width(150)
+                    .ticks(10)
+                    .default([1, 9])
+                    .fill('darkslategray')
+                    .on('onchange', val => {
+                        credit_range = val;
+                        update(root,true);
+                    });
+
+                var gRange = d3
+                    .select('div#slider-range')
+                    .append('svg')
+                    .attr('width', 500)
+                    .attr('height', 80)
+                    .append('g')
+                    .attr('transform', 'translate(12,20)');
+
+                gRange.call(sliderRange);
+
+                d3.select('#detailedViewButton').on('click', showDetailedView);
+
+                function showDetailedView() {
+                    if (selectedCourses.length > 0) {
+                        window.location.href='../3_narrowDownSelection.html'
+                        
+                    }
+                    else {
+                        alert('Please select some courses to compare!')
+                    }
+                }
+
+        </script>
+</body>
+</html>

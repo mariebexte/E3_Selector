@@ -1,0 +1,105 @@
+*{
+    font-family: Arsenal, Arial;
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse;
+    font-size: 12pt;
+}
+
+tr{
+    background:white;
+}
+
+th { 
+    background: #6EA2A5; 
+    color: white; 
+    font-weight: normal;
+    position: sticky;
+    top: 0; 
+}
+
+td, th { 
+    padding: 5px; 
+    text-align: left; 
+}
+
+th p{
+    float:right;
+    text-align:right;
+    margin:0;
+    min-width: 17px;
+    cursor: pointer;
+}
+
+.fakeButton {
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+    border-radius: 15px;
+}
+
+#page3 {
+    position: absolute;
+    top:50px;
+    bottom:0;
+    left:0;
+    right:0;
+    height:auto;
+    width:auto;
+    font-size: 11pt;
+    background-color:white;
+}
+
+#page3 p{
+    text-align: center;
+}
+
+#selectedCoursesTable{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height:59.5%;
+    width:auto;
+    overflow-y: auto;
+    background-color:whitesmoke;
+    margin:0.5%;
+}
+
+#timeTable{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height:37.5%;
+    width:50%;
+    background-color:whitesmoke;
+    margin:0.5%;
+}
+
+#timeTable svg{
+    width:80%;
+    height: 80%;
+}
+
+#radarChart{
+    position: absolute;
+    text-align: left;
+    right: 0;
+    bottom: 0;
+    height:37.5%;
+    width:50%;
+    background-color:whitesmoke;
+    margin:0.5%;
+}
+
+#radarChart svg{
+    width:100%;
+    height:85%;
+}
