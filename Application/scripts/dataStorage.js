@@ -137,21 +137,27 @@ function setSelectedCourses(courses) {
 
 //Clears languages
 function clearDeselectedLanguages() {
-    localStorage.setItem(DESELECTED_LANGUAGES_KEY,"[]");
+    localStorage.setItem(DESELECTED_LANGUAGES_KEY,null);
 }
 
 //Clears timeslots
 function clearDeselectedTimeslots() {
-    localStorage.setItem(DESELECTED_TIMESLOTS_KEY,"[]");
+    localStorage.setItem(DESELECTED_TIMESLOTS_KEY,null);
 }
 
 // Clears study program
 function clearSelectedStudyprogram() {
-    localStorage.setItem(STUDYPROGRAM_RETRIEVAL_KEY,"");
+    localStorage.setItem(STUDYPROGRAM_KEY,null);
+}
+
+// Clears filtered courses
+function clearFilteredCourses() {
+    localStorage.setItem(FILTERED_COURSES_KEY,null);
 }
 
 function clearAll() {
     clearDeselectedLanguages();
     clearSelectedStudyprogram();
     clearDeselectedTimeslots();
+    clearFilteredCourses();
 }
