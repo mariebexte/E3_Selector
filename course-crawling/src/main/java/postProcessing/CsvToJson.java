@@ -1,9 +1,7 @@
-package dataManipulation;
+package postProcessing;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,30 +12,28 @@ import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-public class CsvToJSON {
+public class CsvToJson  {
+    
+    public static void main(String[] args) {
+        
+        try{
+            process("e3_courses_190120_2.csv","e3_courses_190120_2.json");
+        }
+        catch(IOException e){
+            e.printStackTrace();
+            System.err.println("File not found.");
+        }
+    }
 	
-	public static void main(String[] args) throws IOException {
+	public static void process(String pathIn, String pathOut) throws IOException {
 		
-//		BufferedReader br = new BufferedReader(new FileReader(new File("e3_courses_FINAL.csv")));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("e3_courses_190120_2.json")));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(pathOut)));
 		
-//		String line = br.readLine();
-//		String[] entries;
 		String prevCatalog = "";
 		String catalog;
 		
-//		while(br.ready()) {
-//			line = br.readLine();
-//			entries = line.split(",");
-//			catalog = entries[3];
-//			
-//			System.out.println("LINE: "+line);
-//			System.out.println("CAT: "+catalog);
-//		}
-		
-	    Reader in = new FileReader("e3_courses_190120_2.csv");
+	    Reader in = new FileReader(pathIn);
 	    Iterable<CSVRecord> records = CSVFormat.DEFAULT
-//	      .withHeader(HEADERS)
 	      .withFirstRecordAsHeader()
 	      .parse(in);
 	    
@@ -55,9 +51,6 @@ public class CsvToJSON {
 	        		bw.write("}]},");
 	        		bw.newLine();
 	        	}
-	        	
-//				System.out.println("LINE: "+record);
-//				System.out.println("CAT: "+catalog);
 				
 				bw.write("{\"title\":\""+catalog+"\",\"children\":[");
 	        	
@@ -89,9 +82,7 @@ public class CsvToJSON {
 	    
 		bw.write("}]}]}");
 		bw.close();
-//		br.close();
-		in.close();
-		
+		in.close();	
 	}
 
 }

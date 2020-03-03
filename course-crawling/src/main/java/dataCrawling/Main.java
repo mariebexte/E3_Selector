@@ -1,3 +1,5 @@
+package dataCrawling;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,7 +25,7 @@ public class Main {
 			spider.getData("https://campus.uni-due.de/lsf/rds?state=wtree&search=1&trex=step&root120182=215769|208339|209397|213515&P.vx=kurz", "",bw);
 			//Wirtschaft
 			spider.getData("https://campus.uni-due.de/lsf/rds?state=wtree&search=1&trex=step&root120182=215769|208339|209397|215550&P.vx=kurz", "",bw);
-//			
+			
 //			Set<String> before = new HashSet<String>();
 //			before.addAll(spider.getSiteHandler().getTitles());
 //			spider.getSiteHandler().resetTitles();
@@ -71,7 +73,7 @@ public class Main {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("unable to initialize writer");
+			System.err.println("Unable to initialize writer.");
 			e.printStackTrace();
 			System.exit(-1);
 		}

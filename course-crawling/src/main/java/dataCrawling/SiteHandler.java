@@ -1,3 +1,5 @@
+package dataCrawling;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -97,8 +99,7 @@ public class SiteHandler {
 			bw.write("\",\"" + catalog);
 			distinctCourses.add(title);
 
-			// Need to explicitly test these classes as some courses are missing some of
-			// them
+			// Need to explicitly test these classes as some courses are missing some of them
 			List<String> basicFields = Arrays.asList(new String[] { "basic_1", "basic_2", "basic_3", "basic_4",
 					"basic_5", "basic_6", "basic_7", "basic_8", "basic_9", "basic_10", "basic_12", "basic_13",
 					"basic_15", "basic_16", "basic_17" });
@@ -204,10 +205,6 @@ public class SiteHandler {
 			}
 			elements = htmlDocument.getElementsByClass("mod_n");
 
-//			for (Element ele : elements) {
-//				bw.write("\",\"" + cleanText(ele.text()));
-//			}
-
 			int missingFieldsSoFar = 0;
 
 			for (int i = 0; i < 5; i++) {
@@ -220,7 +217,6 @@ public class SiteHandler {
 					bw.write("\",\"");
 					missingFieldsSoFar++;
 				} else {
-//					System.out.println(elements.get(i-missingFieldsSoFar).text());
 					bw.write("\",\"" + cleanText(elements.get(i - missingFieldsSoFar).text()));
 				}
 			}

@@ -1,3 +1,5 @@
+package dataCrawling;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -39,7 +41,6 @@ public class Spider {
 		this.pagesToVisit.addAll(handler.getLinks());
 
 		while (this.pagesToVisit.size() > 0) {
-//		for(int i=0; i<2; i++) {
 			currentUrl = this.nextUrl();
 			if (!currentUrl.equals("")) {
 				handler.extractFields(currentUrl, catalog, bw);
