@@ -6,7 +6,7 @@ It presents a solution for a more easy selection of E3 courses, which are a spec
 * Second, the user can browse the remaining courses, filter and select those that seem interesting.
 * Third, a concise table view of the selected courses is combined with a visual representation of the student's timetable as wells as a radar chart displaying course ratings.
 
-Screenshots of the visualizations are provided [below](#visualizations).
+Screenshots of the visualizations are provided [below](#visualizations-and-how-to-use-the-application).
 As of now, the application only includes Bachelor programs of the Faculty of Engineering.
 
 ## Data Collection
@@ -53,7 +53,7 @@ The image below illustrates the project architecture. The application consists o
 
 ![Project Architecture](/images/project-architecture.png)
 
-## Visualizations & how to use the application
+## Visualizations and how to use the application
 1. **Assessing basic information**
 
 Collection of some hard constraints regarding the user, according to which the full course set will be filtered.
