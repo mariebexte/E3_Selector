@@ -87,9 +87,6 @@ function setDeselectedTimeslots(set) {
 function loadFilteredCourses() {
     console.log("load filtered courses");
     let selection = JSON.parse(localStorage.getItem(FILTERED_COURSES_KEY));
-    if (selection === null) {
-        selection = []
-    }
     console.log(selection);
     return selection;
 }

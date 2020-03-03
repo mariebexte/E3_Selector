@@ -20,16 +20,24 @@ th {
     top: 0; 
 }
 
-td, th { 
-    padding: 5px; 
-    text-align: left; 
-}
-
 th p{
     float:right;
     text-align:right;
     margin:0;
     min-width: 17px;
+    cursor: pointer;
+}
+
+td, th { 
+    padding: 5px; 
+    text-align: left; 
+}
+
+td{
+    font-size: 11pt;
+}
+
+.Title{
     cursor: pointer;
 }
 
