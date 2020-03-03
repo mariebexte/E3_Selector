@@ -1,0 +1,97 @@
+*{
+    font-family: Arsenal, Arial;
+}
+
+/*Three column layout*/
+.panel{
+    top:50px;
+    bottom:0;
+    margin:0.5%;
+    padding:10px;
+    background-color: whitesmoke;
+}
+
+#leftPanel {
+    position:absolute;
+    width: 220px;
+    left: 0;
+    overflow-y:auto;
+}
+
+#middlePanel {
+    position:absolute;
+    left:230px;
+    right:310px;
+}
+
+#rightPanel {
+    position:absolute;
+    width: 300px;
+    right:0;
+}
+
+/*Panel headers & subheaders*/
+.panelTitle { 
+    font-size: 18px;
+}
+
+.caption{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/*For left panel*/
+#selectedCoursesPanel{
+    height:90%;
+    margin-top:10px;
+    margin-bottom:30px;
+    overflow-y: auto;        
+}
+
+#selectedCoursesPanel p { 
+    font-size: 15px;
+    text-align: left;
+    margin: 9px;
+    padding: 7px 15px 7px 10px;
+    border-radius: 10px;
+}
+
+/*For checkboxes*/
+.filterClass{
+    border-radius: 15px;
+    padding: 10px;
+    margin:4% 2% 4% 2%;
+}
+
+.filterClass label{
+    display: inline-block;
+    width:80%;
+    padding-left:5px;
+    padding-right:5px;
+    margin-left: 5px;
+}
+
+/*Tree Styling*/
+svg.mainElement{
+    height:100%;
+}
+
+.node circle {
+  stroke-width: 2px;
+}
+
+.link {
+  fill: none;
+  stroke: lightgray;
+  stroke-width: 2px;
+}
+
+/*Button*/
+#detailedViewButton {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    width:180px;
+    transform: translateX(-50%);
+}

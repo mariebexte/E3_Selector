@@ -8,7 +8,7 @@ let SELECTED_COURSES_KEY = "selectedCourses";
  * Retrieves selected study program
  * @returns {studyProgram}
  */
-function loadSelectedStudyprogram() {
+function loadSelectedStudyProgram() {
     return JSON.parse(localStorage.getItem(STUDYPROGRAM_KEY))
 }
 
@@ -16,7 +16,7 @@ function loadSelectedStudyprogram() {
  * Saves selected study program
  * @param studyprogram
  */
-function setSelectedStudyprogram(studyprogram) {
+function setSelectedStudyProgram(studyprogram) {
     localStorage.setItem(STUDYPROGRAM_KEY, JSON.stringify(studyprogram));
 }
 
@@ -29,9 +29,6 @@ function setSelectedStudyprogram(studyprogram) {
 function loadDeselectedLanguages() {
     console.log("load deselected_languages");
     let selection = JSON.parse(localStorage.getItem(DESELECTED_LANGUAGES_KEY));
-    if (selection === null) {
-        selection = []
-    }
     console.log(selection);
     return selection;
 }
@@ -61,20 +58,17 @@ function setDeselectedLanguages(list) {
 function loadDeselectedTimeslots() {
     console.log("load deselected timeslots");
     let selection = JSON.parse(localStorage.getItem(DESELECTED_TIMESLOTS_KEY));
-    if (selection === null) {
-        selection = []
-    }
     console.log(selection);
     return selection;
 }
 
 /**
- * Saves a list of deselected times
- * @param list
+ * Saves a set of deselected times
+ * @param set
  */
-function setDeselectedTimeslots(list) {
+function setDeselectedTimeslots(set) {
     let deselectedTimeslots = [];
-    for (let item of list) {
+    for (let item of set) {
         deselectedTimeslots.push(item)
     }
     console.log("set deselected timeslots")
@@ -116,9 +110,9 @@ function setFilteredCourses(treeStructure) {
 
 /**
  * Retrieves list of selected courses
- * @param selection
+ * @returns [selection]
  */
-function loadSelectedCourses(selectedCourses) {
+function loadSelectedCourses() {
     console.log("selected course set")
     let selection = JSON.parse(localStorage.getItem(SELECTED_COURSES_KEY));
     if (selection === null) {
@@ -130,7 +124,7 @@ function loadSelectedCourses(selectedCourses) {
 
 /**
  * Saves a list of selected courses
- * @param listOfNodes
+ * @param courses
  */
 function setSelectedCourses(courses) {
     console.log("set selected courses");
@@ -140,28 +134,24 @@ function setSelectedCourses(courses) {
 }
 
 
+
 //Clear
 //----------------------------
-
 
 //Clears languages
 function clearDeselectedLanguages() {
     localStorage.setItem(DESELECTED_LANGUAGES_KEY,"[]");
 }
 
-
-
 //Clears timeslots
 function clearDeselectedTimeslots() {
     localStorage.setItem(DESELECTED_TIMESLOTS_KEY,"[]");
 }
 
-
 // Clears study program
 function clearSelectedStudyprogram() {
     localStorage.setItem(STUDYPROGRAM_RETRIEVAL_KEY,"");
 }
-
 
 function clearAll() {
     clearDeselectedLanguages();

@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="../E3_icon.ico"/>
 
     <!-- CSS Files -->
-    <link href="c3.min.css" rel="stylesheet">
+    <link href="../scripts/c3.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Arsenal' rel='stylesheet'>
     <link rel="stylesheet" href="../scripts/bootstrap.min.css">
     <link rel="stylesheet" href="selection-page.css">
@@ -17,14 +17,14 @@
     <!-- JS Files -->
     <script type="text/javascript" src="../scripts/d3.min.js"></script>
     <script type="text/javascript" src="../scripts/c3.min.js"></script>
-    <script src="radarChart.js"></script>
+    <script src="../scripts/radarChart.js"></script>
     <script type="text/javascript" src="../scripts/dataStorage.js"></script>
         
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="../0-landing-page/landing-page.html">
-            <img src="Logo.png" width="90" height="22" class="d-inline-block align-top" alt="">
+            <img src="../Logo.png" width="90" height="22" class="d-inline-block align-top" alt="">
         </a>
             <div class="navbar-nav">
                 <a class="nav-item nav-link" href="../1-personal-information-page/personal-information-page.html">Your Information</a>
@@ -43,6 +43,8 @@
     </div>
 
     <script>
+        
+        //GRID
         
         var colorText = "black";
         var colorAvailable = "green";
@@ -130,11 +132,17 @@
             }
         }
 
-
+        //TABLE
+        
         var selectedCourses = loadSelectedCourses();
+        var filteredData = loadFilteredCourses();
+            var root = d3.hierarchy(filteredData, function (d) { return d.children; });
+            var treemap = d3.tree().size([100, 100]);
+            var treeData = treemap(root);
+            var nodes = treeData.descendants();
         var titles = ["Delete", "Title", "Recommendation", "Credits", "Type", "Exam", "Location", "Language", "Link"];
 
-        //Define basic table structure
+        //Define basic table structure: headers
         var table = d3.select('#selectedCoursesTable')
             .append('table')
             .attr("id", 'courseTable');
@@ -153,16 +161,18 @@
                 return d;
             });
 
+        //Can sort by any column except delete and link
         headers.append('p')
             .attr('class','sort-marker');
-
         d3.select('#Delete_title').selectAll('.sort-marker').remove();
         d3.select('#Link_title').selectAll('.sort-marker').remove();
 
         //Sorting functionality
         headers.on('click', function (d) {
+            //Do nothing if delete or link column is clicked
             if(this.id.localeCompare('Delete_title')==0 || this.id.localeCompare('Link_title')==0){
                 return null;
+                
             //Recommendation column needs own comparator
             }else if(this.id.localeCompare('Recommendation_title')==0){
 
@@ -174,8 +184,8 @@
                 if (sortAscending) {
                     table_rows.sort(
                         function(a, b) {
-                            var first = a[d];
-                            var second = b[d];
+                            var first = a.data[d];
+                            var second = b.data[d];
 
                             if(first != ''){
                                 first = parseInt(first);
@@ -195,11 +205,12 @@
                     headers.selectAll('p.sort-marker').text('');
                     d3.select(this).selectAll('.sort-marker')
                         .text('▲');
+                    
                 } else {
                     table_rows.sort(
                         function(a, b) {
-                            var first = a[d];
-                            var second = b[d];
+                            var first = a.data[d];
+                            var second = b.data[d];
 
                             if(first != ''){
                                 first = parseInt(first);
@@ -219,6 +230,7 @@
                         d3.select(this).selectAll('.sort-marker')
                             .text('▼');
                 }
+    
             //All other rows can be sorted using built in functions
             }else{
                 sorted_by = this.id;
@@ -228,7 +240,7 @@
                 if (sortAscending) {
                     table_rows.sort(
                         function(a, b) {
-                            return d3.ascending(a[d], b[d]);
+                            return d3.ascending(a.data[d], b.data[d]);
                         });
                         sortAscending = false;
                         this.className = 'aes';
@@ -238,7 +250,7 @@
                 } else {
                     table_rows.sort(
                         function(a, b) {
-                            return d3.descending(a[d], b[d]);
+                            return d3.descending(a.data[d], b.data[d]);
                         });
                         sortAscending = true;
                         this.className = 'des';
@@ -249,17 +261,27 @@
 
             }});
 
+        
+            //Fill table with selected courses
             function fillSelectedCoursesTable() {
-
+//                alert("refill");
                 rows.selectAll('.table-data').remove();
                 rows.selectAll('tr')
-                    .data(selectedCourses).enter()
+//                    .data(selectedCourses).enter()
+                    .data(nodes.filter(function (d){
+//                        alert(d.data.selected);
+                        if(d.data.selected == true){
+//                            alert("found one");
+                        }
+                            return d.data.selected == true;
+                        
+                    })).enter()
                     .append('tr')
                     .attr('class', 'table-data')
                     .selectAll('td')
                     .data(function (d) {
                         return titles.map(function (k) {
-                            return { 'value': d[k], 'name': k };
+                            return { 'value': d.data[k], 'name': k };
                         });
                     }).enter()
                     .append('td')
@@ -285,8 +307,8 @@
                     .attr('class', 'fakeButton')
                     .text("LSF");
 
+                //Draw bars indicating recommendation percentage
                 rows.selectAll('.table-data').selectAll('.Recommendation').attr('style','font-size:0pt;');
-
                 rows.selectAll('.table-data').selectAll('.Recommendation')
                     .append('svg')
                     .attr('height', '30px')
@@ -333,85 +355,86 @@
                                 d3.select(this.parentNode)
                                     .append('text')
                                     .on('click', function () {
+                                        d.data.selected = false;
+                                        setFilteredCourses(filteredData);
                                         var index = selectedCourses.indexOf(d);
                                         selectedCourses.splice(index, 1);
+
                                         d3.select(this.parentNode.parentNode.parentNode).each(
-                                        function (d) {
-                                            d3.select(this)
-                                                .attr('style', 'background-color:white;');
-
-                                            times = [];
-                                            courseTimes = d.Times_manual;
-                                            if (!courseTimes == "") {
-                                                if (courseTimes.includes(';')) {
-                                                    var times = courseTimes.split(';');
-                                                }
-                                                else {
-                                                    times.push(courseTimes);
-                                                }
-
-                                                for (t = 0; t < times.length; t++) {
-                                                    time = times[t];
-                                                    var name = '#' + time;
-                                                    timeTable.select(name)
-                                                        .attr('fill', function () {
-                                                            if(times_userNotAvailable.includes(time)){
-                                                                return colorUnavailable;
-                                                            }
-                                                            else{
-                                                                return colorAvailable;
-                                                            }
-                                                        });
-                                                }
-                                            }
-                                                
-                                                if (d3.select(this).select('.Title').attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
-                                                    
-//                                                    alert('Matched');
-                                                    
-                                                d3.select(this).select('.Title')
-                                                    .attr('style', 'background-color:none');
-
-
+                                            function (d) {
+                                                //Reset possible marks in course table and timetable
+                                                d3.select(this)
+                                                    .attr('style', 'background-color:white;');
                                                 times = [];
                                                 courseTimes = d.Times_manual;
                                                 if (!courseTimes == "") {
                                                     if (courseTimes.includes(';')) {
-                                                        times = courseTimes.split(';');
+                                                        var times = courseTimes.split(';');
                                                     }
                                                     else {
                                                         times.push(courseTimes);
                                                     }
+
                                                     for (t = 0; t < times.length; t++) {
                                                         time = times[t];
                                                         var name = '#' + time;
-                                                        timeTable.select(name).each(function () {
-                                                            d3.select(this.parentNode)
-                                                                .selectAll('.courseMarker').remove();
-                                                        })
+                                                        timeTable.select(name)
+                                                            .attr('fill', function () {
+                                                                if(times_userNotAvailable.includes(time)){
+                                                                    return colorUnavailable;
+                                                                }
+                                                                else{
+                                                                    return colorAvailable;
+                                                                }
+                                                            });
                                                     }
                                                 }
+                                                
+                                                if (d3.select(this).select('.Title').attr('style') != null && d3.select(this).select('.Title').attr('style').includes('background-color:'+selectedCourseColor)) {
+                                                    
+                                                    d3.select(this).select('.Title')
+                                                        .attr('style', 'background-color:none');
+                                                    times = [];
+                                                    courseTimes = d.Times_manual;
+                                                    if (!courseTimes == "") {
+                                                        if (courseTimes.includes(';')) {
+                                                            times = courseTimes.split(';');
+                                                        }
+                                                        else {
+                                                            times.push(courseTimes);
+                                                        }
+                                                        for (t = 0; t < times.length; t++) {
+                                                            time = times[t];
+                                                            var name = '#' + time;
+                                                            timeTable.select(name).each(function () {
+                                                                d3.select(this.parentNode)
+                                                                    .selectAll('.courseMarker').remove();
+                                                            })
+                                                        }
+                                                    }
                                                 }
                                                 
                                             });
                                         
+                                            //Refill course table
                                             fillSelectedCoursesTable();
                                         
                                             //Recreate status before refilling table: sort and select
                                             sortAscending = !sortAscending;
                                             document.getElementById(sorted_by).click();
                                             if(selected_row != null){
-                                                    d3.selectAll('tr.table-data').each(function(d){
-                                                        if(d == selected_row){
-                                                          d3.select(this).selectAll('.Title')                         
-                                                        .attr('style', 'background-color:'+selectedCourseColor);
+                                                d3.selectAll('tr.table-data').each(function(d){
+                                                    if(d == selected_row){
+                                                        d3.select(this).selectAll('.Title')                         
+                                                            .attr('style', 'background-color:'+selectedCourseColor);
                                                     }
-                                                    });
-                        
-                                                                                    
+                                                });                                   
                                             }
+                                    
+                                            //Write new set of selected courses to local storage
                                             setSelectedCourses(selectedCourses);
                                         })
+                                        //Styling of delete buttons
                                         .attr("style", "font-size:17pt;")
                                         .attr("x", "50%")
                                         .attr("y", "55%")
@@ -423,6 +446,7 @@
                         });
                     });
 
+                    //Hovering functionality
                     var timeTable = d3.select('#timeTable');
                     var times = [];
                     var time;
@@ -441,27 +465,28 @@
                                 
                                 d3.select(this.parentNode).each(function(d){
 
-                                times = [];
-                                courseTimes = d.Times_manual;
-                                if (!courseTimes == "") {
-                                    if (courseTimes.includes(';')) {
-                                        times = courseTimes.split(';');
+                                    times = [];
+                                    courseTimes = d.data.Times_manual;
+                                    if (!courseTimes == "") {
+                                        if (courseTimes.includes(';')) {
+                                            times = courseTimes.split(';');
+                                        }
+                                        else {
+                                            times.push(courseTimes);
+                                        }
+                                        for (t = 0; t < times.length; t++) {
+                                            time = times[t];
+                                            var name = '#' + time;
+                                            timeTable.select(name).each(function () {
+                                                d3.select(this.parentNode)
+                                                    .selectAll('.courseMarker').remove();
+                                            })
+                                        }
                                     }
-                                    else {
-                                        times.push(courseTimes);
-                                    }
-                                    for (t = 0; t < times.length; t++) {
-                                        time = times[t];
-                                        var name = '#' + time;
-                                        timeTable.select(name).each(function () {
-                                            d3.select(this.parentNode)
-                                                .selectAll('.courseMarker').remove();
-                                        })
-                                    }
-                                }
                                 });
 
                             }
+                        
                             else {
                                 
                                 //Reset selection
@@ -474,40 +499,41 @@
                                 
                                 d3.select(this.parentNode).each(function(d){
                                     
-//                                alert(d.Title);
-                                selected_row = d;
-                                
-                                times = [];
-                                courseTimes = d.Times_manual;
+                                    selected_row = d;
 
-                                if (!courseTimes == "") {
-                                    if (courseTimes.includes(';')) {
-                                        times = courseTimes.split(';');
+                                    times = [];
+                                    courseTimes = d.data.Times_manual;
+
+                                    if (!courseTimes == "") {
+                                        if (courseTimes.includes(';')) {
+                                            times = courseTimes.split(';');
+                                        }
+                                        else {
+                                            times.push(courseTimes);
+                                        }
+                                        for (t = 0; t < times.length; t++) {
+                                            time = times[t];
+                                            var name = '#' + time;
+                                            timeTable.select(name).each(function () {
+                                                d3.select(this.parentNode)
+                                                    .append('g')
+                                                    .append('circle')
+                                                    .attr('r', 5)
+                                                    .attr('cx', '11px')
+                                                    .attr('cy', '6px')
+                                                    .attr('class', 'courseMarker')
+                                                    .attr('fill', selectedCourseColor);
+                                            })
+                                        }
                                     }
-                                    else {
-                                        times.push(courseTimes);
-                                    }
-                                    for (t = 0; t < times.length; t++) {
-                                        time = times[t];
-                                        var name = '#' + time;
-                                        timeTable.select(name).each(function () {
-                                            d3.select(this.parentNode)
-                                                .append('g')
-                                                .append('circle')
-                                                .attr('r', 5)
-                                                .attr('cx', '11px')
-                                                .attr('cy', '6px')
-                                                .attr('class', 'courseMarker')
-                                                .attr('fill', selectedCourseColor);
-                                        })
-                                    }
-                                }
                                 });
                             }
                         });
+                
+        //RADAR CHART
 
         //RadarChart properties
-        var data_r = [
+        var average_ratings = [
             {
                 name: 'Average Rating',
                 axes: [
@@ -523,15 +549,10 @@
                 color: '#26AF32'
             }
         ];
-                    
-        // Diagram measurements
-        var margin = { top: 20, right: 10, bottom: 10, left: 30},
-        width = 800 - margin.left - margin.right,
-        height = 830 - margin.top - margin.bottom;
 
         var radarMargin = { top: 65, right: 80, bottom: 50, left: 300 },
-            width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
-            height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+            width = Math.min(700, window.innerWidth / 4) - 30 - 10,
+            height = Math.min(width, window.innerHeight - 20 - 10);
 
         var radarChartOptions = {
             w: 600,
@@ -545,7 +566,7 @@
             format: '.0f'
         };
 
-        var svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
+        var svg_radar1 = RadarChart("#radarChart", average_ratings, radarChartOptions);
 
         var fair;
         var support;
@@ -556,14 +577,14 @@
         var grade_effort;
 
 
-        //On mouseenter of a row: visually display couse hours in timetable
+        //On mouseenter of a row: visually display course hours in timetable
         d3.selectAll('.table-data')
             .on('mouseenter', function (d) {
                 d3.select(this)
                     .attr('style', 'background-color:'+highlightColor+';');
 
                 times = [];
-                courseTimes = d.Times_manual;
+                courseTimes = d.data.Times_manual;
                 if (!courseTimes == "") {
                     if (courseTimes.includes(';')) {
                         times = courseTimes.split(';');
@@ -580,13 +601,13 @@
 
                 //Display course ratings in radar chart
                 //if it has ratings: show them, else show that there aren't any
-                fair = d.fairness;
-                support = d.support;
-                material = d.material;
-                comprehensible = d.comprehensibility;
-                fun = d.fun;
-                interesting = d.interesting;
-                grade_effort = d.grade_effort;
+                fair = d.data.fairness;
+                support = d.data.support;
+                material = d.data.material;
+                comprehensible = d.data.comprehensibility;
+                fun = d.data.fun;
+                interesting = d.data.interesting;
+                grade_effort = d.data.grade_effort;
 
                 var hasRatings = false;
 
@@ -604,7 +625,7 @@
                     grade_effort = 0;
                 }
 
-                var data_r_withSelectedCourse = [
+                var ratings_withSelectedCourse = [
                     {name: 'Average Rating',
                         axes: [
                             { axis: 'interesting', value: 3.82 },
@@ -629,7 +650,7 @@
                     }
                 ];
 
-                svg_radar1 = RadarChart("#radarChart", data_r_withSelectedCourse, radarChartOptions);
+                svg_radar1 = RadarChart("#radarChart", ratings_withSelectedCourse, radarChartOptions);
 
                 if (!hasRatings) {
                     var noRatings = svg_radar1.append('g')
@@ -664,7 +685,7 @@
                     .attr('style', 'background-color:white;');
 
                 times = [];
-                courseTimes = d.Times_manual;
+                courseTimes = d.data.Times_manual;
                 if (!courseTimes == "") {
                     if (courseTimes.includes(';')) {
                         var times = courseTimes.split(';');
@@ -687,12 +708,12 @@
                 }
 
                 //Reset radar chart to only show average ratings
-                svg_radar1 = RadarChart("#radarChart", data_r, radarChartOptions);
+                svg_radar1 = RadarChart("#radarChart", average_ratings, radarChartOptions);
 
                 });
-            }
+        }
         
-        //Initially sorted by recommendation
+        //Table is initially sorted by recommendation
         fillSelectedCoursesTable();
         document.getElementById('Recommendation_title').click();
 
