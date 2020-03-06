@@ -2,7 +2,7 @@
 This project was developed as part of the Learning Analytics and Visual Analytics (LAVA) lab at the University of Duisburg-Essen lead by Prof. Dr. Mohamed Amine Chatti and Dr. Arham Muslim.
 
 It presents a solution for a more easy selection of E3 courses, which are a special course catalog of the University of Duisburg-Essen from which every Bachelor student has to complete some. Before this project these courses could only be viewed as a list and it was not possible to filter them. This shall be fixed by offering the application developed here. It aims to  improve the course selection in three steps:
-* First, the user has to provide some basic information, which allows for all courses irrelevant to him/her to be filered out.
+* First, the user has to provide some basic information, which allows for all courses irrelevant to him/her to be filtered out.
 * Second, the user can browse the remaining courses, filter and select those that seem interesting.
 * Third, a concise table view of the selected courses is combined with a visual representation of the student's timetable as wells as a radar chart displaying course ratings.
 
@@ -73,7 +73,7 @@ A table layout concisely displays the courses selected by the user. It is enrich
 
 ## How to run the project
 After cloning this repository, the project can be run locally.
-This requires starting starting a local server, e.g. using the [Node.js](https://www.npmjs.com/get-npm) [http-server package](https://www.npmjs.com/package/http-server).
+This requires starting a local server, e.g. using the [Node.js](https://www.npmjs.com/get-npm) [http-server package](https://www.npmjs.com/package/http-server).
 Running *http-server* in the project folder should start the project at http://localhost:8080.
 
 ## Deployed Version
