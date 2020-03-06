@@ -4,7 +4,7 @@ var sliderRange = d3
 .min(1)
 .max(9)
 .step(1)
-.width(150)
+.width(130)
 .ticks(10)
 .default([1, 9])
 .fill('darkslategray')
@@ -16,7 +16,7 @@ var sliderRange = d3
 var gRange = d3
 .select('div#slider-range')
 .append('svg')
-.attr('width', 500)
+.attr('width', 170)
 .attr('height', 80)
 .append('g')
 .attr('transform', 'translate(12,20)');

@@ -13,20 +13,21 @@
 
 #leftPanel {
     position:absolute;
-    width: 220px;
+    width: 200px;
     left: 0;
     overflow-y:auto;
+    font-size: 14px;
 }
 
 #middlePanel {
     position:absolute;
-    left:230px;
-    right:310px;
+    left:210px;
+    right:290px;
 }
 
 #rightPanel {
     position:absolute;
-    width: 300px;
+    width: 280px;
     right:0;
 }
 
@@ -51,7 +52,7 @@
 
 #selectedCoursesPanel p { 
     position:relative;
-    font-size: 15px;
+    font-size: 14px;
     text-align: left;
     margin: 9px;
     padding: 7px 15px 7px 10px;

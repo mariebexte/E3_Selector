@@ -1,19 +1,19 @@
 *{
     font-family: Arsenal, Arial;
-    font-size: 18pt;
+    font-size: 16pt;
 }
 
 h1{
     margin-top:8%;
-    font-size: 40pt;
+    font-size: 38pt;
 }
 
 h2{
-    font-size: 20pt;
+    font-size: 18pt;
 }
 
 h3{
-    font-size: 18pt;
+    font-size: 16pt;
 }
 
 .subtitle{
@@ -27,7 +27,7 @@ h3{
     right:0;
     top:0;
     padding:1%;
-    min-height: 95.5%;
+    min-height: 96%;
     width:auto;
     margin:1%;
     border-radius: 20px;
@@ -39,9 +39,9 @@ h3{
     color: white;
     padding:20px;
     margin-top:10px;
-    font-size: 16pt;
+    font-size: 12pt;
     vertical-align: middle;
-    height:85%;
+    height:80%;
 }
 
 .centered{
