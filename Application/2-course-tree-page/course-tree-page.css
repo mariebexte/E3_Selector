@@ -78,6 +78,7 @@
 /*Tree Styling*/
 svg.mainElement{
     height:100%;
+    width:100%;
 }
 
 circle {
