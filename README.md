@@ -1,7 +1,7 @@
 # E3 Selector
 This project was developed as part of the Learning Analytics and Visual Analytics (LAVA) lab at the University of Duisburg-Essen lead by Prof. Dr. Mohamed Amine Chatti and Dr. Arham Muslim.
 
-It presents a solution for a more easy selection of E3 courses, which are a special course catalog of the University of Duisburg-Essen from which every Bachelor student has to complete some. Before this project these courses could only be viewed as a list and it was not possible to filter them. This shall be fixed by offering the application developed here. It aims to  improve the course selection in three steps:
+It presents a solution for a more easy selection of E3 courses, which are a special course catalog of the University of Duisburg-Essen from which every Bachelor student has to complete some. Before this project these courses could only be viewed as a list and it was not possible to filter them. This shall be fixed by offering the application developed here. It aims to  improve course selection in three steps:
 * First, the user has to provide some basic information, which allows for all courses irrelevant to him/her to be filtered out.
 * Second, the user can browse the remaining courses, filter and select those that seem interesting.
 * Third, a concise table view of the selected courses is combined with a visual representation of the student's timetable as wells as a radar chart displaying course ratings.
@@ -10,10 +10,10 @@ Screenshots of the visualizations are provided [below](#visualizations-and-how-t
 As of now, the application only includes Bachelor programs of the Faculty of Engineering.
 
 ## Data Collection
-The course data used within this project was crawled from https://campus.uni-due.de/lsf using a [maven project](/course-crawling) included in this repository. It uses [jsoup](https://jsoup.org) (v1.12.1) to crawl the data. The code also includes code to process the .csv-file resulting from the crawling process into a JSON file, which is simplified by including [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) (v.1.7). The resulting course data was combined with course ratings manually collected from https://www.meinprof.de.
+The course data used within this project was crawled from https://campus.uni-due.de/lsf using a [maven project](/course-crawling) included in this repository. It uses [jsoup](https://jsoup.org) (v1.12.1) to crawl the data. The project also includes code to process the .csv-file resulting from the crawling process into a JSON file, which is simplified by including [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/) (v.1.7). The resulting course data was combined with course ratings manually collected from https://www.meinprof.de.
 
 ## Libraries
-The project uses html, JavaScript and CSS and makes use of the following libraries:
+The application uses HTML, JavaScript and CSS and makes use of the following libraries:
 * [Bootstrap](https://getbootstrap.com) (v4.4.1)
 * [D3](https://d3js.org) (v5.9.2)
 
@@ -29,7 +29,7 @@ A downloaded version of all required libraries is included in the project.
     ├── Application                       # E3 Selector aplication
         ├── 0-landing-page                  # .html and .css file for landing page
           └── ...
-        ├── 1-personal-information-page     # .html, .css and .css file for personal information page
+        ├── 1-personal-information-page     # .html, .css and .js file for personal information page
           └── ...
         ├── 2-course-tree-page              # .html, .css, and .js file for course tree page
           └── ...
@@ -49,11 +49,11 @@ A downloaded version of all required libraries is included in the project.
     └── index.html                        # For deployment to github pages
 
 
-The image below illustrates the project architecture. The application consists of four pages, with the horizontal arrows indicating the navigation path between these. A navigation bar allows navigation deviating from this expected path, as data consistency is ensured by including a local storage. This local storage holds the information input into the personal information page as well as the output of the personal information page, which is a filtered set of course data. The course tree and selection pages access this set of relevant courses. The selection page additionaly also requires the saved availabilities. The lists below the line of the boxes repesenting the pages represent the main visualization elements present in the respective pages.
+The image below illustrates the architecture of the application. It consists of four pages, with the horizontal arrows indicating the navigation path between these. A navigation bar allows navigation deviating from this expected path, as data consistency is ensured by including a local storage. This local storage holds the information input into the personal information page as well as the output of the personal information page, which is a filtered set of course data. The course tree and selection pages access this set of relevant courses. The selection page additionaly requires the saved availabilities. The lists below the lines of the boxes repesenting the pages represent the main visualization elements present in the respective pages.
 
 ![Project Architecture](/images/project-architecture.png)
 
-## Visualizations and how to use the application
+## Visualizations and How to Use the Application
 1. **Assessing basic information**
 
 Collection of some hard constraints regarding the user, according to which the full course set will be filtered.
