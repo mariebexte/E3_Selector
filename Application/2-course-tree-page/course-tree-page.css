@@ -44,10 +44,11 @@
 
 /*For left panel*/
 #selectedCoursesPanel{
-    height:89%;
-    margin-top:10px;
-    margin-bottom:30px;
-    overflow-y: auto;        
+    overflow-y: auto; 
+    width: 93%;
+    position:absolute;
+    top:50px;
+    bottom:75px;
 }
 
 #selectedCoursesPanel p { 
