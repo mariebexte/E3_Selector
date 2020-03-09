@@ -81,5 +81,5 @@ The master branch of this project was deployed to https://mariebexte.github.io/E
 
 ## Contributors
 * Marie Bexte
-* Aynaz Khoshkoo
+* Aynaz Khoshkhoo
 * Yuewei Ma
