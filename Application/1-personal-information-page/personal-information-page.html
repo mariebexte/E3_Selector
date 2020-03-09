@@ -20,17 +20,20 @@
 </head>
 <body>
     
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="../0-landing-page/landing-page.html">
             <img src="../Logo.png" width="90" height="22" class="d-inline-block align-top" alt="">
         </a>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="../1-personal-information-page/personal-information-page.html">Your Information</a>
-            <a class="nav-item nav-link" href="../2-course-tree-page/course-tree-page.html">Course Tree</a>         
-            <a class="nav-item nav-link" href="../3-selection-page/selection-page.html">Course Selection</a>        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="../1-personal-information-page/personal-information-page.html">Your Information<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="../2-course-tree-page/course-tree-page.html">Course Tree</a>         
+                <a class="nav-item nav-link" href="../3-selection-page/selection-page.html">Course Selection</a>        
+            </div>
         </div>
-      </div>
     </nav> 
     
     <div id="form">
@@ -70,5 +73,7 @@
     </div>
     
     <script type="text/javascript" src="personal-information-page.js"></script>
+    <script src="../scripts/jquery-3.4.1.slim.min.js.css"></script>
+    <script src="../scripts/bootstrap.min.js"></script>
 </body>
 </html>
