@@ -16,6 +16,7 @@ The course data used within this project was crawled from https://campus.uni-due
 The application uses HTML, JavaScript and CSS and makes use of the following libraries:
 * [Bootstrap](https://getbootstrap.com) (v4.4.1)
 * [D3](https://d3js.org) (v5.9.2)
+* [jQuery](https://jquery.com) (v3.4.1)
 
 Some D3 elements were inspired by other projects:
 * The tree layout used in the course-tree-page of this project was derived from [this](https://gist.github.com/d3noob/43a860bc0024792f8803bba8ca0d5ecd) project (released under the [MIT License](https://opensource.org/licenses/MIT))
